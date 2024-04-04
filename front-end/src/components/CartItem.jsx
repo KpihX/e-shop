@@ -3,8 +3,8 @@ import { CartContext } from "../utils/context/CartContext"
 import styled from 'styled-components'
 
 const CartItemWrapper = styled.div`
-	width: 700px;
-  height: 300px;
+	width: 900px;
+  height: 400px;
   display: flex;
   
   align-items: center;
@@ -31,29 +31,28 @@ const ProductImage = styled.img`
   border-radius: 50%;
 `
 
-function CartItem (props) {
-  const { id, name, price, image } = props.data;
+function CartItem ({ codePro, nomPro, prix, quantite, image, size1, size2 }) {
   const { cartItems, addToCart, removeFromCart, updateCartItemCount } = useContext(CartContext);
 
   return (
     <CartItemWrapper>
-      <ProductImage src={image} alt={name}/>
+      <ProductImage src={image} alt={nomPro}/>
       <CartItemLabel>
         <p>
-          <b>nom: {name}</b>
+          <b>nom: {nomPro}</b>
         </p>
-        <p> prix: {price} </p>
+        <p> prix: {prix} </p>
         <CountHandler>
-          <button onClick={() => removeFromCart(id)}> - </button>
+          <button onClick={() => removeFromCart(codePro)}> - </button>
           <input
-            value={cartItems[id]}
-            onChange={(e) => updateCartItemCount(Number(e.target.value), id)}
+            defaultValue={quantite}
+            onChange={(e) => updateCartItemCount(Number(e.target.value), codePro)}
           />
-          <button onClick={() => addToCart(id)}> + </button>
+          <button onClick={() => addToCart(codePro, nomPro, prix, size1, size2, image, "blue")}> + </button>
         </CountHandler>
       </CartItemLabel>  
     </CartItemWrapper>
-  );
-};
+  )
+}
 
 export default CartItem
