@@ -1,5 +1,14 @@
+*** General ***
+
+- Ne pas oublier la couleur pour les produits
+
 *** front-end ***
 
 - modifier le cartContextProvider, pour que ça ne necessite pas d'avoir tous les produits.
+- toute navigation vers login ou register quand le token existe deje, redirige vers home
+
+- - Utiliser les tailles en %
 
 *** back-end ***
+
+

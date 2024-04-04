@@ -1,58 +1,93 @@
 import { createContext, useState } from "react"
-import { products } from "../../datas/products"
 
-export const CartContext = createContext(null);
-
-const getDefaultCart = () => {
-  let cart = {};
-  for (let i = 1; i < products.length + 1; i++) {
-    cart[i] = 0;
-  }
-  return cart;
-};
+export const CartContext = createContext();
 
 export const CartContextProvider = (props) => {
-  const [cartItems, setCartItems] = useState(getDefaultCart());
+  const [cartItems, updateCart] = useState([]);
 
-  const getTotalCartAmount = () => {
-    let totalAmount = 0;
-    for (const item in cartItems) {
-      if (cartItems[item] > 0) {
-        let itemInfo = products.find((product) => product.id === Number(item));
-        totalAmount += cartItems[item] * itemInfo.price;
+  function addToCart(codePro, nomPro, prix, size1, size2, image, color) {
+    const currentItemRemoved = cartItems.find((item) => item.codePro === codePro)
+    
+    if (currentItemRemoved) {
+        const cartFilteredCurrentItem = cartItems.filter(
+            (item) => item.nomPro !== nomPro
+        )
+        updateCart([
+            ...cartFilteredCurrentItem,
+            { codePro, nomPro, prix, quantite: currentItemRemoved.quantite + 1, size1, size2, image, color}
+        ])
+        
+    } else {
+        updateCart([...cartItems, { codePro, nomPro, prix, quantite: 1, size1, size2, image, color }])
+    }
+    // console.log(cartItems)
+  } 
+
+  function removeFromCart(codePro) {
+    const currentItemRemoved = cartItems.find((item) => item.codePro === codePro)
+    if (currentItemRemoved) {
+      const cartFilteredCurrentItem = cartItems.filter(
+        (item) => item.codePro !== codePro
+      )
+      if (currentItemRemoved.quantite === 1) {
+        updateCart(cartFilteredCurrentItem)
+      } else {
+        updateCart([
+          ...cartFilteredCurrentItem,
+          { codePro, nomPro: currentItemRemoved.nomPro, prix: currentItemRemoved.prix, quantite: currentItemRemoved.quantite - 1, size1: currentItemRemoved.size1, size2: currentItemRemoved.size2, image: currentItemRemoved.image, color: currentItemRemoved.color }
+        ])
       }
     }
-    return totalAmount;
-  };
+  } 
 
-  const addToCart = (itemId) => {
-    setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
-  };
+  const getTotalCartAmount = () => {
+    return cartItems.reduce(
+      (acc, cartItem) => acc + cartItem.quantite * cartItem.prix,
+      0
+    )
+  }
 
-  const removeFromCart = (itemId) => {
-    setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
-  };
+  const updateCartItemCount = (newQuantite, codePro) => {
+    const currentItemRemoved = cartItems.find((item) => item.nomPro === nomPro)
+    if (currentItemRemoved) {
+      const cartFilteredCurrentItem = cartItems.filter(
+        (item) => item.nomPro !== nomPro
+      )
+      updateCart([
+        ...cartFilteredCurrentItem,
+        { codePro, nomPro, prix, quantite: currentItemRemoved.newQuantite, size1, size2, image, color}
+      ])
+    } else {
+        updateCart([...cart, { codePro, nomPro, prix, quantite: currentItemRemoved.newQuantite, size1, size2, image, color}])
+    }
+  }
 
-  const updateCartItemCount = (newAmount, itemId) => {
-    setCartItems((prev) => ({ ...prev, [itemId]: newAmount }));
-  };
+  const cartItemCount = (codePro) => {
+    const currentItem = cartItems.find((item) => item.codePro === codePro)
+    if (currentItem) {
+      return currentItem.quantite
+    }
+    return 0
+  }
 
   const checkout = () => {
-    setCartItems(getDefaultCart());
-  };
+    updateCart([]);
+  }
 
   const contextValue = {
     cartItems,
+    updateCart,
     addToCart,
+    getTotalCartAmount,
     updateCartItemCount,
     removeFromCart,
-    getTotalCartAmount,
+    cartItemCount,
     checkout,
-  };
+  }
 
   return (
     <CartContext.Provider value={contextValue}>
       {props.children}
     </CartContext.Provider>
-  );
-};
+  )
+}
