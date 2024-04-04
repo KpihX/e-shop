@@ -349,7 +349,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (113, '2024_03_01_175029_create_expedition_table', 1),
 (114, '2024_03_01_192929_create_fournisseur_table', 1),
 (115, '2024_03_01_194546_create_influenceur_table', 1),
-(116, '2024_03_01_195311_create_paie_influenceur_table', 1),
+(116, '2024_03_01_195311_create_paieinfluenceur_table', 1),
 (117, '2024_03_01_200124_create_achatfournisseur_table', 1),
 (118, '2024_03_01_202624_create_facture_table', 1),
 (119, '2024_03_01_203437_create_commande_table', 1),
