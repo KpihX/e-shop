@@ -10,7 +10,6 @@ return new class extends Migration {
      */
     public function up()
     {
-
         Schema::dropIfExists('achatfournisseur');
         Schema::create('achatfournisseur', function (Blueprint $table) {
             $table->id('idAchat');

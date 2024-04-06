@@ -9,43 +9,44 @@ class Produit extends Model
 {
     use HasFactory;
 
-    public static function validate($request)
-    {
-        $request->validate([
-            "nomPro" => "required|max:255",
-        ]);
-    }
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'produit';
+    
+    /**
+     * The primary key associated with the table.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'codePro';
 
-    protected $fillable = [
-        "nomPro",
-    ];
-    // $table->unsignedBigInteger('codePro');  // Use id() for auto-incrementing primary key (assuming codePro is unique)
-    //         $table->primary('codePro');  // Use id() for auto-incrementing primary key (assuming codePro is unique)
-    //         $table->unsignedInteger('idCategorie');
-    //         $table->string('nomPro', 255)->collate('utf8mb4_unicode_ci');
-    //         $table->decimal('prix', 8, 0);
-    //         $table->unsignedInteger('qte');
-    //         $table->text('description')->collate('utf8mb4_unicode_ci');
-    //         $table->string('codeArrivage', 255)->collate('utf8mb4_unicode_ci');
-    //         $table->tinyInteger('actif');
-    //         $table->date('dateInsertion');
-    //         $table->decimal('prixAchat', 8, 0);
-    //         $table->decimal('pourcentage', 2, 2);  // Consider using a decimal for more precise percentage calculations
-    //         $table->tinyInteger('promo');
-    //         $table->integer('size1');
-    //         $table->integer('size2');
-    //         $table->integer('typeSize');
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    // protected $fillable = [
+    //     'idCategorie', 'nomPro', 'description', 'stock',
+    // ];
 
-    //         $table->foreign('idCategorie')->references('idCat')->on('categorie'); // Assuming 'categories' table with 'id' primary key exists
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    // protected $hidden = [
+    //     'created_at', 'updated_at',
+    // ];
 
-
-    public function getCodePro()
-    {
-        return $this->attributes["codePro"];
-    }
-
-    public function setCodePro($codePro)
-    {
-        $this->attributes["codePro"] = $codePro;
-    }
+    /**
+     * Get the category that owns the product.
+     */
+    // public function category()
+    // {
+    //     return $this->belongsTo(Categorie::class);
+    // }
+    
 }
