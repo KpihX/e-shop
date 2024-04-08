@@ -1,4 +1,4 @@
-import { useContext } from "react"
+import { useContext, useState, useEffect } from "react"
 import { CartContext } from "../utils/context/CartContext"
 import styled from 'styled-components'
 
@@ -32,7 +32,27 @@ const ProductImage = styled.img`
 `
 
 function CartItem ({ codePro, nomPro, prix, quantite, image, size1, size2 }) {
-  const { cartItems, addToCart, removeFromCart, updateCartItemCount } = useContext(CartContext);
+  const { addToCart, removeFromCart, updateCartItemCount } = useContext(CartContext)
+  const [inputValue, setInputValue] = useState(quantite ? quantite.toString() : '')
+
+  // Appelé lorsque l'utilisateur modifie la valeur de l'input
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
+  }
+
+  // Appelé lorsque l'utilisateur quitte l'input ou appuie sur Entrée
+  const handleBlurOrEnter = (e) => {
+    if (e.type === 'blur' || (e.type === 'keydown' && e.key === 'Enter')) {
+      const newQuantity = Number(inputValue) || 0;
+      updateCartItemCount(newQuantity, codePro);
+      setInputValue(newQuantity.toString()); // Assurez-vous que la valeur est une chaîne pour l'attribut value de l'input
+    }
+  };
+
+  useEffect(() => {
+    // Assurez-vous que l'inputValue est mis à jour si la quantité externe change
+    setInputValue(quantite ? quantite.toString() : '');
+  }, [quantite]);
 
   return (
     <CartItemWrapper>
@@ -45,8 +65,11 @@ function CartItem ({ codePro, nomPro, prix, quantite, image, size1, size2 }) {
         <CountHandler>
           <button onClick={() => removeFromCart(codePro)}> - </button>
           <input
-            defaultValue={quantite}
-            onChange={(e) => updateCartItemCount(Number(e.target.value), codePro)}
+            type="text"
+            value={inputValue}
+            onChange={handleInputChange}
+            onBlur={handleBlurOrEnter}
+            onKeyDown={handleBlurOrEnter}
           />
           <button onClick={() => addToCart(codePro, nomPro, prix, size1, size2, image, "blue")}> + </button>
         </CountHandler>
