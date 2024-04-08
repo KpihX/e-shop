@@ -85,17 +85,17 @@ export const CartContextProvider = (props) => {
   }
 
   const updateCartItemCount = (newQuantite, codePro) => {
-    const currentItemRemoved = cartItems.find((item) => item.nomPro === nomPro)
+    const currentItemRemoved = cartItems.find((item) => item.codePro === codePro)
     if (currentItemRemoved) {
       const cartFilteredCurrentItem = cartItems.filter(
-        (item) => item.nomPro !== nomPro
+        (item) => item.codePro !== codePro
       )
       updateCart([
         ...cartFilteredCurrentItem,
-        { codePro, nomPro, prix, quantite: currentItemRemoved.newQuantite, size1, size2, image, color}
+        { codePro, nomPro: currentItemRemoved.nomPro, prix: currentItemRemoved.prix, quantite: newQuantite, size1: currentItemRemoved.size1, size2: currentItemRemoved.size2, image: currentItemRemoved.image, color: currentItemRemoved.color }
       ])
     } else {
-        updateCart([...cart, { codePro, nomPro, prix, quantite: currentItemRemoved.newQuantite, size1, size2, image, color}])
+        updateCart([...cart, { codePro, nomPro, prix, quantite: newQuantite, size1, size2, image, color}])
     }
   }
 
