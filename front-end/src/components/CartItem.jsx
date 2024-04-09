@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 const CartItemWrapper = styled.div`
 	width: 900px;
-  height: 400px;
+  height: 450px;
   display: flex;
   
   align-items: center;
@@ -25,8 +25,8 @@ const CountHandler = styled.div`
 `
 
 const ProductImage = styled.img`
-  height: 150px;
-  width: 400px;
+  height: 100px;
+  width: 200px;
   align-self: center;
   border-radius: 50%;
 `
@@ -34,6 +34,8 @@ const ProductImage = styled.img`
 function CartItem ({ codePro, nomPro, prix, quantite, image, size1, size2 }) {
   const { addToCart, removeFromCart, updateCartItemCount } = useContext(CartContext)
   const [inputValue, setInputValue] = useState(quantite ? quantite.toString() : '')
+  const [colorClothe, setColorClothe] = useState("")
+  const [sizeClothe, setSizeClothe] = useState("")
 
   // Appelé lorsque l'utilisateur modifie la valeur de l'input
   const handleInputChange = (e) => {
@@ -59,9 +61,19 @@ function CartItem ({ codePro, nomPro, prix, quantite, image, size1, size2 }) {
       <ProductImage src={image} alt={nomPro}/>
       <CartItemLabel>
         <p>
-          <b>nom: {nomPro}</b>
+          <b>{nomPro}</b>
         </p>
-        <p> prix: {prix} </p>
+        <p>{prix} FCFA</p>
+        <span>Entrez votre couleur: </span>
+        <input
+          type="text"
+          onChange={e => setColorClothe(e.target.value)}
+        />
+        <span>Entrez votre taille (compris entre {size1} et {size2}): </span>
+        <input
+          type="text"
+          onChange={e => setSizeClothe(e.target.value)}
+        />
         <CountHandler>
           <button onClick={() => removeFromCart(codePro)}> - </button>
           <input
