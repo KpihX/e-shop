@@ -1,10 +1,12 @@
 import { useContext } from "react"
 import { CartContext } from "../utils/context/CartContext"
-import { products } from "../datas/products"
+import products from "../datas/products"
 import CartItem from "../components/CartItem"
 import { useNavigate } from "react-router-dom"
 import styled from 'styled-components'
+
 import Header from "../components/Header"
+import CartInfos from "../components/CartInfos"
 
 
 const CartWrapper = styled.div`
@@ -37,6 +39,7 @@ function Cart() {
     <div>
       <Header />
       <CartWrapper>
+        <CartInfos />
         <h1>Finalisez vos achats ici</h1>
         {cartItems.map(({codePro, nomPro, prix, quantite, image, size1, size2}) => (
           <CartItem

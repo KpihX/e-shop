@@ -14,9 +14,10 @@ import Footer from '../components/Footer'
 const HomeWrapper = styled.div`
   display: flex;
   justify-content: center;
-  margin: 30px;
-  background-color: ${({ theme }) =>
-    theme === 'light' ? colors.backgroundLight : colors.backgroundDark};
+  margin: 10px;
+  /* background-color: ${colors.backgroundLight}; */
+  /* background-color: ${({ theme }) =>
+    theme === 'light' ? colors.backgroundLight : colors.backgroundDark}; */
   padding: 60px 90px;
   display: flex;
   flex-direction: row;
@@ -24,12 +25,13 @@ const HomeWrapper = styled.div`
 `
 
 const StyledTitle = styled.h2`
-  width: 100;
+  width: 100%;
   text-align: center;
   /* padding-bottom: 30px;
   max-width: 280px;
   line-height: 50px; */
-  color: ${({ theme }) => (theme === 'light' ? '#000000' : '#ffffff')};
+  color: #381b5e;
+  /* color: ${({ theme }) => (theme === 'light' ? '#000000' : '#ffffff')}; */
 `
 
 const ProductsWrapper = styled.div`
@@ -41,9 +43,10 @@ const ProductsWrapper = styled.div`
 `
 
 const SearchBar = styled.input`
-  width: 100%;
+  width: 80%;
   padding: 10px;
   margin-bottom: 20px;
+  
   border: 2px solid #5e437b; // Bordure violette
   border-radius: 5px; // Bordures arrondies
 `;
@@ -58,8 +61,14 @@ function Home() {
     <div>
       <Header />
       <StyledTitle theme={theme}>
-        <h1>Bienvenue chez e-shop, la solution pour vos vêtements!</h1>
+        <h2>"Bienvenue chez E-Shop. Vous satisfaire,notre dévise!"</h2>
       </StyledTitle>
+      <SearchBar 
+        type="text" 
+        placeholder="Rechercher des produits..." 
+        value={searchValue}
+        onChange={(e) => setSearchValue(e.target.value)}
+      />
       <HomeWrapper theme={theme}>
         <Categories 
           categories={categories}
@@ -68,12 +77,7 @@ function Home() {
           theme={theme} 
         />
         <ProductsWrapper>
-          <SearchBar 
-            type="text" 
-            placeholder="Rechercher des produits..." 
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-          />
+          
           {products
             .filter(({ nomPro }) => (nomPro.toLowerCase().includes(searchValue.toLowerCase())))
             .map(({codePro, idCategorie, nomPro, prix, image, size1, size2}) => (
