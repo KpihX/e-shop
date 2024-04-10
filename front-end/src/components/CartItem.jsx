@@ -5,8 +5,6 @@ import styled from 'styled-components'
 const CartItemWrapper = styled.div`
 	width: 900px;
   height: 400px;
-	width: 900px;
-  height: 400px;
   display: flex;
   
   align-items: center;
@@ -92,7 +90,4 @@ function CartItem ({ codePro, nomPro, prix, quantite, image, size1, size2 }) {
     </CartItemWrapper>
   )
 }
-  )
-}
-
 export default CartItem
