@@ -9,7 +9,6 @@ return new class extends Migration {
     {
         Schema::create('tontine', function (Blueprint $table) {
             $table->bigIncrements('idTontine');  // Use bigIncrements() for auto-incrementing big integer primary key
-            // $table->id('idTontine');  // Use id() for auto-incrementing primary key
             $table->datetime('dateCotisation');
             $table->decimal('montant', 8, 2);
             $table->text('commentaire')->nullable()->collate('utf8mb4_unicode_ci');  // Allow null values for commentaire

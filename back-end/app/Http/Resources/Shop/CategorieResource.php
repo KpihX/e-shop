@@ -16,4 +16,5 @@ class CategorieResource extends JsonResource
     {
         return parent::toArray($request);
     }
+    
 }
