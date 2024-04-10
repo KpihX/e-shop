@@ -27,11 +27,11 @@
 //     }
 // }
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Shop;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreUpdateCategorieRequest extends FormRequest
+class StoreCategorieRequest extends FormRequest
 {
     public function authorize()
     {

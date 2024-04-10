@@ -67,32 +67,31 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProduitRequest;
-use app\Http\Requests\UpdateProduitRequest;
+use App\Http\Requests\UpdateProduitRequest;
 use App\Http\Resources\ProduitResource;
+use App\Models\Photo;
 use App\Models\Produit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ProduitController extends Controller
 {
-    // Display a listing of the products.
     public function index()
     {
         $produits = Produit::with('photos')->get();
         return ProduitResource::collection($produits);
     }
 
-    // Store a newly created product in storage.
     public function store(StoreProduitRequest $request)
     {
         $produit = DB::transaction(function () use ($request) {
             $produit = Produit::create($request->validated());
 
-            // Handle file upload
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $image) {
-                    $path = $image->store('public/images'); // Returns the file path
-                    $produit->photos()->create(['lienPhoto' => $path]);
+                    $path = $image->store('public/images');
+                    $produit->photos()->create(['lienPhoto' => Storage::url($path)]);
                 }
             }
 
@@ -102,35 +101,53 @@ class ProduitController extends Controller
         return new ProduitResource($produit);
     }
 
-    // Display the specified product.
     public function show($id)
     {
         $produit = Produit::with('photos')->findOrFail($id);
         return new ProduitResource($produit);
     }
 
-    // Update the specified product in storage.
     public function update(UpdateProduitRequest $request, $id)
     {
         $produit = Produit::findOrFail($id);
-        $produit->update($request->validated());
-        
-        // Handle file upload if needed
-        // ...
+
+        DB::transaction(function () use ($request, $produit) {
+            $produit->update($request->validated());
+
+            if ($request->hasFile('images')) {
+                // First, delete old images
+                foreach ($produit->photos as $photo) {
+                    $filename = basename($photo->lienPhoto);
+                    Storage::delete('public/images/' . $filename);
+                    $photo->delete();
+                }
+
+                // Now, upload new images
+                foreach ($request->file('images') as $image) {
+                    $path = $image->store('public/images');
+                    $produit->photos()->create(['lienPhoto' => Storage::url($path)]);
+                }
+            }
+        });
 
         return new ProduitResource($produit);
     }
 
-    // Remove the specified product from storage.
     public function destroy($id)
     {
         $produit = Produit::findOrFail($id);
+        
         DB::transaction(function () use ($produit) {
-            // Delete associated photos if needed
-            // ...
+            foreach ($produit->photos as $photo) {
+                $filename = basename($photo->lienPhoto);
+                Storage::delete('public/images/' . $filename);
+                $photo->delete();
+            }
+
             $produit->delete();
         });
-        
-        return response()->json(null, 204); // No content
+
+        return response()->json(null, 204);
     }
 }
+
