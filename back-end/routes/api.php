@@ -30,7 +30,7 @@ Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
 
 // This is for the home page
-Route::prefix('api/shop')->group(function () {
+Route::prefix('/shop')->group(function () {
     Route::get('all_categories', [HomeController::class, 'getAllCategories'])->name('home.all_categories');
     Route::get('products', [HomeController::class, 'getMoreProducts'])->name('home.more_products');
     Route::get('search', [HomeController::class, 'searchProducts'])->name('home.search_products');
