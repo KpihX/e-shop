@@ -8,16 +8,14 @@ return new class extends Migration
 {
     public function up()
     {
-    Schema::dropIfExists('photo');
         Schema::create('photo', function (Blueprint $table) {
-            $table->id('idPhoto');  // Use id() for auto-incrementing primary key
+            $table->id('idPhoto');  // Auto-incrementing primary key
             $table->string('lienPhoto', 255)->collate('utf8mb4_unicode_ci');
             $table->unsignedBigInteger('codePro');
-
-            $table->foreign('codePro')->references('codePro')->on('produit'); // Assuming 'produits' table with 'id' primary key exists
+        
+            $table->foreign('codePro')->references('codePro')->on('produit');
         });
     }
-
     public function down()
     {
         Schema::dropIfExists('photo');

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreLigneCarteRequest;
+use App\Http\Requests\StoreClientCarteRequest;
 use App\Http\Requests\UpdateLigneCarteRequest;
 use App\Models\LigneCarte;
 

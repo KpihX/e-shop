@@ -12,4 +12,27 @@ class Produit extends Model
     protected $table = 'produit';
     
     protected $primaryKey = 'codePro';
+    protected $fillable = [
+        'nomProd',
+        'prix',
+        'codeCat',
+        'idCategorie',
+        'qte',
+        'description',
+        'codeArrivage',
+        'actif',
+        'dateInsertion',
+        'prixAchat',
+        'pourcentage',
+        'promo',
+        'size1',
+        'size2',
+        'typeSize'
+    ];
+    public function category(){
+        return $this->belongsTo(Categorie::class, 'idCategorie');
+    }
+    public function photos(){
+        return $this->hasMany(Photo::class, 'codePro');
+    }
 }

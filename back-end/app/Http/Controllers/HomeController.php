@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SearchProductRequest;
-use App\Http\Resources\CategorieResource;
 use App\Http\Resources\ProduitResource;
+use App\Http\Resources\CategorieResource;
 use App\Models\Categorie;
 use App\Models\Produit;
 use Illuminate\Http\Request;

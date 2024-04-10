@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProduitRequest;
 use App\Http\Requests\UpdateProduitRequest;
 use App\Http\Resources\ProduitResource;
+use App\Models\Photo;
 use App\Models\Produit;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Psy\Readline\Hoa\FileException;
 
 class ProduitController extends Controller
 {
@@ -14,54 +18,67 @@ class ProduitController extends Controller
      */
     public function index()
     {
-        $products = Produit::all();
+        $products = Produit::paginate(10);
         // Retourner les données en format JSON
-        return ProduitResource::collection($products);
+        if($products){
+            return ProduitResource::collection($products);
+        }else return response()->json("Pas de Produit");
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreProduitRequest $request)
-    {
-        //
-        $request->validated();
-
-        $product = new Produit();
-        $product->codeProd = $request->get('product_id');
-        $product->nomProd = $request->get('nom');
-        $product->save();
+    public function show($codePro){
+        
+        $product = Produit::find($codePro);
+        if($product){
+            return new ProduitResource($product);
+        }else return response()->json("Produit non trouvé");
     }
+    public function store (StoreProduitRequest $request){
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Produit $produit)
-    {
-        //
+        if(!$request->validated()){
+            return response()->json("Impossible d'enregistrer ce produit", 400);
+        }
+        $product=new Produit();
+        $photo = new Photo();
+        $product->fill([
+            'nomProd' => $request->nomProd,
+            'prix' => $request->prix,
+            'codeCat' => $request->codeCat,
+            'idCategorie' => $request->idCategorie,
+            'qte' => $request->qte,
+            'description' => $request->description,
+            'codeArrivage' => $request->codeArrivage,
+            'actif' => $request->actif,
+            'dateInsertion' => $request->dateInsertion,
+            'prixAchat' => $request->prixAchat,
+            'pourcentage' => $request->pourcentage,
+            'promo' => $request->promo,
+            'size1' => $request->size1,
+            'size2' => $request->size2,
+            'typeSize' => $request->typeSize,
+        ]);
+        if($request->hasFile('image')){
+            $path = 'storage/'.$request->image;
+            if(File::exists($path)){
+                File::delete($path);
+            }
+            $file = $request->file('image');
+            $ext = $file->getClientOriginalExtension();
+            $filename = time().'.'.$ext;
+            try{
+                $file->move('storage/', $filename);
+            }catch(FileException $e){
+                return response()->json($e,500);
+            }
+        }
+        $photo->lienPhoto = Storage::url($filename);
+        $photo->codePro = $product->codePro;
+        if($product->save() && $photo->save()){
+            return new ProduitResource($product);
+        }else return response()->json("Impossible d'enregistrer ce produit", 400);
+        
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Produit $produit)
-    {
-        //
+    public function update(){
+        
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateProduitRequest $request, Produit $produit)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Produit $produit)
-    {
-        //
-    }
-}
+}   
+ 
