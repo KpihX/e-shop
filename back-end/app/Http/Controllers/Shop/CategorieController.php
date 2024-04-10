@@ -65,12 +65,16 @@
 //     }
 // }
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Shop;
 
-use App\Http\Requests\StoreUpdateCategorieRequest;
-use App\Http\Resources\CategorieResource;
-use App\Models\Categorie;
+use App\Http\Requests\Shop\StoreCategorieRequest;
+use App\Http\Requests\Shop\UpdateCategorieRequest;
+use App\Http\Resources\Shop\CategorieResource;
+use App\Models\Shop\Categorie;
 use Illuminate\Http\Response;
+use App\Http\Controllers\Controller;
+
+// Contrôleur pour les catégories de produits
 
 class CategorieController extends Controller
 {
@@ -82,12 +86,12 @@ class CategorieController extends Controller
     }
 
     // Enregistrer une nouvelle catégorie
-    public function store(StoreUpdateCategorieRequest $request)
+    public function store(StoreCategorieRequest $request)
     {
         // Vérifier si la catégorie existe déjà
         $existingCategorie = Categorie::where('nomCat', $request->nomCat)->first();
         if ($existingCategorie) {
-            return response()->json(['message' => 'Category already exists.'], Response::HTTP_CONFLICT);
+            return response()->json(['message' => 'La catégorie existe déjà!'], Response::HTTP_CONFLICT);
         }
 
         $categorie = Categorie::create($request->validated());
@@ -99,21 +103,30 @@ class CategorieController extends Controller
     // Afficher une catégorie spécifique
     public function show($id)
     {
-        $categorie = Categorie::findOrFail($id);
+        $categorie = Categorie::find($id);
+
+        if (!$categorie) {
+            return response()->json(['message' => 'Catégorie non trouvée!'], 404);
+        }
+
         return new CategorieResource($categorie);
     }
 
     // Mettre à jour une catégorie
-    public function update(StoreUpdateCategorieRequest $request, $id)
+    public function update(UpdateCategorieRequest $request, $id)
     {
-        $categorie = Categorie::findOrFail($id);
+        $categorie = Categorie::find($id);
+
+        if (!$categorie) {
+            return response()->json(['message' => 'Catégorie non trouvée'], 404);
+        }
 
         // Vérifier si le nom de la catégorie est déjà utilisé par une autre catégorie
         $existingCategorie = Categorie::where('nomCat', $request->nomCat)
                                        ->where('idCat', '!=', $id)
                                        ->first();
         if ($existingCategorie) {
-            return response()->json(['message' => 'Category name already in use.'], Response::HTTP_CONFLICT);
+            return response()->json(['message' => 'Le nom de la catégorie existe déjà.'], Response::HTTP_CONFLICT);
         }
 
         $categorie->update($request->validated());
@@ -123,7 +136,13 @@ class CategorieController extends Controller
     // Supprimer une catégorie
     public function destroy($id)
     {
-        $categorie = Categorie::findOrFail($id);
+        $categorie = Categorie::find($id);
+
+        if (!$categorie) {
+            return response()->json(['message' => 'Catégorie non trouvée'], 404);
+        }
+
+
         $categorie->delete();
         return response()->json(null, Response::HTTP_NO_CONTENT);
     }

@@ -3,11 +3,11 @@ import { StyledLink } from '../utils/style/Atoms'
 import { ShoppingCart } from "phosphor-react";
 import { useEffect } from "react";
 import axiosClient from "../axiosClient";
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 import { useTheme } from '../utils/hooks'
 
 import logo from '../assets/logo2.png'
-import colors from '../utils/style/colors';
+// import colors from '../utils/style/colors';
 import { useUserContext } from "../utils/context/UserContext";
 // import LightLogo from '../assets/light-logo.png'
 // import DarkLogo from '../assets/dark-logo.png'
