@@ -16,11 +16,53 @@ class ProduitController extends Controller
 {
     public function index(Request $request)
     {
-        // Paginer les produits, 10 par page
+        // Récupérez l'identifiant de la catégorie à partir de la requête, s'il est présent
+        $categoryId = $request->query('category');
+        
+    
+        // Assurez-vous que la requête contient 'page'
         $page = $request->query('page', 1);
-        $produits = Produit::paginate(10, ['*'], 'page', $page);
+
+        $searchItem = $request->query('searchItem');
+        // error_log("searchItem = " . $searchItem);
+    
+        // Créez une requête de base pour les produits
+        $query = Produit::query();
+    
+        // Si un identifiant de catégorie est fourni, filtrez les produits par cette catégorie
+        if ($categoryId && $categoryId != -1) {
+            $query->where('idCategorie', $categoryId);
+        }
+
+        if ($searchItem) {
+            $query->where('nomPro', 'like', '%' . $searchItem . '%');
+        }
+    
+        // Paginez les produits, 10 par page
+        $produits = $query->paginate(10, ['*'], 'page', $page);
+    
         return ProduitResource::collection($produits);
     }
+
+    // public function search (Request $request) {
+    //     $searchItem = $request->query('searchItem');
+
+    //     $categoryId = $request->query('category');
+
+    //     $query = Produit::query();
+
+    //     if ($categoryId && $categoryId != -1) {
+    //         $query->where('idCategorie', $categoryId);
+    //     }
+
+    //     if ($searchItem) {
+    //         $query->where('nomPro', 'like', '%' . $searchItem . '%');
+    //     }
+
+    //     $products = $query->paginate(10);
+
+    //     return ProduitResource::collection($products);
+    // }
 
     public function store(StoreProduitRequest $request)
     {

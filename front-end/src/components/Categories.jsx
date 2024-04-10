@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import axiosClient from '../axiosClient';
 import { useTheme } from '../utils/hooks';
 
 const CategoryList = styled.nav`
+  /* position: fixed;
+  top: 100px;
+  left: 10px; */
   height: 100%;
   overflow-y: scroll;
   background-color: #7d5ba6; // Couleur violette pour le fond
@@ -27,7 +29,7 @@ const SearchBar = styled.input`
   border-radius: 5px; // Bordures arrondies
 `;
 
-const Category = ({ categories, setSelectedCategory }) => {
+const Category = ({ categories, setSelectedCategory, setCurrentPage }) => {
   const { theme } = useTheme()
   const [searchValue, setSearchValue] = useState('')
 
@@ -56,14 +58,20 @@ const Category = ({ categories, setSelectedCategory }) => {
         onChange={(e) => setSearchValue(e.target.value)}
       />
       {searchValue === '' && (
-        <CategoryItem key={-1} theme={theme} onClick={() => setSelectedCategory(-1)}>
+        <CategoryItem key={-1} theme={theme} onClick={() => {
+          setSelectedCategory(-1)
+          setCurrentPage(0)
+        }}>
           Tous
         </CategoryItem>
       )}
       {categories
         .filter(({nomCat}) => (nomCat.toLowerCase().includes(searchValue.toLowerCase())))
         .map(({ idCat, nomCat }) => (
-          <CategoryItem key={idCat} theme={theme} onClick={() => setSelectedCategory(idCat)}>
+          <CategoryItem key={idCat} theme={theme} onClick={() => {
+            setSelectedCategory(idCat)
+            setCurrentPage(0)
+          }}>
             {nomCat}
           </CategoryItem>
         ))}

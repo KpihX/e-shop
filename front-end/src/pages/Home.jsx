@@ -10,6 +10,8 @@ import Product from "../components/Product"
 import Header from "../components/Header"
 import Categories from '../components/Categories'
 import Footer from '../components/Footer'
+import { Loader } from '../utils/style/Atoms'
+
 
 const HomeWrapper = styled.div`
   display: flex;
@@ -35,6 +37,7 @@ const StyledTitle = styled.h2`
 `
 
 const ProductsWrapper = styled.div`
+  left: 100px;
   width: 100%;
   height: auto;
   display: grid;
@@ -49,7 +52,12 @@ const SearchBar = styled.input`
   
   border: 2px solid #5e437b; // Bordure violette
   border-radius: 5px; // Bordures arrondies
-`;
+`
+
+const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+`
 
 function Home() {
   const { theme } = useTheme()
@@ -59,16 +67,19 @@ function Home() {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [allProducts, setAllProducts] = useState(false);
+  const [isLoading, setLoading] = useState(false)
   // const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true)
     axiosClient.get('/shop/categories')
       .then(({data}) => {
-        console.log(data.data)
         setCategories(data.data)
+        setLoading(false)
       })
       .catch(error => {
         console.error("Erreur lors de la récupération des catégories:", error);
+        setLoading(false)
       });
   }, []);
 
@@ -84,23 +95,56 @@ function Home() {
   // }, []);
 
   useEffect(() => {
-    loadProducts(currentPage);
-  }, [currentPage]);
+    // console.log(currentPage)
+    // console.log(selectedCategory)
+    loadProducts(currentPage)
+    console.log(searchValue)
+  }, [currentPage, searchValue]);
+
+  // useEffect(() => {
+  //   // console.log(currentPage)
+  //   // console.log(selectedCategory)
+  //   handleSearch(searchValue)
+  // }, [searchValue]);
+
 
   const loadProducts = (page) => {
-    axiosClient.get(`/shop/products?page=${page}`)
+    if (currentPage === 0) {
+      setCurrentPage(1)
+      return
+    }
+    setLoading(true)
+    axiosClient.get(`/shop/products?page=${page}&category=${selectedCategory}&searchItem=${searchValue}`)
       .then(response => {
         const data = response.data.data
-        console.log(data)
-        if (data.length == 0) {
+        // console.log(data)
+        if (page === 1) {
+          setProducts(data)
+          setAllProducts(false)
+          // console.log(data)
+        } else {
+          setProducts(prevProducts => [...prevProducts, ...data]);
+        }
+        if (data.length == 0 || data.length < 10) {
           setAllProducts(true)
         }
-        setProducts(prevProducts => [...prevProducts, ...data]);
+        setLoading(false)
       })
       .catch(error => {
         console.error("Erreur lors de la récupération des produits:", error);
+        setLoading(false)
       });
   };
+
+  // const handleSearch = (searchValue) => {
+  //   axiosClient.get(`/shop/search?&searchItem=${searchValue}&category=${selectedCategory}`)
+  //     .then(response => {
+  //       setProducts(prevProducts => [...prevProducts, ...response.data.data]);
+  //     })
+  //     .catch(error => {
+  //       console.error("Erreur lors de la récupération des produits de recherche.", error);
+  //     });
+  // };
 
   const handleLoadMore = () => {
     setCurrentPage(prevPage => prevPage + 1);
@@ -119,29 +163,42 @@ function Home() {
         onChange={(e) => setSearchValue(e.target.value)}
       />
       <HomeWrapper theme={theme}>
-        <Categories 
-          categories={categories}
-          setSelectedCategory={setSelectedCategory}
-          selectedCategory={selectedCategory}
-          theme={theme} 
-        />
+        {false ? (
+          <LoaderWrapper>
+            <Loader theme={theme} data-testid="loader"/>
+          </LoaderWrapper>
+        ) : (
+          <Categories 
+            categories={categories}
+            setSelectedCategory={setSelectedCategory}
+            // selectedCategory={selectedCategory}
+            // currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            theme={theme} 
+          />
+        )}
+        
         <ProductsWrapper>
-          
-          {products
-            .filter(({ nomPro }) => (nomPro.toLowerCase().includes(searchValue.toLowerCase())))
-            .map(({codePro, idCategorie, nomPro, prix, image, size1, size2}) => (
-            (selectedCategory == -1 || selectedCategory == idCategorie) ? (
-              <Product 
-                key={codePro} 
-                codePro={codePro} 
-                nomPro={nomPro}
-                prix={prix}
-                image={image}
-                size1={size1}
-                size2={size2}
-              />
-            ) : null
-          ))}
+          { false ? (
+            <LoaderWrapper>
+              <Loader theme={theme} data-testid="loader"/>
+            </LoaderWrapper>
+          ) : (
+            products
+              .filter(({ nomPro }) => (nomPro.toLowerCase().includes(searchValue.toLowerCase())))
+              .map(({codePro, idCategorie, nomPro, prix, image, size1, size2}) => (
+              (selectedCategory == -1 || selectedCategory == idCategorie) ? (
+                <Product 
+                  key={codePro} 
+                  codePro={codePro} 
+                  nomPro={nomPro}
+                  prix={prix}
+                  image={image}
+                  size1={size1}
+                  size2={size2}
+                />
+              ) : null
+          )))}
           {allProducts ? <p>Plus de produits disponibles.</p> : <button onClick={handleLoadMore}>Charger plus</button>}
           <button onClick={() => window.scrollTo(0, 0)}>Revenir en haut</button>
         </ProductsWrapper>

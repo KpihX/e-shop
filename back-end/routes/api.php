@@ -40,6 +40,8 @@ Route::prefix('/shop')->group(function () {
     // Route pour obtenir les produits paginés
     Route::get('products', [ProduitController::class, 'index']);
 
+    Route::get('search', [ProduitController::class, 'search']);
+
     // Route pour charger plus de produits
     // Route::get('products/load-more', [ProduitController::class, 'loadMore']);
     // Routes pour les opérations CRUD sur les produits
