@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -16,17 +17,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->group(function() {
-    Route::get('logout',[AuthController::class,'logout']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('logout', [AuthController::class, 'logout']);
 
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
-
-    Route::apiResource('/users',UserController::class);
+    Route::apiResource('/users', UserController::class);
 });
 
+Route::post('login', [AuthController::class, 'login']);
+Route::post('register', [AuthController::class, 'register']);
 
-
-Route::post('login',[AuthController::class,'login']);
-Route::post('register',[AuthController::class,'register']);
+// This is for the home page
+Route::prefix('/shop')->group(function () {
+    Route::get('all_categories', [HomeController::class, 'getAllCategories'])->name('home.all_categories');
+    Route::get('products', [HomeController::class, 'getMoreProducts'])->name('home.more_products');
+    Route::get('search', [HomeController::class, 'searchProducts'])->name('home.search_products');
+    Route::get('categories', [HomeController::class, 'getMoreCategories'])->name('home.more_categories');
+});

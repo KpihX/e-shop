@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SearchProductRequest extends FormRequest
+class UpdateFactureRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -22,8 +22,7 @@ class SearchProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "category_id" => "nullable|integer",
-            "name" => "require|string|max:255"
+            //
         ];
     }
 }
