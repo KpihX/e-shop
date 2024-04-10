@@ -31,4 +31,5 @@ class CategorieResource extends JsonResource
             'nomCat' => $this->nomCat,
         ];
     }
+    
 }

@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class ClientCarte extends Model
 {
     use HasFactory;
+
+    protected $table = 'produit';
+    
+    protected $primaryKey = 'codePro';
 }
