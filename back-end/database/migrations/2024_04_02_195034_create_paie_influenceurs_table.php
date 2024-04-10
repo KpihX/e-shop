@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id('idPaiement');  // Use id() for auto-incrementing primary key
             $table->datetime('datePaie');
             $table->decimal('montant', 8, 2);
-            $table->unsignedBigInteger('idInf');
+            $table->unsignedInteger('idInf');
             $table->tinyInteger('validite');
             $table->text('commentaire')->collate('utf8mb4_unicode_ci');
 

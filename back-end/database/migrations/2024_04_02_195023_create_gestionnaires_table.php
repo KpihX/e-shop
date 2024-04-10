@@ -9,7 +9,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('gestionnaire', function (Blueprint $table) {
-            $table->unsignedBigInteger('idGest');  // Use id() for auto-incrementing primary key
+            $table->unsignedInteger('idGest');  // Use id() for auto-incrementing primary key
             $table->primary('idGest');  // Use id() for auto-incrementing primary key
             $table->string('nomGest', 255)->collate('utf8mb4_unicode_ci');
             $table->integer('typeGest');

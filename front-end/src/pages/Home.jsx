@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { useState, useEffect } from 'react'
 import axiosClient from '../axiosClient'
 import { useTheme } from '../utils/hooks'
-import products from "../datas/products"
+// import products from "../datas/products"
 // import categories from '../datas/categories'
 import colors from '../utils/style/colors'
 import Product from "../components/Product"
@@ -55,11 +55,14 @@ function Home() {
   const { theme } = useTheme()
   const [searchValue, setSearchValue] = useState('')
   const [selectedCategory, setSelectedCategory] = useState(-1)
-
   const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [allProducts, setAllProducts] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    axiosClient.get('/categories')
+    axiosClient.get('/shop/categories')
       .then(({data}) => {
         console.log(data.data)
         setCategories(data.data)
@@ -68,6 +71,40 @@ function Home() {
         console.error("Erreur lors de la récupération des catégories:", error);
       });
   }, []);
+
+  // useEffect(() => {
+  //   axiosClient.get('/shop/products')
+  //     .then(({data}) => {
+  //       console.log(data.data)
+  //       setProducts(data.data)
+  //     })
+  //     .catch(error => {
+  //       console.error("Erreur lors de la récupération des produits:", error);
+  //     });
+  // }, []);
+
+  useEffect(() => {
+    loadProducts(currentPage);
+  }, [currentPage]);
+
+  const loadProducts = (page) => {
+    axiosClient.get(`/shop/products?page=${page}`)
+      .then(response => {
+        const data = response.data.data
+        console.log(data)
+        if (data.length == 0) {
+          setAllProducts(true)
+        }
+        setProducts(prevProducts => [...prevProducts, ...data]);
+      })
+      .catch(error => {
+        console.error("Erreur lors de la récupération des produits:", error);
+      });
+  };
+
+  const handleLoadMore = () => {
+    setCurrentPage(prevPage => prevPage + 1);
+  };
 
   return (
     <div>
@@ -85,7 +122,7 @@ function Home() {
         <Categories 
           categories={categories}
           setSelectedCategory={setSelectedCategory}
-          // selectedCategory={selectedCategory}
+          selectedCategory={selectedCategory}
           theme={theme} 
         />
         <ProductsWrapper>
@@ -105,6 +142,8 @@ function Home() {
               />
             ) : null
           ))}
+          {allProducts ? <p>Plus de produits disponibles.</p> : <button onClick={handleLoadMore}>Charger plus</button>}
+          <button onClick={() => window.scrollTo(0, 0)}>Revenir en haut</button>
         </ProductsWrapper>
       </HomeWrapper>
       <Footer />

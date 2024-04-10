@@ -8,7 +8,7 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('fournisseur', function (Blueprint $table) {
-            $table->unsignedBigInteger('idFour');
+            $table->unsignedInteger('idFour');
 
             $table->primary('idFour');  // Use id() for auto-incrementing primary key
             $table->string('nom', 255)->collate('utf8mb4_unicode_ci');

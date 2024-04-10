@@ -15,8 +15,8 @@ return new class extends Migration
             $table->unsignedInteger('qte');
             $table->datetime('dateStock');
             $table->tinyInteger('operation');
-            $table->unsignedBigInteger('idGest');
-            $table->unsignedBigInteger('codePro')->nullable();
+            $table->unsignedInteger('idGest');
+            $table->unsignedInteger('codePro')->nullable();
 
             // $table->primary('idStock');
             $table->foreign('idGest')->references('idGest')->on('gestionnaire'); // Assuming 'gestionnaire' table exists

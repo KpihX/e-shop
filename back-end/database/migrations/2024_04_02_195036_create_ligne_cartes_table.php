@@ -12,8 +12,8 @@ return new class extends Migration
         Schema::dropIfExists('lignecarte');
         Schema::create('lignecarte', function (Blueprint $table) {
             $table->bigIncrements('id');  // Use bigIncrements() for auto-incrementing big integer primary key
-            $table->unsignedBigInteger('idFac');
-            $table->unsignedBigInteger('idCarte');
+            $table->unsignedInteger('idFac');
+            $table->unsignedInteger('idCarte');
             $table->integer('point');
             $table->datetime('dateOpera');
             $table->decimal('montantFac', 8, 2);

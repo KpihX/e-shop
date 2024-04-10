@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Shop\CategorieController;
+use App\Http\Controllers\Shop\ProduitController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -33,8 +33,19 @@ Route::post('register', [AuthController::class, 'register']);
 
 // This is for the home page
 Route::prefix('/shop')->group(function () {
-    Route::get('all_categories', [HomeController::class, 'getAllCategories'])->name('home.all_categories');
-    Route::get('products', [HomeController::class, 'getMoreProducts'])->name('home.more_products');
-    Route::get('search', [HomeController::class, 'searchProducts'])->name('home.search_products');
-    Route::get('categories', [HomeController::class, 'getMoreCategories'])->name('home.more_categories');
+    Route::get('categories', [CategorieController::class, 'index']);
+     // Routes pour les opérations CRUD sur les produits
+    //  Route::apiResource('categories', ProduitController::class);
+    
+    // Route pour obtenir les produits paginés
+    Route::get('products', [ProduitController::class, 'index']);
+
+    // Route pour charger plus de produits
+    // Route::get('products/load-more', [ProduitController::class, 'loadMore']);
+    // Routes pour les opérations CRUD sur les produits
+    // Route::apiResource('produits', ProduitController::class);
+    // Route::get('all_categories', [HomeController::class, 'getAllCategories'])->name('home.all_categories');
+    // Route::get('products', [HomeController::class, 'getMoreProducts'])->name('home.more_products');
+    // Route::get('search', [HomeController::class, 'searchProducts'])->name('home.search_products');
+    // Route::get('categories', [HomeController::class, 'getMoreCategories'])->name('home.more_categories');
 });

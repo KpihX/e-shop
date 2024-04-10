@@ -9,7 +9,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('messagerie', function (Blueprint $table) {
-            $table->unsignedBigInteger('idmsg');  // Use id() for auto-incrementing primary key
+            $table->unsignedInteger('idmsg');  // Use id() for auto-incrementing primary key
             $table->primary('idmsg');  // Use id() for auto-incrementing primary key
             $table->string('mobile', 255)->collate('utf8mb4_unicode_ci');
             $table->text('wsms')->collate('utf8mb4_unicode_ci');

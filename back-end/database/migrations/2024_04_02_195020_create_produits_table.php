@@ -9,8 +9,7 @@ return new class extends Migration {
     {
         Schema::dropIfExists('produit');
         Schema::create('produit', function (Blueprint $table) {
-            $table->unsignedBigInteger('codePro');  // Use id() for auto-incrementing primary key (assuming codePro is unique)
-            $table->primary('codePro');  // Use id() for auto-incrementing primary key (assuming codePro is unique)
+            $table->increments('codePro');  // Use id() for auto-incrementing primary key (assuming codePro is unique)
             $table->unsignedInteger('idCategorie');
             $table->string('nomPro', 255)->collate('utf8mb4_unicode_ci');
             $table->decimal('prix', 8, 0);
@@ -22,8 +21,8 @@ return new class extends Migration {
             $table->decimal('prixAchat', 8, 0);
             $table->decimal('pourcentage', 2, 2);  // Consider using a decimal for more precise percentage calculations
             $table->tinyInteger('promo');
-            $table->integer('size1');
-            $table->integer('size2');
+            $table->string('size1', 10)->collate('utf8mb4_unicode_ci');
+            $table->string('size2', 10)->collate('utf8mb4_unicode_ci');
             $table->integer('typeSize');
 
             $table->foreign('idCategorie')->references('idCat')->on('categorie'); // Assuming 'categories' table with 'id' primary key exists

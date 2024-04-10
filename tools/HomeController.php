@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SearchProductRequest;
+use App\Http\Requests\SearchProduitRequest;
 use App\Http\Resources\CategorieResource;
 use App\Http\Resources\ProduitResource;
 use App\Models\Categorie;
@@ -63,7 +63,7 @@ class HomeController extends Controller
         return $categoriesWithProducts;
     }
 
-    public function searchProducts(SearchProductRequest $request)
+    public function searchProducts(SearchProduitRequest $request)
     {
         // $data contient "name" et "category_id"
         $data = $request->validated();

@@ -1,31 +1,19 @@
 <?php
 
-// namespace App\Http\Resources;
 
-// use Illuminate\Http\Request;
-// use Illuminate\Http\Resources\Json\JsonResource;
-
-// class ProduitResource extends JsonResource
-// {
-//     /**
-//      * Transform the resource into an array.
-//      *
-//      * @return array<string, mixed>
-//      */
-//     public function toArray(Request $request): array
-//     {
-//         return parent::toArray($request);
-//     }
-// }
-
-namespace App\Http\Resources;
+namespace App\Http\Resources\Shop;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+
+// use App\Models\Shop\Photo;
 
 class ProduitResource extends JsonResource
 {
     public function toArray($request)
     {
+        // Récupérer une image aléatoire pour le produit
+        $photo = $this->photos()->inRandomOrder()->first();
+
         return [
             'codePro' => $this->codePro,
             'idCategorie' => $this->idCategorie,
@@ -33,16 +21,16 @@ class ProduitResource extends JsonResource
             'prix' => $this->prix,
             'qte' => $this->qte,
             'description' => $this->description,
-            'codeArrivage' => $this->codeArrivage,
-            'actif' => $this->actif,
-            'dateInsertion' => $this->dateInsertion,
-            'prixAchat' => $this->prixAchat,
-            'pourcentage' => $this->pourcentage,
+            // 'codeArrivage' => $this->codeArrivage,
+            // 'actif' => $this->actif,
+            // 'dateInsertion' => $this->dateInsertion->format('Y-m-d'),
+            // 'prixAchat' => $this->prixAchat,
+            // 'pourcentage' => $this->pourcentage,
             'promo' => $this->promo,
             'size1' => $this->size1,
             'size2' => $this->size2,
-            'typeSize' => $this->typeSize,
-            'images' => PhotoResource::collection($this->photos), // Assuming a relationship 'photos' exists
+            // 'typeSize' => $this->typeSize,
+            'image' => $photo ? $photo->lienPhoto : null, // Lien vers une image aléatoire du produit
         ];
     }
 }

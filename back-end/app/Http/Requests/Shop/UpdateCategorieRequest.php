@@ -8,7 +8,7 @@ class UpdateCategorieRequest extends FormRequest
 {
     public function authorize()
     {
-        return true; // Change this to false if you want to use authorization logic.
+        return true; 
     }
 
     public function rules()

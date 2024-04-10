@@ -9,7 +9,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('client_carte', function (Blueprint $table) {
-            $table->unsignedBigInteger('idCarte'); // Use id() for auto-incrementing primary key
+            $table->unsignedInteger('idCarte'); // Use id() for auto-incrementing primary key
             $table->primary('idCarte'); // Use id() for auto-incrementing primary key
             $table->string('nom', 255)->collate('utf8mb4_unicode_ci');
             $table->tinyInteger('sexe');

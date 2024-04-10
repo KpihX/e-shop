@@ -10,8 +10,8 @@ return new class extends Migration
     {
         Schema::create('lignefacture', function (Blueprint $table) {
             $table->id('idLFac');  // Use id() for auto-incrementing primary key
-            $table->unsignedBigInteger('codePro');
-            $table->unsignedBigInteger('idFac');
+            $table->unsignedInteger('codePro');
+            $table->unsignedInteger('idFac');
             $table->decimal('prix', 8, 2);
             $table->smallInteger('qte');
 
