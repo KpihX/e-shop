@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProduitRequest;
 use App\Http\Requests\UpdateProduitRequest;
+use App\Http\Resources\ProduitResource;
 use App\Models\Produit;
 
 class ProduitController extends Controller
@@ -13,14 +14,9 @@ class ProduitController extends Controller
      */
     public function index()
     {
-        $produit = Produit::all();
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
+        $products = Produit::all();
+        // Retourner les données en format JSON
+        return ProduitResource::collection($products);
     }
 
     /**
@@ -29,6 +25,12 @@ class ProduitController extends Controller
     public function store(StoreProduitRequest $request)
     {
         //
+        $request->validated();
+
+        $product = new Produit();
+        $product->codeProd = $request->get('product_id');
+        $product->nomProd = $request->get('nom');
+        $product->save();
     }
 
     /**

@@ -11,7 +11,7 @@ class StoreCategorieRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,9 @@ class StoreCategorieRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            // ces noms sont à respecter par le developpeur frontend
+            'nom' => 'required|string|max:255',
+            'category_id' => 'required|integer'
         ];
     }
 }

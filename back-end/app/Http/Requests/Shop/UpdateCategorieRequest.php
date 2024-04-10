@@ -11,7 +11,7 @@ class UpdateCategorieRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,6 +23,8 @@ class UpdateCategorieRequest extends FormRequest
     {
         return [
             //
+            'nom' => 'required|string|max:255',
+            'category_id' => 'required|integer'
         ];
     }
 }
