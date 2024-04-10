@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 const CartItemWrapper = styled.div`
 	width: 900px;
-  height: 400px;
+  height: 450px;
   display: flex;
   
   align-items: center;
@@ -84,10 +84,10 @@ function CartItem ({ codePro, nomPro, prix, quantite, image, size1, size2 }) {
             onKeyDown={handleBlurOrEnter}
           />
           <button onClick={() => addToCart(codePro, nomPro, prix, size1, size2, image, "blue")}> + </button>
-          <button onClick={() => addToCart(codePro, nomPro, prix, size1, size2, image, "blue")}> + </button>
         </CountHandler>
       </CartItemLabel>  
     </CartItemWrapper>
   )
 }
+
 export default CartItem
