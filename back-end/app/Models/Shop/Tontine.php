@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Tontine extends Model
 {
     use HasFactory;
+
+    protected $primaryKey = 'idTontine';
+
+    protected $table="tontine";
 }
