@@ -18,7 +18,7 @@
 //     }
 // }
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Shop;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 

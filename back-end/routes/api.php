@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\Shop\CategorieController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +29,17 @@ Route::middleware('auth:sanctum')->group(function() {
 });
 
 
-
 Route::post('login',[AuthController::class,'login']);
 Route::post('register',[AuthController::class,'register']);
+
+//Route pour afficher toutes les catégories
+Route::post('categories', [CategorieController::class, 'index']);
+Route::get('categories', [CategorieController::class, 'index']);
+// Route pour afficher une catégorie spécifique
+Route::get('/categories/{id}', [CategorieController::class, 'show']);
+// Route pour créer une nouvelle catégorie
+Route::post('/categories', [CategorieController::class, 'store']);
+// Route pour mettre à jour une catégorie
+Route::put('/categories/{id}', [CategorieController::class, 'update']);
+// Route pour supprimer une catégorie
+Route::delete('/categories/{id}', [CategorieController::class, 'destroy']);

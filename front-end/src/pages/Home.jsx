@@ -1,10 +1,10 @@
 import styled from 'styled-components'
 // import { StyledLink } from '../utils/style/Atoms'
-import { useState } from 'react'
-
+import { useState, useEffect } from 'react'
+import axiosClient from '../axiosClient'
 import { useTheme } from '../utils/hooks'
 import products from "../datas/products"
-import categories from '../datas/categories'
+// import categories from '../datas/categories'
 import colors from '../utils/style/colors'
 import Product from "../components/Product"
 import Header from "../components/Header"
@@ -54,8 +54,20 @@ const SearchBar = styled.input`
 function Home() {
   const { theme } = useTheme()
   const [searchValue, setSearchValue] = useState('')
-
   const [selectedCategory, setSelectedCategory] = useState(-1)
+
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    axiosClient.get('/categories')
+      .then(({data}) => {
+        console.log(data.data)
+        setCategories(data.data)
+      })
+      .catch(error => {
+        console.error("Erreur lors de la récupération des catégories:", error);
+      });
+  }, []);
 
   return (
     <div>
