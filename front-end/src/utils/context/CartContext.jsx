@@ -5,7 +5,7 @@ export const CartContext = createContext();
 export const CartContextProvider = (props) => {
   const [cartItems, updateCart] = useState([]);
 
-  function addToCart(codePro, nomPro, prix, size1, size2, image, color) {
+  function addToCart(codePro, nomPro, prix, size1, size2, size, image, color) {
     const currentItemRemoved = cartItems.find((item) => item.codePro === codePro)
     
     if (currentItemRemoved) {
@@ -14,11 +14,11 @@ export const CartContextProvider = (props) => {
         )
         updateCart([
             ...cartFilteredCurrentItem,
-            { codePro, nomPro, prix, quantite: currentItemRemoved.quantite + 1, size1, size2, image, color}
+            { codePro, nomPro, prix, quantite: currentItemRemoved.quantite + 1, size1, size2, size, image, color}
         ])
         
     } else {
-        updateCart([...cartItems, { codePro, nomPro, prix, quantite: 1, size1, size2, image, color }])
+        updateCart([...cartItems, { codePro, nomPro, prix, quantite: 1, size1, size2, size, image, color }])
     }
     // console.log(cartItems)
   } 
@@ -34,7 +34,7 @@ export const CartContextProvider = (props) => {
       } else {
         updateCart([
           ...cartFilteredCurrentItem,
-          { codePro, nomPro: currentItemRemoved.nomPro, prix: currentItemRemoved.prix, quantite: currentItemRemoved.quantite - 1, size1: currentItemRemoved.size1, size2: currentItemRemoved.size2, image: currentItemRemoved.image, color: currentItemRemoved.color }
+          { codePro, nomPro: currentItemRemoved.nomPro, prix: currentItemRemoved.prix, quantite: currentItemRemoved.quantite - 1, size1: currentItemRemoved.size1, size2: currentItemRemoved.size2, size: currentItemRemoved.size, image: currentItemRemoved.image, color: currentItemRemoved.color }
         ])
       }
     }
@@ -55,10 +55,10 @@ export const CartContextProvider = (props) => {
       )
       updateCart([
         ...cartFilteredCurrentItem,
-        { codePro, nomPro: currentItemRemoved.nomPro, prix: currentItemRemoved.prix, quantite: newQuantite, size1: currentItemRemoved.size1, size2: currentItemRemoved.size2, image: currentItemRemoved.image, color: currentItemRemoved.color }
+        { codePro, nomPro: currentItemRemoved.nomPro, prix: currentItemRemoved.prix, quantite: newQuantite, size1: currentItemRemoved.size1, size2: currentItemRemoved.size2, size: currentItemRemoved.size, image: currentItemRemoved.image, color: currentItemRemoved.color }
       ])
     } else {
-        updateCart([...cart, { codePro, nomPro, prix, quantite: newQuantite, size1, size2, image, color}])
+        updateCart([...cart, { codePro, nomPro, prix, quantite: newQuantite, size1, size2, size, image, color}])
     }
   }
 

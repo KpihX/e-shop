@@ -35,15 +35,24 @@ function CartItem ({ codePro, nomPro, prix, quantite, image, size1, size2 }) {
   const { addToCart, removeFromCart, updateCartItemCount } = useContext(CartContext)
   const [inputValue, setInputValue] = useState(quantite ? quantite.toString() : '')
   const [colorClothe, setColorClothe] = useState("")
-  const [sizeClothe, setSizeClothe] = useState("")
+  const [sizeClothe, setSizeClothe] = useState(size1)
 
   // Appelé lorsque l'utilisateur modifie la valeur de l'input
   const handleInputChange = (e) => {
-    setInputValue(e.target.value);
+    const value = e.target.value;
+    if (!isNaN(value) && parseFloat(value) > 0) {
+      setInputValue(value);
+    } else {
+      alert('Veuillez saisir un nombre positif pour la quantité!');
+    }
   }
 
   // Appelé lorsque l'utilisateur quitte l'input ou appuie sur Entrée
   const handleBlurOrEnter = (e) => {
+    if (isNaN(value) || parseFloat(value) <= 0) {
+      alert('Veuillez saisir un nombre positif pour la quantité!')
+      return
+    }
     if (e.type === 'blur' || (e.type === 'keydown' && e.key === 'Enter')) {
       const newQuantity = Number(inputValue) || 0;
       updateCartItemCount(newQuantity, codePro);
@@ -65,6 +74,7 @@ function CartItem ({ codePro, nomPro, prix, quantite, image, size1, size2 }) {
         </p>
         <p>{prix} FCFA</p>
         <span>Entrez votre couleur: </span>
+        {/* TO DO: ComboBox de couleurs à la place! */}
         <input
           type="text"
           onChange={e => setColorClothe(e.target.value)}
@@ -72,6 +82,7 @@ function CartItem ({ codePro, nomPro, prix, quantite, image, size1, size2 }) {
         <span>Entrez votre taille (compris entre {size1} et {size2}): </span>
         <input
           type="text"
+          placeholder={sizeClothe}
           onChange={e => setSizeClothe(e.target.value)}
         />
         <CountHandler>
@@ -83,7 +94,7 @@ function CartItem ({ codePro, nomPro, prix, quantite, image, size1, size2 }) {
             onBlur={handleBlurOrEnter}
             onKeyDown={handleBlurOrEnter}
           />
-          <button onClick={() => addToCart(codePro, nomPro, prix, size1, size2, image, "blue")}> + </button>
+          <button onClick={() => addToCart(codePro, nomPro, prix, size1, size2, sizeClothe, image, colorClothe)}> + </button>
         </CountHandler>
       </CartItemLabel>  
     </CartItemWrapper>

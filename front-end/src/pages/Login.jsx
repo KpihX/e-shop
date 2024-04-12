@@ -17,15 +17,16 @@ export default function Login() {
             email: emailRef.current.value,
             password: passwordRef.current.value,
         }
-        axiosClient.post("/login", payload).then(({data})=>{
+        axiosClient.post("/login", payload)
+        .then(({data})=>{
             setUser(data.user)
             setToken(data.token)
             navigate('/')
-    }).catch(err => {
-        const response = err.response;
-        if(response && response.status === 422){
-            console.log(response.data.errors);
-        }
+        }).catch(err => {
+            const response = err.response;
+            if(response && response.status === 422){
+                console.log(response.data.errors);
+            }
     });
     }
 

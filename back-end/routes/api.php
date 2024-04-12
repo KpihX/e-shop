@@ -42,7 +42,7 @@ Route::prefix('/shop')->group(function () {
 
     Route::get('search', [ProduitController::class, 'search']);
 
-    // Route pour charger plus de produits
+    // Route pour charger plus de produits0
     // Route::get('products/load-more', [ProduitController::class, 'loadMore']);
     // Routes pour les opérations CRUD sur les produits
     // Route::apiResource('produits', ProduitController::class);

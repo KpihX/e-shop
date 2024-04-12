@@ -163,7 +163,7 @@ function Home() {
         onChange={(e) => setSearchValue(e.target.value)}
       />
       <HomeWrapper theme={theme}>
-        {false ? (
+        {isLoading ? (
           <LoaderWrapper>
             <Loader theme={theme} data-testid="loader"/>
           </LoaderWrapper>

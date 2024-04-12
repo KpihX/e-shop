@@ -1,6 +1,5 @@
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import { CartContext } from "../utils/context/CartContext"
-import products from "../datas/products"
 import CartItem from "../components/CartItem"
 import { useNavigate } from "react-router-dom"
 import styled from 'styled-components'
@@ -28,18 +27,18 @@ const Checkout = styled.div`
 `
 
 function Cart() {
-  const { cartItems, getTotalCartAmount, cartItemCount, checkout } = useContext(CartContext);
+  const { cartItems, getTotalCartAmount, checkout } = useContext(CartContext)
   const totalAmount = getTotalCartAmount();
 
   const navigate = useNavigate();
 
-  // console.log(cartItems)
+  
 
   return (
     <div>
       <Header />
+      <CartInfos />
       <CartWrapper>
-        <CartInfos />
         <h1>Finalisez vos achats ici</h1>
         {cartItems.map(({codePro, nomPro, prix, quantite, image, size1, size2}) => (
           <CartItem
