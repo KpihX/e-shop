@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 use App\Http\Requests\StoreClientCarteRequest;
 =======
+=======
+>>>>>>> Stashed changes
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreLigneCarteRequest;
 >>>>>>> Stashed changes
