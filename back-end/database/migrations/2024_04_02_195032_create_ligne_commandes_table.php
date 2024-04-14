@@ -10,8 +10,8 @@ return new class extends Migration
     {
         Schema::create('lignecommande', function (Blueprint $table) {
             $table->id('idLignCom');  // Use id() for auto-incrementing primary key
-            $table->unsignedBigInteger('idCommande');
-            $table->unsignedBigInteger('codePro');
+            $table->unsignedInteger('idCommande');
+            $table->unsignedInteger('codePro');
             $table->integer('quantite');
             $table->string('taille', 255)->collate('utf8mb4_unicode_ci')->nullable();
             $table->string('couleur', 255)->collate('utf8mb4_unicode_ci')->nullable();

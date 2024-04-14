@@ -1,87 +1,84 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Shop;
 
-use App\Models\Categorie;
-use Illuminate\Http\Request;
-use App\Http\Resources\CategorieResource;
-use Exception;
+use App\Http\Requests\Shop\StoreCategorieRequest;
+use App\Http\Requests\Shop\UpdateCategorieRequest;
+use App\Http\Resources\Shop\CategorieResource;
+use App\Models\Shop\Categorie;
+use Illuminate\Http\Response;
+use App\Http\Controllers\Controller;
+
+// Contrôleur pour les catégories de produits
 
 class CategorieController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Afficher la liste des catégories
     public function index()
     {
-        // Récupérer toutes les catégories de la base de données
         $categories = Categorie::all();
-    
-        // Retourner les données en format JSON
         return CategorieResource::collection($categories);
     }
-    
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    // Enregistrer une nouvelle catégorie
+    public function store(StoreCategorieRequest $request)
     {
-        try{
-            $validated = $request->validate([
-                'name' =>'required|unique:Categorie,nomCat',
-            ]);
-            $categorie = new Categorie();
-            $categorie->name = $request->name;
-            $categorie->save();
-            return response()->json('Catégorie ajoute avec succes', 201);
-        }catch(Exception $e){
-            return response()->json($e,500);
+        // Vérifier si la catégorie existe déjà
+        $existingCategorie = Categorie::where('nomCat', $request->nomCat)->first();
+        if ($existingCategorie) {
+            return response()->json(['message' => 'La catégorie existe déjà!'], Response::HTTP_CONFLICT);
         }
+
+        $categorie = Categorie::create($request->validated());
+        return (new CategorieResource($categorie))
+            ->response()
+            ->setStatusCode(Response::HTTP_CREATED);
     }
 
-    /**
-     * returns a JSON of the specified resource.
-     */
-    public function show($idCat)
+    // Afficher une catégorie spécifique
+    public function show($id)
     {
-        $category = Categorie::find($idCat);
-        if($category){
-            return CategorieResource::make($category);
-        }else return response()->json('Catégorie non trouvée', 404);
+        $categorie = Categorie::find($id);
+
+        if (!$categorie) {
+            return response()->json(['message' => 'Catégorie non trouvée!'], 404);
+        }
+
+        return new CategorieResource($categorie);
     }
-    
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $idCat)
-    {   
-        try{
-            $validated = $request->validate([
-                'name' =>'required|unique:Categorie,nomCat',
-            ]);
-            $category = Categorie::where('idCat',$idCat)->update(['nomCat'=>$request->name]);
-            return response()->json("Catégorie mise à jour avec succes", 201);
-        }catch(Exception $e){
-            return response()->json($e,500);
+
+    // Mettre à jour une catégorie
+    public function update(UpdateCategorieRequest $request, $id)
+    {
+        $categorie = Categorie::find($id);
+
+        if (!$categorie) {
+            return response()->json(['message' => 'Catégorie non trouvée'], 404);
+        }
+
+        // Vérifier si le nom de la catégorie est déjà utilisé par une autre catégorie
+        $existingCategorie = Categorie::where('nomCat', $request->nomCat)
+                                       ->where('idCat', '!=', $id)
+                                       ->first();
+        if ($existingCategorie) {
+            return response()->json(['message' => 'Le nom de la catégorie existe déjà.'], Response::HTTP_CONFLICT);
+        }
+
+        $categorie->update($request->validated());
+        return new CategorieResource($categorie);
+    }
+
+    // Supprimer une catégorie
+    public function destroy($id)
+    {
+        $categorie = Categorie::find($id);
+
+        if (!$categorie) {
+            return response()->json(['message' => 'Catégorie non trouvée'], 404);
         }
 
 
-    }
-    
-
-    /**
-     * Remove the categorie resource from storage.
-     */
-    public function destroy($idCat)
-    {   
-        try{
-            $category = Categorie::find($idCat);
-            if($category){
-                $category->delete();
-            }else return response()->json('Catégorie non trouvée');
-        }catch(Exception $e){
-            return response()->json($e);
-        }
+        $categorie->delete();
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }

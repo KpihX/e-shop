@@ -42,21 +42,20 @@ const AddToCartButton = styled.button`
   
 `
 
-function Product(props) {
-  const { id, name, price, image } = props.data;
+function Product({ codePro, nomPro, prix, image, size1, size2 }) {
   const { theme } = useTheme()
-  const { cartItems, addToCart } = useContext(CartContext);
-  const cartItemCount = cartItems[id];
+  const { cartItems, addToCart, cartItemCount } = useContext(CartContext);
+  const cartItemCountValue = cartItemCount(codePro)
 
   return (
     <ProductWrapper theme={theme} onClick={() => null}>
       <ProductLabel theme={theme}>
-        <span>Nom : {name}</span>
-        <span>Price : {price}</span>
+        <span>Nom: {nomPro}</span>
+        <span>Prix: {prix}</span>
       </ProductLabel>
-      <ProductImage src={image} alt={name} />
-      <AddToCartButton className="addToCartBttn" onClick={() => addToCart(id)}>
-        Ajouter au panier {cartItemCount > 0 && <> ({cartItemCount})</>}
+      <ProductImage src={image} alt={nomPro} />
+      <AddToCartButton onClick={() => addToCart(codePro, nomPro, prix, size1, size2, size1, image, "")}>
+        Ajouter au panier {cartItemCountValue != 0 && <> ({cartItemCountValue})</>}
       </AddToCartButton>
     </ProductWrapper>
   )

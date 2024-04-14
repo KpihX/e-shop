@@ -1,84 +1,89 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Shop;
 
-use App\Http\Requests\StoreProduitRequest;
-use App\Http\Requests\UpdateProduitRequest;
-use App\Http\Resources\ProduitResource;
-use App\Models\Photo;
-use App\Models\Produit;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
-use Psy\Readline\Hoa\FileException;
+use App\Http\Resources\Shop\ProduitResource;
+use App\Http\Requests\Shop\StoreProduitRequest;
+use App\Http\Requests\Shop\UpdateProduitRequest;
+use Illuminate\Http\Request;
+use App\Models\Shop\Produit;
+use Illuminate\Http\Response;
+use App\Http\Controllers\Controller;
+
+// Définition de la classe ProduitController
 
 class ProduitController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Produit::paginate(10);
-        // Retourner les données en format JSON
-        if($products){
-            return ProduitResource::collection($products);
-        }else return response()->json("Pas de Produit");
+        // Récupérez l'identifiant de la catégorie à partir de la requête, s'il est présent
+        $categoryId = $request->query('category');
+        
+    
+        // Assurez-vous que la requête contient 'page'
+        $page = $request->query('page', 1);
+
+        $searchItem = $request->query('searchItem');
+        // error_log("searchItem = " . $searchItem);
+    
+        // Créez une requête de base pour les produits
+        $query = Produit::query();
+    
+        // Si un identifiant de catégorie est fourni, filtrez les produits par cette catégorie
+        if ($categoryId && $categoryId != -1) {
+            $query->where('idCategorie', $categoryId);
+        }
+
+        if ($searchItem) {
+            $query->where('nomPro', 'like', '%' . $searchItem . '%');
+        }
+    
+        // Paginez les produits, 10 par page
+        $produits = $query->paginate(10, ['*'], 'page', $page);
+    
+        return ProduitResource::collection($produits);
     }
 
-    public function show($codePro){
-        
-        $product = Produit::find($codePro);
-        if($product){
-            return new ProduitResource($product);
-        }else return response()->json("Produit non trouvé");
-    }
-    public function store (StoreProduitRequest $request){
+    // public function search (Request $request) {
+    //     $searchItem = $request->query('searchItem');
 
-        if(!$request->validated()){
-            return response()->json("Impossible d'enregistrer ce produit", 400);
-        }
-        $product=new Produit();
-        $photo = new Photo();
-        $product->fill([
-            'nomProd' => $request->nomProd,
-            'prix' => $request->prix,
-            'codeCat' => $request->codeCat,
-            'idCategorie' => $request->idCategorie,
-            'qte' => $request->qte,
-            'description' => $request->description,
-            'codeArrivage' => $request->codeArrivage,
-            'actif' => $request->actif,
-            'dateInsertion' => $request->dateInsertion,
-            'prixAchat' => $request->prixAchat,
-            'pourcentage' => $request->pourcentage,
-            'promo' => $request->promo,
-            'size1' => $request->size1,
-            'size2' => $request->size2,
-            'typeSize' => $request->typeSize,
-        ]);
-        if($request->hasFile('image')){
-            $path = 'storage/'.$request->image;
-            if(File::exists($path)){
-                File::delete($path);
-            }
-            $file = $request->file('image');
-            $ext = $file->getClientOriginalExtension();
-            $filename = time().'.'.$ext;
-            try{
-                $file->move('storage/', $filename);
-            }catch(FileException $e){
-                return response()->json($e,500);
-            }
-        }
-        $photo->lienPhoto = Storage::url($filename);
-        $photo->codePro = $product->codePro;
-        if($product->save() && $photo->save()){
-            return new ProduitResource($product);
-        }else return response()->json("Impossible d'enregistrer ce produit", 400);
-        
+    //     $categoryId = $request->query('category');
+
+    //     $query = Produit::query();
+
+    //     if ($categoryId && $categoryId != -1) {
+    //         $query->where('idCategorie', $categoryId);
+    //     }
+
+    //     if ($searchItem) {
+    //         $query->where('nomPro', 'like', '%' . $searchItem . '%');
+    //     }
+
+    //     $products = $query->paginate(10);
+
+    //     return ProduitResource::collection($products);
+    // }
+
+    public function store(StoreProduitRequest $request)
+    {
+        $produit = Produit::create($request->validated());
+        return new ProduitResource($produit);
     }
-    public function update(){
-        
+
+    public function show(Produit $produit)
+    {
+        return new ProduitResource($produit);
     }
-}   
- 
+
+    public function update(UpdateProduitRequest $request, Produit $produit)
+    {
+        $produit->update($request->validated());
+        return new ProduitResource($produit);
+    }
+
+    public function destroy(Produit $produit)
+    {
+        $produit->delete();
+        return response()->json(null, 204);
+    }
+}

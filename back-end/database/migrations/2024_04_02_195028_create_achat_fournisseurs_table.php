@@ -19,8 +19,8 @@ return new class extends Migration {
             $table->decimal('montantCargo', 8, 2);
             $table->decimal('totalKg', 8, 2);
             $table->decimal('montantGlobal', 8, 2);
-            $table->unsignedBigInteger('idFour');
-            $table->unsignedBigInteger('idCargo');
+            $table->unsignedInteger('idFour');
+            $table->unsignedInteger('idCargo');
 
             $table->foreign('idFour')->references('idFour')->on('fournisseur');
             $table->timestamps();

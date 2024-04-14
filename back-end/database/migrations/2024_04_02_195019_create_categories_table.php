@@ -9,10 +9,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('categorie', function (Blueprint $table) {
-            $table->unsignedInteger('idCat');
+            $table->increments('idCat');
             $table->string('nomCat', 255)->collate('utf8mb4_unicode_ci');
 
-            $table->primary('idCat');
+            // $table->primary('idCat');
         });
     }
 

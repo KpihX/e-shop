@@ -1,22 +1,33 @@
 import styled from 'styled-components'
 import { StyledLink } from '../utils/style/Atoms'
-// import LightLogo from '../assets/light-logo.png'
-// import DarkLogo from '../assets/dark-logo.png'
 import { ShoppingCart } from "phosphor-react";
 import { useEffect } from "react";
 import axiosClient from "../axiosClient";
-import { Link } from 'react-router-dom'
-
+// import { Link } from 'react-router-dom'
 import { useTheme } from '../utils/hooks'
+
+import logo from '../assets/logo2.png'
+// import colors from '../utils/style/colors';
 import { useUserContext } from "../utils/context/UserContext";
+// import LightLogo from '../assets/light-logo.png'
+// import DarkLogo from '../assets/dark-logo.png'
 
 
-// const HomeLogo = styled.img`
-//   height: 70px;
-// `
+const HomeLogo = styled.img`
+  height: 70px;
+`
 
 const NavContainer = styled.nav`
-  padding: 30px;
+  padding: 10px;
+  width: 100%;
+  display: flex;
+  background-color: #eeeef3;
+  justify-content: space-between;
+  align-items: center;
+`
+
+const TitleContainer = styled.div`
+  padding: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -28,6 +39,10 @@ const LogoutButton = styled.a`
   color: #212121;
   transition: all 0.3s;
   border-radius: 6px;
+`
+
+const Logo = styled.img`
+  height: 70px;
 `
 
 
@@ -53,16 +68,23 @@ function Header() {
 
   return (
     <NavContainer>
-      <Link to="/">
+      <TitleContainer>
         {/* <HomeLogo src={theme === 'light' ? DarkLogo : LightLogo} alt='e-shop'/> */}
-				e-shop
-      </Link>
-      <StyledLink $theme={theme} to="/">
-        Accueil
-      </StyledLink>
-      <StyledLink to="/cart" $isFullLink>
-        <ShoppingCart size={32} />
-      </StyledLink>
+				<StyledLink to="/">
+          <Logo src={logo} alt="e-shop" />
+        </StyledLink>
+        {/* <StyledLink to="/" $isFullLink>
+          E-Shop
+        </StyledLink> */}
+      </TitleContainer>
+      <div>
+        <StyledLink to="/" $isFullLink>{/* <StyledLink $theme={theme} to="/"> */}
+          Accueil
+        </StyledLink>
+        <StyledLink to="/cart" $isFullLink>
+          <ShoppingCart size={25} />
+        </StyledLink>
+      </div>
 			{token ? (
         <div>
           {user.name}

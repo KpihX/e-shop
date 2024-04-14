@@ -1,10 +1,10 @@
-import { useContext } from "react"
+import { useContext, useState, useEffect } from "react"
 import { CartContext } from "../utils/context/CartContext"
 import styled from 'styled-components'
 
 const CartItemWrapper = styled.div`
-	width: 700px;
-  height: 300px;
+	width: 900px;
+  height: 450px;
   display: flex;
   
   align-items: center;
@@ -25,35 +25,80 @@ const CountHandler = styled.div`
 `
 
 const ProductImage = styled.img`
-  height: 150px;
-  width: 400px;
+  height: 100px;
+  width: 200px;
   align-self: center;
   border-radius: 50%;
 `
 
-function CartItem (props) {
-  const { id, name, price, image } = props.data;
-  const { cartItems, addToCart, removeFromCart, updateCartItemCount } = useContext(CartContext);
+function CartItem ({ codePro, nomPro, prix, quantite, image, size1, size2 }) {
+  const { addToCart, removeFromCart, updateCartItemCount } = useContext(CartContext)
+  const [inputValue, setInputValue] = useState(quantite ? quantite.toString() : '')
+  const [colorClothe, setColorClothe] = useState("")
+  const [sizeClothe, setSizeClothe] = useState(size1)
+
+  // Appelé lorsque l'utilisateur modifie la valeur de l'input
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    if (!isNaN(value) && parseFloat(value) > 0) {
+      setInputValue(value);
+    } else {
+      alert('Veuillez saisir un nombre positif pour la quantité!');
+    }
+  }
+
+  // Appelé lorsque l'utilisateur quitte l'input ou appuie sur Entrée
+  const handleBlurOrEnter = (e) => {
+    if (isNaN(value) || parseFloat(value) <= 0) {
+      alert('Veuillez saisir un nombre positif pour la quantité!')
+      return
+    }
+    if (e.type === 'blur' || (e.type === 'keydown' && e.key === 'Enter')) {
+      const newQuantity = Number(inputValue) || 0;
+      updateCartItemCount(newQuantity, codePro);
+      setInputValue(newQuantity.toString()); // Assurez-vous que la valeur est une chaîne pour l'attribut value de l'input
+    }
+  };
+
+  useEffect(() => {
+    // Assurez-vous que l'inputValue est mis à jour si la quantité externe change
+    setInputValue(quantite ? quantite.toString() : '');
+  }, [quantite]);
 
   return (
     <CartItemWrapper>
-      <ProductImage src={image} alt={name}/>
+      <ProductImage src={image} alt={nomPro}/>
       <CartItemLabel>
         <p>
-          <b>nom: {name}</b>
+          <b>{nomPro}</b>
         </p>
-        <p> prix: {price} </p>
+        <p>{prix} FCFA</p>
+        <span>Entrez votre couleur: </span>
+        {/* TO DO: ComboBox de couleurs à la place! */}
+        <input
+          type="text"
+          onChange={e => setColorClothe(e.target.value)}
+        />
+        <span>Entrez votre taille (compris entre {size1} et {size2}): </span>
+        <input
+          type="text"
+          placeholder={sizeClothe}
+          onChange={e => setSizeClothe(e.target.value)}
+        />
         <CountHandler>
-          <button onClick={() => removeFromCart(id)}> - </button>
+          <button onClick={() => removeFromCart(codePro)}> - </button>
           <input
-            value={cartItems[id]}
-            onChange={(e) => updateCartItemCount(Number(e.target.value), id)}
+            type="text"
+            value={inputValue}
+            onChange={handleInputChange}
+            onBlur={handleBlurOrEnter}
+            onKeyDown={handleBlurOrEnter}
           />
-          <button onClick={() => addToCart(id)}> + </button>
+          <button onClick={() => addToCart(codePro, nomPro, prix, size1, size2, sizeClothe, image, colorClothe)}> + </button>
         </CountHandler>
       </CartItemLabel>  
     </CartItemWrapper>
-  );
-};
+  )
+}
 
 export default CartItem

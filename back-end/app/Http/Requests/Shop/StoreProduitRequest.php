@@ -1,43 +1,33 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Shop;
 
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreProduitRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
+    public function authorize()
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
-    public function rules(): array
+    public function rules()
     {
         return [
-            'nomProd' => 'required|string',
+            'idCategorie' => 'required|exists:categories,idCat',
+            'nomPro' => 'required|string|max:255',
             'prix' => 'required|numeric',
-            'codeCat' => 'required|string',
-            'idCategorie' => 'required|integer',
-            'qte' => 'required|integer',
-            'description' => 'nullable|string',
-            'codeArrivage' => 'required|string',
+            'qte' => 'required|integer|min:0',
+            'description' => 'required|string',
+            'codeArrivage' => 'required|string|max:255',
             'actif' => 'required|boolean',
             'dateInsertion' => 'required|date',
             'prixAchat' => 'required|numeric',
-            'pourcentage' => 'nullable|numeric',
-            'promo' => 'nullable|boolean',
-            'size1' => 'nullable|string',
-            'size2' => 'nullable|string',
-            'typeSize' => 'nullable|string',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'pourcentage' => 'required|numeric|between:0,99.99',
+            'promo' => 'required|boolean',
+            'size1' => 'required|integer',
+            'size2' => 'required|integer',
+            'typeSize' => 'required|integer',
         ];
     }
 }

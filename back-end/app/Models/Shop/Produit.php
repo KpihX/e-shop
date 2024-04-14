@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Shop;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,13 +10,13 @@ class Produit extends Model
     use HasFactory;
   
     protected $table = 'produit';
-    
     protected $primaryKey = 'codePro';
+    public $incrementing = true;
+    protected $keyType = 'int';
     protected $fillable = [
-        'nomProd',
-        'prix',
-        'codeCat',
         'idCategorie',
+        'nomPro',
+        'prix',
         'qte',
         'description',
         'codeArrivage',
@@ -29,10 +29,15 @@ class Produit extends Model
         'size2',
         'typeSize'
     ];
-    public function category(){
-        return $this->belongsTo(Categorie::class, 'idCategorie');
+    public $timestamps = false;
+
+    public function categorie()
+    {
+        return $this->belongsTo(Categorie::class, 'idCategorie', 'idCat');
     }
-    public function photos(){
-        return $this->hasMany(Photo::class, 'codePro');
+
+    public function photos()
+    {
+        return $this->hasMany(Photo::class, 'codePro', 'codePro');
     }
 }

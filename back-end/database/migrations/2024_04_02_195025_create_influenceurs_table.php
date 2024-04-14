@@ -9,7 +9,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('influenceur', function (Blueprint $table) {
-            $table->unsignedBigInteger('idInf');  // Use id() for auto-incrementing primary key
+            $table->unsignedInteger('idInf');  // Use id() for auto-incrementing primary key
             $table->primary('idInf');
             $table->string('nom', 255)->collate('utf8mb4_unicode_ci');
             $table->string('mobile', 255)->collate('utf8mb4_unicode_ci');

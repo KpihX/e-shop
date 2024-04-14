@@ -24,7 +24,8 @@ export const Loader = styled.div`
 
 export const StyledLink = styled(Link)`
 	padding: 10px 15px;
-	color: ${({ $theme }) => ($theme === 'light' ? '#8186a0' : '#ffffff')};
+	color: ${colors.primary};
+	
 	text-decoration: none;
 	font-size: 18px;
 	text-align: center;

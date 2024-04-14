@@ -1,26 +1,15 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-use App\Http\Controllers\CategorieController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\UserController;
-=======
-=======
->>>>>>> Stashed changes
 use App\Http\Controllers\LigneCarteController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Shop\CategorieController;
 use App\Http\Controllers\Shop\CommandeController;
 use App\Http\Controllers\Shop\ProduitController;
 use App\Http\Controllers\Shop\VilleController;
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -45,31 +34,8 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
 
-// This is for the e-shop interface
+// This is for the home page
 Route::prefix('/shop')->group(function () {
-<<<<<<< Updated upstream
-
-    //This is for the home
-    Route::get('all_categories', [HomeController::class, 'getAllCategories'])->name('home.all_categories');
-    Route::get('products/', [HomeController::class, 'getMoreProducts'])->name('home.more_products');
-    Route::get('search', [HomeController::class, 'searchProducts'])->name('home.search_products');
-    Route::get('categories', [HomeController::class, 'getMoreCategories'])->name('home.more_categories');
-});
-
-//This for the admin
-
-//Category CRUD
-Route::controller(CategorieController::class)->group(function(){
-
-Route::get('index','index');
-Route::get('show/{id_cat}','show');
-Route::post('store','store');
-Route::post('update/{id_cat}','update');
-Route::delete('destroy/{id_cat}','destroy');
-
-});
-
-=======
     Route::get('categories', [CategorieController::class, 'index']);
      // Routes pour les opérations CRUD sur les produits
     //  Route::apiResource('categories', ProduitController::class);
@@ -103,9 +69,4 @@ Route::delete('destroy/{id_cat}','destroy');
         
     });
     
-<<<<<<< Updated upstream
 });
->>>>>>> Stashed changes
-=======
-});
->>>>>>> Stashed changes

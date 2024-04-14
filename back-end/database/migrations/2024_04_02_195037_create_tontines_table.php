@@ -12,9 +12,9 @@ return new class extends Migration {
             $table->datetime('dateCotisation');
             $table->decimal('montant', 8, 2);
             $table->text('commentaire')->nullable()->collate('utf8mb4_unicode_ci');  // Allow null values for commentaire
-            $table->unsignedBigInteger('idGest');
+            $table->unsignedInteger('idGest');
             $table->tinyInteger('validite');
-            $table->unsignedBigInteger('idCarte');
+            $table->unsignedInteger('idCarte');
             $table->tinyInteger('action');
 
             // $table->primary('idTontine');

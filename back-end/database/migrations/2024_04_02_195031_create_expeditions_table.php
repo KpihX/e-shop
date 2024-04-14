@@ -12,7 +12,7 @@ return new class extends Migration
         Schema::dropIfExists('expedition');
         Schema::create('expedition', function (Blueprint $table) {
             $table->id('idExp');
-            $table->unsignedBigInteger('idVille');
+            $table->unsignedInteger('idVille');
             $table->string('transporteur', 255)->collate('utf8mb4_unicode_ci');
             $table->string('prix', 255)->collate('utf8mb4_unicode_ci');
             $table->string('mobile1', 255)->collate('utf8mb4_unicode_ci')->nullable();

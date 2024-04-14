@@ -1,10 +1,11 @@
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import { CartContext } from "../utils/context/CartContext"
-import { products } from "../datas/products"
 import CartItem from "../components/CartItem"
 import { useNavigate } from "react-router-dom"
 import styled from 'styled-components'
+
 import Header from "../components/Header"
+import CartInfos from "../components/CartInfos"
 
 
 const CartWrapper = styled.div`
@@ -26,28 +27,38 @@ const Checkout = styled.div`
 `
 
 function Cart() {
-  const { cartItems, getTotalCartAmount, checkout } = useContext(CartContext);
+  const { cartItems, getTotalCartAmount, checkout } = useContext(CartContext)
   const totalAmount = getTotalCartAmount();
 
   const navigate = useNavigate();
 
+  
+
   return (
     <div>
       <Header />
+      <CartInfos />
       <CartWrapper>
-        <h1>Your Cart Items : Here is presente all what you chouse to buy</h1>
-        {products.map((product) => {
-          if (cartItems[product.id] !== 0) {
-            return <CartItem data={product} />;
-          }
-        })}
+        <h1>Finalisez vos achats ici</h1>
+        {cartItems.map(({codePro, nomPro, prix, quantite, image, size1, size2}) => (
+          <CartItem
+            key={codePro} 
+            codePro={codePro} 
+            nomPro={nomPro}
+            prix={prix}
+            quantite={quantite}
+            size1={size1}
+            size2={size2}
+            image={image}
+          />
+        ))}
         {totalAmount > 0 ? (
           <Checkout>
             <p> sous total: {totalAmount} </p>
             <button onClick={() => navigate("/")}> Continue Shopping </button>
             <button onClick={() => {
                                     checkout();
-                                    navigate("/checkout");
+                                    navigate("/");
                                   }}>
             {" "} Annuler {" "}
             </button>

@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('commande', function (Blueprint $table) {
 
-            $table->unsignedBigInteger('idCommande'); // Use id() for auto-incrementing primary key
+            $table->unsignedInteger('idCommande'); // Use id() for auto-incrementing primary key
             $table->primary('idCommande'); // Use id() for auto-incrementing primary key
             $table->timestamp('dateCom');
             $table->decimal('montant', 8, 2);
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->decimal('avance', 8, 2);
             $table->string('remise', 255)->collate('utf8mb4_unicode_ci');
             $table->tinyInteger('type');
-            $table->unsignedBigInteger('idVille');
+            $table->unsignedInteger('idVille');
 
             $table->foreign('idVille')->references('idVille')->on('ville'); // Assuming 'villes' table exists
         });

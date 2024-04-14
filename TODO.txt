@@ -1,5 +1,0 @@
-*** front-end ***
-
-- modifier le cartContextProvider, pour que ça ne necessite pas d'avoir tous les produits.
-
-*** back-end ***
