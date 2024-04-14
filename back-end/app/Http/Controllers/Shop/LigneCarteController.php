@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+<<<<<<< Updated upstream
 use App\Http\Requests\StoreClientCarteRequest;
+=======
+use Illuminate\Http\Request;
+use App\Http\Requests\StoreLigneCarteRequest;
+>>>>>>> Stashed changes
 use App\Http\Requests\UpdateLigneCarteRequest;
 use App\Models\LigneCarte;
 
@@ -11,9 +16,10 @@ class LigneCarteController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+     //
+        
     }
 
     /**

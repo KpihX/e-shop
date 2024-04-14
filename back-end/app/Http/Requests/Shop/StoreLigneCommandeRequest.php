@@ -11,7 +11,7 @@ class StoreLigneCommandeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,6 +22,12 @@ class StoreLigneCommandeRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'codePro'=> 'required|exists:produit,codePro',
+            'qte'=> 'required|integer|min:1',
+            'taille'=>'required',
+            'couleur'=>'required',
+            'disponible'=>'required|boolean',
+            'idCommande'=>'required|exists:commandes,idCommande',
             //
         ];
     }

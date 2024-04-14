@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Shop;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreLigneCommandeRequest;
 use App\Http\Requests\UpdateLigneCommandeRequest;
-use App\Models\LigneCommande;
+use App\Models\Shop\LigneCommande;
 
 class LigneCommandeController extends Controller
 {
@@ -29,6 +30,9 @@ class LigneCommandeController extends Controller
      */
     public function store(StoreLigneCommandeRequest $request)
     {
+        if($request->validated()){
+            $LigneCommandec=new LigneCommande();
+        }
         //
     }
 

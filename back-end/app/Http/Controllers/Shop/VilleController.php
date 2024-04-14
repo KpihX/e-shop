@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Shop;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StorevilleRequest;
 use App\Http\Requests\UpdatevilleRequest;
-use App\Models\ville;
+use App\Http\Resources\Shop\villeResource;
+use App\Models\Shop\ville;
 
 class VilleController extends Controller
 {
@@ -13,6 +15,13 @@ class VilleController extends Controller
      */
     public function index()
     {
+        $villes = ville::all();
+        if($villes->count() == 0){
+            return response()->json([
+                'message' => 'Aucune ville trouvée'
+            ], 500);
+        }
+        return villeResource::collection($villes);
         //
     }
 
