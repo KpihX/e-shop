@@ -8,6 +8,7 @@ use App\Http\Resources\Shop\CommandeResource;
 use App\Models\Shop\Commande;
 use App\Models\Shop\Produit;
 use App\Models\Shop\LigneCommande;
+// use DB;
 
 class CommandeController extends Controller
 {
@@ -44,7 +45,14 @@ class CommandeController extends Controller
      */
     public function command(StoreCommandeRequest $request)
     {
+        $validatedData = $request->validated();
+        if (!$validatedData) {
+            return response()->json('veuillez remplir tous les champs de façon adéquate', 400);
+        }
+
+        // DB::beginTransaction();
         try {
+<<<<<<< HEAD
 <<<<<<< HEAD
             $data = $request->validated();
             // Check if the request is valid
@@ -82,30 +90,48 @@ class CommandeController extends Controller
             error_log("Hi");
             $commande->adresse = "ras";//$client['adresse'];
 >>>>>>> origin/master
+=======
+            $commande = new Commande();
+            $commande->idVille = $validatedData['client']['idVille'];
+            $commande->nomClient = $validatedData['client']['nomClient'];
+            $commande->mobile = $validatedData['client']['mobile'];
+            $commande->montant = $validatedData['montant'];
+            $commande->adresse = $validatedData['client']['adresse'];
+>>>>>>> origin
             $commande->dateCom = now();
-            
+            $commande->livrer = 0;
+            $commande->avance = 0;
+            $commande->type = 0;
+            $commande->remise = 0;
             $commande->save();
 
-            // Create a new ligne de commande for each produit in the request
-            // foreach ($produits as $lignesCommande) {
-            //     $ligne = new LigneCommande();
-            //     $ligne->idCommande = $commande->idCommande;
-            //     $ligne->codePro = $lignesCommande['codePro'];
-            //     $ligne->quantite = $lignesCommande['quantite'];
-            //     $ligne->taille = $lignesCommande['taille'];
-            //     $ligne->couleur = $lignesCommande['couleur'];
-            //     $ligne->save();
+            $produits = $validatedData['produits'];
+            //Create a new ligne de commande for each produit in the request
+            foreach ($produits as $ligneCommande) {
+                // error_log($ligneCommande['couleur']);
+                $ligne = new LigneCommande();
+                $ligne->idCommande = $commande->idCommande;
+                $ligne->codePro = $ligneCommande['codePro'];
+                $ligne->quantite = $ligneCommande['quantite'];
+                $ligne->taille = $ligneCommande['taille'];
+                $ligne->couleur = $ligneCommande['couleur'];
+                $ligne->disponible = 1;
+                error_log("Hi");
+                $ligne->save();
+                
 
-            //     // Update the stock of each produit
-            //     $produit = Produit::where('id', $lignesCommande['codePro'])->first();
-            //     $produit->stock -= $lignesCommande['quantite'];
-            //     $produit->save();
-            // }
+                // Update the stock of each produit
+                $produit = Produit::where('codePro', $ligneCommande['codePro'])->first();
+                $produit->qte -= $ligneCommande['quantite'];
+                $produit->save();
+            }
 
             // Return a success message
+            // DB::commit();
             return response()->json('commande crée', 201);
         } catch (\Exception $e) {
             // Return an error message
+            error_log($e->getMessage());
             return response()->json($e->getMessage(), 400);
         }
     }
