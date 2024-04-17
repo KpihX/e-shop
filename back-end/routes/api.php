@@ -57,17 +57,17 @@ Route::prefix('/shop')->group(function () {
     //recuperer les villes
     Route::get('town', [VilleController::class, 'index']);
 
-    
+    Route::post('command', [CommandeController::class, 'command']);
     //Cart CRUD
-    Route::controller(CommandeController::class)->group(function(){
+    // Route::controller(CommandeController::class)->group(function(){
         
-        Route::get('allCommands','allCommands');
-        Route::post('command','command');
-        Route::post('getLignesCommand,getLignesCommand');
-        Route::post('getUserCommands,getLignesCommand');
-        Route::post('ChangeCommandStatus,getLignesCommand');
-        Route::delete('destroy/{code_pro}','destroy');
+    //     Route::get('allCommands','allCommands');
+    //     Route::post('command','command');
+    //     Route::post('getLignesCommand,getLignesCommand');
+    //     Route::post('getUserCommands,getLignesCommand');
+    //     Route::post('ChangeCommandStatus,getLignesCommand');
+    //     Route::delete('destroy/{code_pro}','destroy');
         
-    });
+    // });
     
 });

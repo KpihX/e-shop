@@ -50,8 +50,8 @@ function Product({ codePro, nomPro, prix, image, size1, size2 }) {
   return (
     <ProductWrapper theme={theme} onClick={() => null}>
       <ProductLabel theme={theme}>
-        <span>Nom: {nomPro}</span>
-        <span>Prix: {prix}</span>
+        <span>{nomPro}</span>
+        <span>{prix}</span>
       </ProductLabel>
       <ProductImage src={image} alt={nomPro} />
       <AddToCartButton onClick={() => addToCart(codePro, nomPro, prix, size1, size2, size1, image, "")}>

@@ -22,12 +22,13 @@ class StoreCommandeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //infos client
-            'client' => 'required|json',
-            //infos montant
-            'montant' => 'required|double',
-            //infos produits
-            'produits' => 'required|json',
+            'client' => 'required',
+            // //infos client
+            // 'client' => 'required|json',
+            // //infos montant
+            // 'montant' => 'required|double',
+            // //infos produits
+            // 'produits' => 'required|json',
 
             //
         ];

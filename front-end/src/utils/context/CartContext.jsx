@@ -62,6 +62,36 @@ export const CartContextProvider = (props) => {
     }
   }
 
+  const updateCartItemColor = (newColor, codePro) => {
+    const currentItemRemoved = cartItems.find((item) => item.codePro === codePro)
+    if (currentItemRemoved) {
+      const cartFilteredCurrentItem = cartItems.filter(
+        (item) => item.codePro !== codePro
+      )
+      updateCart([
+        ...cartFilteredCurrentItem,
+        { codePro, nomPro: currentItemRemoved.nomPro, prix: currentItemRemoved.prix, quantite: currentItemRemoved.quantite, size1: currentItemRemoved.size1, size2: currentItemRemoved.size2, size: currentItemRemoved.size, image: currentItemRemoved.image, color: newColor }
+      ])
+    } else {
+        updateCart([...cart, { codePro, nomPro, prix, quantite: newQuantite, size1, size2, size, image, color}])
+    }
+  }
+
+  const updateCartItemSize = (newSize, codePro) => {
+    const currentItemRemoved = cartItems.find((item) => item.codePro === codePro)
+    if (currentItemRemoved) {
+      const cartFilteredCurrentItem = cartItems.filter(
+        (item) => item.codePro !== codePro
+      )
+      updateCart([
+        ...cartFilteredCurrentItem,
+        { codePro, nomPro: currentItemRemoved.nomPro, prix: currentItemRemoved.prix, quantite: currentItemRemoved.quantite, size1: currentItemRemoved.size1, size2: currentItemRemoved.size2, size: newSize, image: currentItemRemoved.image, color: currentItemRemoved.color }
+      ])
+    } else {
+        updateCart([...cart, { codePro, nomPro, prix, quantite: newQuantite, size1, size2, size, image, color}])
+    }
+  }
+
   const cartItemCount = (codePro) => {
     const currentItem = cartItems.find((item) => item.codePro === codePro)
     if (currentItem) {
@@ -83,6 +113,8 @@ export const CartContextProvider = (props) => {
     removeFromCart,
     cartItemCount,
     checkout,
+    updateCartItemColor,
+    updateCartItemSize
   }
 
   return (

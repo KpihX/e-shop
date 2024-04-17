@@ -45,35 +45,47 @@ class CommandeController extends Controller
     public function command(StoreCommandeRequest $request)
     {
         try {
-            // Check if the request is valid
-            if (!$request->validated()) {
-                return response()->json('veuillez remplir tous les champs', 400);
-            }
+            $client = $request->query('client');
+            $produits = $request->query('produits');
+            $montant = $request->query('montant');
+            error_log($client);
+            error_log($produits);
+            error_log($montant);
+            
+            //Check if the request is valid
+            // if (!$request->validated()) {
+            //     return response()->json('veuillez remplir tous les champs', 400);
+            // }
+
+            
 
             // Create a new Commande
             $commande = new Commande();
-            $commande->idVille = $request->client['idVille'];
-            $commande->nomClient = $request->client['nomCient'];
-            $commande->mobile = $request->client['mobile'];
-            $commande->montant = $request->montant;
+            $commande->idVille = 1;//$client['idVille'];
+            $commande->nomClient = "Tamo";//$client['nomClient'];
+            $commande->mobile = "678"; //$client['mobile'];
+            error_log("Hi");
+            $commande->montant = 458;//$montant;
+            $commande->adresse = "ras";//$client['adresse'];
             $commande->dateCom = now();
+            
             $commande->save();
 
             // Create a new ligne de commande for each produit in the request
-            foreach ($request->produits as $lignesCommande) {
-                $ligne = new LigneCommande();
-                $ligne->idCommande = $commande->idCommande;
-                $ligne->codePro = $lignesCommande['codePro'];
-                $ligne->quantite = $lignesCommande['quantite'];
-                $ligne->taille = $lignesCommande['taille'];
-                $ligne->couleur = $lignesCommande['couleur'];
-                $ligne->save();
+            // foreach ($produits as $lignesCommande) {
+            //     $ligne = new LigneCommande();
+            //     $ligne->idCommande = $commande->idCommande;
+            //     $ligne->codePro = $lignesCommande['codePro'];
+            //     $ligne->quantite = $lignesCommande['quantite'];
+            //     $ligne->taille = $lignesCommande['taille'];
+            //     $ligne->couleur = $lignesCommande['couleur'];
+            //     $ligne->save();
 
-                // Update the stock of each produit
-                $produit = Produit::where('id', $lignesCommande['codePro'])->first();
-                $produit->stock -= $lignesCommande['quantite'];
-                $produit->save();
-            }
+            //     // Update the stock of each produit
+            //     $produit = Produit::where('id', $lignesCommande['codePro'])->first();
+            //     $produit->stock -= $lignesCommande['quantite'];
+            //     $produit->save();
+            // }
 
             // Return a success message
             return response()->json('commande crée', 201);
