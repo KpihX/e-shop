@@ -1,9 +1,12 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LigneCarteController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Shop\CategorieController;
+use App\Http\Controllers\Shop\CommandeController;
 use App\Http\Controllers\Shop\ProduitController;
+use App\Http\Controllers\Shop\VilleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -50,4 +53,21 @@ Route::prefix('/shop')->group(function () {
     // Route::get('products', [HomeController::class, 'getMoreProducts'])->name('home.more_products');
     // Route::get('search', [HomeController::class, 'searchProducts'])->name('home.search_products');
     // Route::get('categories', [HomeController::class, 'getMoreCategories'])->name('home.more_categories');
+
+    //recuperer les villes
+    Route::get('town', [VilleController::class, 'index']);
+
+    
+    //Cart CRUD
+    Route::controller(CommandeController::class)->group(function(){
+        
+        Route::get('allCommands','allCommands');
+        Route::post('command','command');
+        Route::post('getLignesCommand,getLignesCommand');
+        Route::post('getUserCommands,getLignesCommand');
+        Route::post('ChangeCommandStatus,getLignesCommand');
+        Route::delete('destroy/{code_pro}','destroy');
+        
+    });
+    
 });

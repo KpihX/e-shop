@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreLigneCarteRequest;
 use App\Http\Requests\UpdateLigneCarteRequest;
 use App\Models\LigneCarte;
@@ -11,9 +12,10 @@ class LigneCarteController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+     //
+        
     }
 
     /**

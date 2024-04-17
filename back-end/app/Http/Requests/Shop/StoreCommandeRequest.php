@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\shop;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -11,7 +11,7 @@ class StoreCommandeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,6 +22,13 @@ class StoreCommandeRequest extends FormRequest
     public function rules(): array
     {
         return [
+            //infos client
+            'client' => 'required|json',
+            //infos montant
+            'montant' => 'required|double',
+            //infos produits
+            'produits' => 'required|json',
+
             //
         ];
     }
