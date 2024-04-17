@@ -113,10 +113,10 @@ const CartInfos = () => {
           value={selectedVille} 
           onChange={e => setSelectedVille(e.target.value)}
         >
-          {villes.map(({idVille, intitule}) => {
+          {villes.map(({idVille, libelle}) => {
             <option
               key={idVille}
-              value={intitule}
+              value={libelle}
             ></option>
           })}
         </select>
