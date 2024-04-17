@@ -11,10 +11,17 @@ class LigneCommande extends Model
 {
     use HasFactory;
 
+    protected $table = 'lignecommande';
+    protected $primaryKey = 'idLignCom';
+    public $incrementing = true;
+    protected $keyType = 'int';
     protected $fillable=[
         'idCommande',
         'codePro',
-        'quantite'
+        'quantite',
+        'couleur',
+        'taille',
+        'disponible'
     ];
     public function commande()
     {

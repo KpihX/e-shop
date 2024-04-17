@@ -9,7 +9,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('lignecommande', function (Blueprint $table) {
-            $table->id('idLignCom');  // Use id() for auto-incrementing primary key
+            $table->increments('idLignCom');  // Use id() for auto-incrementing primary key
             $table->unsignedInteger('idCommande');
             $table->unsignedInteger('codePro');
             $table->integer('quantite');
@@ -19,6 +19,7 @@ return new class extends Migration
 
             $table->foreign('idCommande')->references('idCommande')->on('commande'); // Assuming 'commande' table exists
             $table->foreign('codePro')->references('codePro')->on('produit'); // Assuming 'produits' table with 'id' primary key exists
+            $table->timestamps();
         });
     }
 

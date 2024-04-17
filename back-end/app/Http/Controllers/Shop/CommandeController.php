@@ -63,12 +63,12 @@ class CommandeController extends Controller
             $commande->avance = 0;
             $commande->type = 0;
             $commande->remise = 0;
-            error_log("Hi");
-            // $commande->save();
+            $commande->save();
 
             $produits = $validatedData['produits'];
             //Create a new ligne de commande for each produit in the request
             foreach ($produits as $ligneCommande) {
+                // error_log($ligneCommande['couleur']);
                 $ligne = new LigneCommande();
                 $ligne->idCommande = $commande->idCommande;
                 $ligne->codePro = $ligneCommande['codePro'];
@@ -76,11 +76,13 @@ class CommandeController extends Controller
                 $ligne->taille = $ligneCommande['taille'];
                 $ligne->couleur = $ligneCommande['couleur'];
                 $ligne->disponible = 1;
+                error_log("Hi");
                 $ligne->save();
+                
 
                 // Update the stock of each produit
-                $produit = Produit::where('id', $ligneCommande['codePro'])->first();
-                $produit->stock -= $ligneCommande['quantite'];
+                $produit = Produit::where('codePro', $ligneCommande['codePro'])->first();
+                $produit->qte -= $ligneCommande['quantite'];
                 $produit->save();
             }
 
@@ -89,6 +91,7 @@ class CommandeController extends Controller
             return response()->json('commande crée', 201);
         } catch (\Exception $e) {
             // Return an error message
+            error_log($e->getMessage());
             return response()->json($e->getMessage(), 400);
         }
     }
