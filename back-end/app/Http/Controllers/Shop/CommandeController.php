@@ -45,14 +45,15 @@ class CommandeController extends Controller
     public function command(StoreCommandeRequest $request)
     {
         try {
+            $data = $request->validated();
             // Check if the request is valid
-            if (!$request->validated()) {
+            if (!$data) {
                 return response()->json('veuillez remplir tous les champs', 400);
             }
 
             // Create a new Commande
             $commande = new Commande();
-            $commande->idVille = $request->client['idVille'];
+            $commande->idVille = $data['client']['idVille'];
             $commande->nomClient = $request->client['nomCient'];
             $commande->mobile = $request->client['mobile'];
             $commande->montant = $request->montant;
