@@ -37,7 +37,7 @@ const CartInfos = () => {
   const [mobile, setMobile] = useState("")
   const [adresse, setAdresse] = useState("")
   const [villes, setVilles] = useState([])
-  const [selectedVille, setSelectedVille] = useState(1)
+  const [selectedVille, setSelectedVille] = useState()
   const [isLoading, setLoading] = useState(false)
   const { cartItems, getTotalCartAmount} = useContext(CartContext)
 
@@ -46,6 +46,8 @@ const CartInfos = () => {
     axiosClient.get('/shop/town')
       .then(({data}) => {
         setVilles(data.data)
+        setSelectedVille(data.data[0].libelle)
+        console.log(data.data)
         setLoading(false)
       })
       .catch(error => {
@@ -55,7 +57,7 @@ const CartInfos = () => {
       });
   }, []);
 
-  const handleValidation = (e) => {
+  const handleValidation = () => {
     setLoading(true)
     const client = {
       "nomClient": nomClient,
@@ -74,14 +76,17 @@ const CartInfos = () => {
       ))
     ]
     const montant = getTotalCartAmount()
+    console.log(client)
+    console.log(produits)
+    console.log(montant)
     
     axiosClient.post(`/shop/command?client=${client}&produits=${produits}&montant=${montant}`)
-      .then(response => {
-        
+      .then((response) => {
+        console.log(response.data)
       })
       .catch(error => {
-        alert("Erreur lors sauvegarde de la commande!")
-        console.error("Erreur lors sauvegarde de la commande", error);
+        alert(error.response.data)
+        console.error(error.response.data);
         setLoading(false)
       });
   }
@@ -113,12 +118,14 @@ const CartInfos = () => {
           value={selectedVille} 
           onChange={e => setSelectedVille(e.target.value)}
         >
-          {villes.map(({idVille, libelle}) => {
+          {villes.map(({idVille, libelle}) => (
             <option
               key={idVille}
               value={libelle}
-            ></option>
-          })}
+            >
+              {libelle}
+            </option>
+          ))}
         </select>
       )}
       <ValidateButton onClick={handleValidation}>

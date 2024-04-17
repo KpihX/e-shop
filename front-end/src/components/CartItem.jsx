@@ -32,16 +32,16 @@ const ProductImage = styled.img`
 `
 
 function CartItem ({ codePro, nomPro, prix, quantite, image, size1, size2 }) {
-  const { addToCart, removeFromCart, updateCartItemCount } = useContext(CartContext)
+  const { addToCart, removeFromCart, updateCartItemCount, updateCartItemColor, updateCartItemSize } = useContext(CartContext)
   const [inputValue, setInputValue] = useState(quantite ? quantite.toString() : '')
   const [colorClothe, setColorClothe] = useState("")
   const [sizeClothe, setSizeClothe] = useState(size1)
 
   // Appelé lorsque l'utilisateur modifie la valeur de l'input
   const handleInputChange = (e) => {
-    const value = e.target.value;
+    const value = e.target.value
     if (!isNaN(value) && parseFloat(value) > 0) {
-      setInputValue(value);
+      setInputValue(value)
     } else {
       alert('Veuillez saisir un nombre positif pour la quantité!');
     }
@@ -49,14 +49,31 @@ function CartItem ({ codePro, nomPro, prix, quantite, image, size1, size2 }) {
 
   // Appelé lorsque l'utilisateur quitte l'input ou appuie sur Entrée
   const handleBlurOrEnter = (e) => {
+    const value = e.target.value
     if (isNaN(value) || parseFloat(value) <= 0) {
       alert('Veuillez saisir un nombre positif pour la quantité!')
       return
     }
     if (e.type === 'blur' || (e.type === 'keydown' && e.key === 'Enter')) {
-      const newQuantity = Number(inputValue) || 0;
+      const newQuantity = Number(value) || 0;
       updateCartItemCount(newQuantity, codePro);
       setInputValue(newQuantity.toString()); // Assurez-vous que la valeur est une chaîne pour l'attribut value de l'input
+    }
+  };
+
+  const handleBlurOrEnterColor = (e) => {
+    const color = e.target.value
+    if (e.type === 'blur' || (e.type === 'keydown' && e.key === 'Enter')) {
+      updateCartItemColor(color, codePro);
+      setColorClothe(color); // Assurez-vous que la valeur est une chaîne pour l'attribut value de l'input
+    }
+  }
+
+  const handleBlurOrEnterSize = (e) => {
+    const size = e.target.value
+    if (e.type === 'blur' || (e.type === 'keydown' && e.key === 'Enter')) {
+      updateCartItemSize(size, codePro);
+      setSizeClothe(size); // Assurez-vous que la valeur est une chaîne pour l'attribut value de l'input
     }
   };
 
@@ -78,12 +95,16 @@ function CartItem ({ codePro, nomPro, prix, quantite, image, size1, size2 }) {
         <input
           type="text"
           onChange={e => setColorClothe(e.target.value)}
+          onBlur={handleBlurOrEnterColor}
+          onKeyDown={handleBlurOrEnterColor}
         />
         <span>Entrez votre taille (compris entre {size1} et {size2}): </span>
         <input
           type="text"
           placeholder={sizeClothe}
           onChange={e => setSizeClothe(e.target.value)}
+          onBlur={handleBlurOrEnterSize}
+          onKeyDown={handleBlurOrEnterSize}
         />
         <CountHandler>
           <button onClick={() => removeFromCart(codePro)}> - </button>
