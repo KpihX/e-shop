@@ -64,8 +64,8 @@ class CommandeController extends Controller
             $commande->idVille = 1;//$client['idVille'];
             $commande->nomClient = "Tamo";//$client['nomClient'];
             $commande->mobile = "678"; //$client['mobile'];
-            error_log("Hi");
             $commande->montant = 458;//$montant;
+            error_log("Hi");
             $commande->adresse = "ras";//$client['adresse'];
             $commande->dateCom = now();
             
