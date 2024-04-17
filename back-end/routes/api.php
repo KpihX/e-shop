@@ -53,6 +53,7 @@ Route::prefix('/shop')->group(function () {
     // Route::get('products', [HomeController::class, 'getMoreProducts'])->name('home.more_products');
     // Route::get('search', [HomeController::class, 'searchProducts'])->name('home.search_products');
     // Route::get('categories', [HomeController::class, 'getMoreCategories'])->name('home.more_categories');
+
     //recuperer les villes
     Route::get('town', [VilleController::class, 'index']);
 

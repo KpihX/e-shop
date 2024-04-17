@@ -13,6 +13,8 @@ use Exception;
 use Illuminate\Http\Testing\File;
 use Illuminate\Support\Facades\Storage;
 use Psy\Readline\Hoa\FileException;
+use Illuminate\Http\Response;
+
 
 // Définition de la classe ProduitController
 
