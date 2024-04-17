@@ -22,15 +22,16 @@ class StoreCommandeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'client' => 'required',
-            // //infos client
-            // 'client' => 'required|json',
-            // //infos montant
-            // 'montant' => 'required|double',
-            // //infos produits
-            // 'produits' => 'required|json',
-
-            //
+            'client.nomClient' => 'required|string',
+            'client.mobile' => 'required|string',
+            'client.adresse' => 'required|string',
+            'client.idVille' => 'required|integer',
+            'produits' => 'required|array',
+            'produits.*.codePro' => 'required|integer', // Valide chaque élément de l'array produits
+            'produits.*.quantite' => 'required|integer',
+            'produits.*.taille' => 'required|string',
+            'produits.*.couleur' => 'required|string',
+            'montant' => 'required|numeric',
         ];
     }
 }

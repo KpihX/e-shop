@@ -58,37 +58,40 @@ const CartInfos = () => {
   }, []);
 
   const handleValidation = () => {
-    setLoading(true)
+    setLoading(true);
     const client = {
       "nomClient": nomClient,
       "mobile": mobile,
       "adresse": adresse,
       "idVille": villes.find((ville) => ville.libelle == selectedVille).idVille
-    }
-    const produits = [
-      cartItems.map(({codePro, quantite, size, color}) => (
-        {
-          "codePro":codePro,
-          "quantite": quantite,
-          "taille": size,
-          "couleur": color
-        }
-      ))
-    ]
-    const montant = getTotalCartAmount()
-    console.log(client)
-    console.log(produits)
-    console.log(montant)
-    
-    axiosClient.post(`/shop/command?client=${client}&produits=${produits}&montant=${montant}`)
-      .then((response) => {
-        console.log(response.data)
-      })
-      .catch(error => {
-        alert(error.response.data)
-        console.error(error.response.data);
-        setLoading(false)
-      });
+    };
+    const produits = cartItems.map(({codePro, quantite, size, color}) => {
+      return {
+        "codePro": codePro,
+        "quantite": quantite,
+        "taille": size,
+        "couleur": color
+      };
+    });
+    const montant = getTotalCartAmount();
+    console.log(client);
+    console.log(produits);
+    console.log(montant);
+  
+    axiosClient.post('/shop/command', {
+      client: client,
+      produits: produits,
+      montant: montant
+    })
+    .then((response) => {
+      console.log(response.data);
+      setLoading(false);
+    })
+    .catch(error => {
+      alert(error.response.data.message); // Assurez-vous que le message d'erreur est bien dans error.response.data.message
+      console.error(error.response);
+      setLoading(false);
+    });
   }
 
   return (
