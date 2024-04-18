@@ -23,7 +23,7 @@ Quand une tâche est terminée, il faut:
 - [Pavel & Kenfack] arranger le style de la page home
 - [Pavel & Kenfack] styliser la page de cart [Maeva & Kenfack]
 - [Pavel & Kenfack] rendre le site responsive
-
+- [Kamdem] reset le contenu du Cart après qu'on ait appuyer sur **valider**
 ## Back-end
 
 * [Isis] Utiliser store comme controller au lieu de command dans CommandeController
