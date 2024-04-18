@@ -49,27 +49,6 @@ class ProduitController extends Controller
     
         return ProduitResource::collection($produits);
     }
-
-    // public function search (Request $request) {
-    //     $searchItem = $request->query('searchItem');
-
-    //     $categoryId = $request->query('category');
-
-    //     $query = Produit::query();
-
-    //     if ($categoryId && $categoryId != -1) {
-    //         $query->where('idCategorie', $categoryId);
-    //     }
-
-    //     if ($searchItem) {
-    //         $query->where('nomPro', 'like', '%' . $searchItem . '%');
-    //     }
-
-    //     $products = $query->paginate(10);
-
-    //     return ProduitResource::collection($products);
-    // }
-
     /**
      * Enregistre un nouveau produit
      * 
@@ -79,32 +58,14 @@ class ProduitController extends Controller
     public function store (StoreProduitRequest $request){
 
         // Vérifie si les données sont correctes
-        if(!$request->validated()){
+        $data = $request->validated();
+        if(!$data){
             return response()->json("Impossible d'enregistrer ce produit", 400);
         }
 
         // Crée un nouvel objet Produit
         $product=new Produit();
         $photo = new Photo();
-
-        // Renseigne les propriétés de l'objet Produit avec les données de la requête
-        $product->fill([
-            'nomProd' => $request->nomProd,
-            'prix' => $request->prix,
-            'codePro' => $request->codePro,
-            'idCategorie' => $request->idCategorie,
-            'qte' => $request->qte,
-            'description' => $request->description,
-            'codeArrivage' => $request->codeArrivage,
-            'actif' => $request->actif,
-            'dateInsertion' => $request->dateInsertion,
-            'prixAchat' => $request->prixAchat,
-            'pourcentage' => $request->pourcentage,
-            'promo' => $request->promo,
-            'size1' => $request->size1,
-            'size2' => $request->size2,
-            'typeSize' => $request->typeSize,
-        ]);
 
         // Vérifie si une image est associée au produit
         if($request->hasFile('image')){
@@ -155,23 +116,6 @@ class ProduitController extends Controller
         $product = Produit::find($codePro);
         // Vérifie si le produit existe
         if($product){
-            // Renseigne les propriétés de l'objet Produit avec les données de la requête
-            $product->fill([
-                'nomProd' => $request->nomProd,
-                'prix' => $request->prix,
-                'idCategorie' => $request->idCategorie,
-                'qte' => $request->qte,
-                'description' => $request->description,
-                'codeArrivage' => $request->codeArrivage,
-                'actif' => $request->actif,
-                'dateInsertion' => $request->dateInsertion,
-                'prixAchat' => $request->prixAchat,
-                'pourcentage' => $request->pourcentage,
-                'promo' => $request->promo,
-                'size1' => $request->size1,
-                'size2' => $request->size2,
-                'typeSize' => $request->typeSize,
-            ]);
             // Vérifie si une image est associée au produit
             if($request->hasFile('image')){
                 // Supprime l'ancienne image si elle existe
