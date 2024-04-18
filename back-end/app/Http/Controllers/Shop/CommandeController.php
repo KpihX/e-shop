@@ -8,6 +8,10 @@ use App\Http\Resources\Shop\CommandeResource;
 use App\Models\Shop\Commande;
 use App\Models\Shop\Produit;
 use App\Models\Shop\LigneCommande;
+use App\Http\Controllers\Shop\LigneCommandeController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
 // use DB;
 
 class CommandeController extends Controller
@@ -20,6 +24,7 @@ class CommandeController extends Controller
     public function allCommands()
     {
         $commandes = Commande::all();
+        // Check if there are any commandes
         if ($commandes) {
             // Get all the commandes
             // Add the name of the product to each ligneCommande
@@ -36,68 +41,34 @@ class CommandeController extends Controller
         return response()->json('Pas de commande', 404);
     }
 
-
     /**
      * Store a newly created resource in storage.
      * 
      * @param StoreCommandeRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function command(StoreCommandeRequest $request)
+    public function store(StoreCommandeRequest $request)
     {
+        // Check if the request is valid
         $validatedData = $request->validated();
         if (!$validatedData) {
-            return response()->json('veuillez remplir tous les champs de façon adéquate', 400);
+            return response()->json('Please fill all the fields', 400);
         }
 
-        // DB::beginTransaction();
+        // Fetch datas
+        $produits = $validatedData['produits'];
+        $client = $validatedData['client'];
+        $montant = $validatedData['montant'];
+        $report = '';
+
+        // Create a new command
         try {
-<<<<<<< HEAD
-<<<<<<< HEAD
-            $data = $request->validated();
-            // Check if the request is valid
-            if (!$data) {
-                return response()->json('veuillez remplir tous les champs', 400);
-            }
-
-            // Create a new Commande
             $commande = new Commande();
-            $commande->idVille = $data['client']['idVille'];
-            $commande->nomClient = $request->client['nomCient'];
-            $commande->mobile = $request->client['mobile'];
-            $commande->montant = $request->montant;
-=======
-            $client = $request->query('client');
-            $produits = $request->query('produits');
-            $montant = $request->query('montant');
-            error_log($client);
-            error_log($produits);
-            error_log($montant);
-            
-            //Check if the request is valid
-            // if (!$request->validated()) {
-            //     return response()->json('veuillez remplir tous les champs', 400);
-            // }
-
-            
-
-            // Create a new Commande
-            $commande = new Commande();
-            $commande->idVille = 1;//$client['idVille'];
-            $commande->nomClient = "Tamo";//$client['nomClient'];
-            $commande->mobile = "678"; //$client['mobile'];
-            $commande->montant = 458;//$montant;
-            error_log("Hi");
-            $commande->adresse = "ras";//$client['adresse'];
->>>>>>> origin/master
-=======
-            $commande = new Commande();
-            $commande->idVille = $validatedData['client']['idVille'];
-            $commande->nomClient = $validatedData['client']['nomClient'];
-            $commande->mobile = $validatedData['client']['mobile'];
-            $commande->montant = $validatedData['montant'];
-            $commande->adresse = $validatedData['client']['adresse'];
->>>>>>> origin
+            $commande->idVille = $client['idVille'];
+            $commande->nomClient = $client['nomClient'];
+            $commande->mobile = $client['mobile'];
+            $commande->adresse = $client['adresse'];
+            $commande->montant = $montant;
             $commande->dateCom = now();
             $commande->livrer = 0;
             $commande->avance = 0;
@@ -105,30 +76,20 @@ class CommandeController extends Controller
             $commande->remise = 0;
             $commande->save();
 
-            $produits = $validatedData['produits'];
-            //Create a new ligne de commande for each produit in the request
+            // Create a new ligne de commande for each produit in the request
             foreach ($produits as $ligneCommande) {
-                // error_log($ligneCommande['couleur']);
-                $ligne = new LigneCommande();
-                $ligne->idCommande = $commande->idCommande;
-                $ligne->codePro = $ligneCommande['codePro'];
-                $ligne->quantite = $ligneCommande['quantite'];
-                $ligne->taille = $ligneCommande['taille'];
-                $ligne->couleur = $ligneCommande['couleur'];
-                $ligne->disponible = 1;
-                error_log("Hi");
-                $ligne->save();
-                
-
-                // Update the stock of each produit
-                $produit = Produit::where('codePro', $ligneCommande['codePro'])->first();
-                $produit->qte -= $ligneCommande['quantite'];
-                $produit->save();
+                $controller = new LigneCommandeController();
+                $report .= $controller->store($ligneCommande, $commande->idCommande);
             }
 
-            // Return a success message
-            // DB::commit();
-            return response()->json('commande crée', 201);
+            $id = $commande->idCommande;
+            if (LigneCommande::where('idCommande', $id)->count() == 0) {
+                $commande->delete();
+                return response()->json('Impossible to create an empty command', 201);
+            } else {
+                // Return a success message
+                return response()->json('Command created .\n' . $report, 201);
+            }
         } catch (\Exception $e) {
             // Return an error message
             error_log($e->getMessage());
@@ -136,18 +97,82 @@ class CommandeController extends Controller
         }
     }
 
-    public function getLignesCommand(){
+    /**
+     * Get all unchecked commands
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function getUncheckedCommand(Request $request)
+    {
+        $commande = Commande::where('livrer', 0)->get();
 
+        // If there are no unchecked commands return an error message
+        if ($commande->count() == 0) {
+            return response()->json('Pas de Commande non livrée', 400);
+        }
+
+        // Otherwise return all the unchecked commands
+        return CommandeResource::collection($commande, 200);
     }
 
-    public function getUserCommands(){
+
+    public function getUserCommands(Request $request){
+        $data = Validator::make($request->all(), [
+            'nomClient' => 'required|string|max:255',
+        ]);
+        if ($data->fails()) {
+            return response()->json('Commande Inexistante', 400);
+        }
+        $commande = Commande::where('nomClient', $request->nomClient)->get();
+        return CommandeResource::collection($commande, 200);
+    }
+    public function checkCommand(Request $request){
+        $data = Validator::make($request->all(), [
+            'idCommande' => 'required|integer',
+        ]);
+        if ($data->fails()) {
+            return response()->json('Commande Inexistante', 400);
+        }
+        $commande = Commande::where('idCommande', $request->idCommande)->first();
+        $commande->livrer = 1;
+        $commande->save();
+        return response()->json('Commande Livrée', 200);
+    }
+
+    public function update(){
+
+        // On ne va pas se tuer!!!!!!!!!!!!!!!!!!!!!
 
     }
-    public function changeCommandStatus(){
-        
+    public function getCommand(Request $request){
+        $data = Validator::make($request->all(), [
+            'idCommande' => 'required|integer',
+        ]);
+        if ($data->fails()) {
+            return response()->json('Commande Inexistante', 400);
+        }
+        $controller = new LigneCommandeController();
+        return $controller->show($request->idCommande);
     }
-    public function destroy(){
-
+    /**
+     * Destroy a command and all its lines
+     *
+     * @param int $idCommande The id of the command to destroy
+     * @return void
+     */
+    public function destroy(int $idCommande): void
+    {
+        $lignesCommande = LigneCommande::where('idCommande', $idCommande)->get();
+        /** @var LigneCommande $ligne */
+        foreach ($lignesCommande as $ligne) {
+            $produit = Produit::where('codePro', $ligne->codePro)->first();
+            $produit->qte += $ligne->quantite;
+            $produit->save();
+            $ligne->delete();
+        }
+        $commande = Commande::where('idCommande', $idCommande)->first();
+        $commande->delete();
     }
 
 }
