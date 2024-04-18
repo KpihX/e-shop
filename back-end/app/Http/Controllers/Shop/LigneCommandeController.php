@@ -7,6 +7,8 @@ use App\Http\Requests\UpdateLigneCommandeRequest;
 use App\Http\Resources\LigneCommandeResource;
 use App\Models\Shop\LigneCommande;
 use App\Models\Shop\Produit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class LigneCommandeController extends Controller
 {
@@ -50,14 +52,21 @@ class LigneCommandeController extends Controller
      */
     public function update(UpdateLigneCommandeRequest $request, LigneCommande $ligneCommande)
     {
-        //
+        // On ne va pas se tuer!!!!!!!!!!!!!
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(LigneCommande $ligneCommande)
-    {
-        //
+    public function destroy(Request $request){
+        $data = Validator::make($request->all(), [
+            'idLignCom' => 'required|integer',
+        ]);
+        if ($data->fails()) {
+            return response()->json('Ligne Inexistante', 400);
+        }
+        $ligne = LigneCommande::where('idCommande', $request->idLignCom)->get();
+        $ligne ->delete();   
+        return response()->json('Ligne Supprimée', 200);
     }
 }

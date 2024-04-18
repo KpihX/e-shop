@@ -9,6 +9,7 @@ use App\Models\Shop\Commande;
 use App\Models\Shop\Produit;
 use App\Models\Shop\LigneCommande;
 use App\Http\Controllers\Shop\LigneCommandeController;
+use App\Http\Requests\UpdateCommandeRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -140,7 +141,7 @@ class CommandeController extends Controller
         return response()->json('Commande Livrée', 200);
     }
 
-    public function update(){
+    public function update(UpdateCommandeRequest $request, Commande $commande){
 
         // On ne va pas se tuer!!!!!!!!!!!!!!!!!!!!!
 
@@ -161,9 +162,14 @@ class CommandeController extends Controller
      * @param int $idCommande The id of the command to destroy
      * @return void
      */
-    public function destroy(int $idCommande): void
-    {
-        $lignesCommande = LigneCommande::where('idCommande', $idCommande)->get();
+    public function destroy(Request $request){
+        $data = Validator::make($request->all(), [
+            'idCommande' => 'required|integer',
+        ]);
+        if ($data->fails()) {
+            return response()->json('Commande Inexistante', 400);
+        }
+        $lignesCommande = LigneCommande::where('idCommande', $request->idCommande)->get();
         /** @var LigneCommande $ligne */
         foreach ($lignesCommande as $ligne) {
             $produit = Produit::where('codePro', $ligne->codePro)->first();
@@ -171,8 +177,10 @@ class CommandeController extends Controller
             $produit->save();
             $ligne->delete();
         }
-        $commande = Commande::where('idCommande', $idCommande)->first();
+        $commande = Commande::where('idCommande', $request->idCommande)->first();
         $commande->delete();
+        return response()->json('Commande Supprimée', 400);
+
     }
 
 }
