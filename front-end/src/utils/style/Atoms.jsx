@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
-import colors from './colors'
 import styled, { keyframes } from 'styled-components'
+
+import colors from './colors'
 
 const rotate = keyframes`
 	from {
@@ -22,10 +23,14 @@ export const Loader = styled.div`
 	width: 0;
 `
 
+export const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+`
+
 export const StyledLink = styled(Link)`
 	padding: 10px 15px;
-	color: ${colors.primary};
-	
+	color: ${({ $theme }) => $theme === 'light' ? colors.secondary : colors.backgroundLight};
 	text-decoration: none;
 	font-size: 18px;
 	text-align: center;

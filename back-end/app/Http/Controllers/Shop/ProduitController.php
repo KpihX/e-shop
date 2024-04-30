@@ -45,7 +45,7 @@ class ProduitController extends Controller
         }
     
         // Paginez les produits, 10 par page
-        $produits = $query->paginate(10, ['*'], 'page', $page);
+        $produits = $query->paginate(12, ['*'], 'page', $page);
     
         return ProduitResource::collection($produits);
     }

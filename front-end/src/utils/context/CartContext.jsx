@@ -3,7 +3,7 @@ import { createContext, useState } from "react"
 export const CartContext = createContext();
 
 export const CartContextProvider = (props) => {
-  const [cartItems, updateCart] = useState([]);
+  const [cartItems, updateCartItems] = useState([]);
 
   function addToCart(codePro, nomPro, prix, size1, size2, size, image, color) {
     const currentItemRemoved = cartItems.find((item) => item.codePro === codePro)
@@ -12,15 +12,14 @@ export const CartContextProvider = (props) => {
         const cartFilteredCurrentItem = cartItems.filter(
             (item) => item.nomPro !== nomPro
         )
-        updateCart([
+        updateCartItems([
             ...cartFilteredCurrentItem,
             { codePro, nomPro, prix, quantite: currentItemRemoved.quantite + 1, size1, size2, size, image, color}
         ])
         
     } else {
-        updateCart([...cartItems, { codePro, nomPro, prix, quantite: 1, size1, size2, size, image, color }])
+        updateCartItems([...cartItems, { codePro, nomPro, prix, quantite: 1, size1, size2, size, image, color }])
     }
-    // console.log(cartItems)
   } 
 
   function removeFromCart(codePro) {
@@ -30,13 +29,15 @@ export const CartContextProvider = (props) => {
         (item) => item.codePro !== codePro
       )
       if (currentItemRemoved.quantite === 1) {
-        updateCart(cartFilteredCurrentItem)
+        updateCartItems(cartFilteredCurrentItem)
       } else {
-        updateCart([
+        updateCartItems([
           ...cartFilteredCurrentItem,
           { codePro, nomPro: currentItemRemoved.nomPro, prix: currentItemRemoved.prix, quantite: currentItemRemoved.quantite - 1, size1: currentItemRemoved.size1, size2: currentItemRemoved.size2, size: currentItemRemoved.size, image: currentItemRemoved.image, color: currentItemRemoved.color }
         ])
       }
+    } else {
+      console.log("!Le produit de code '" + codePro + "' n'existe pas dans le panier!")
     }
   } 
 
@@ -47,48 +48,48 @@ export const CartContextProvider = (props) => {
     )
   }
 
-  const updateCartItemCount = (newQuantite, codePro) => {
+  const updateCartItemsItemCount = (newQuantite, codePro) => {
     const currentItemRemoved = cartItems.find((item) => item.codePro === codePro)
     if (currentItemRemoved) {
       const cartFilteredCurrentItem = cartItems.filter(
         (item) => item.codePro !== codePro
       )
-      updateCart([
+      updateCartItems([
         ...cartFilteredCurrentItem,
         { codePro, nomPro: currentItemRemoved.nomPro, prix: currentItemRemoved.prix, quantite: newQuantite, size1: currentItemRemoved.size1, size2: currentItemRemoved.size2, size: currentItemRemoved.size, image: currentItemRemoved.image, color: currentItemRemoved.color }
       ])
     } else {
-        updateCart([...cart, { codePro, nomPro, prix, quantite: newQuantite, size1, size2, size, image, color}])
+      console.log("!Le produit de code '" + codePro + "' n'existe pas dans le panier!")
     }
   }
 
-  const updateCartItemColor = (newColor, codePro) => {
+  const updateCartItemsItemColor = (newColor, codePro) => {
     const currentItemRemoved = cartItems.find((item) => item.codePro === codePro)
     if (currentItemRemoved) {
       const cartFilteredCurrentItem = cartItems.filter(
         (item) => item.codePro !== codePro
       )
-      updateCart([
+      updateCartItems([
         ...cartFilteredCurrentItem,
         { codePro, nomPro: currentItemRemoved.nomPro, prix: currentItemRemoved.prix, quantite: currentItemRemoved.quantite, size1: currentItemRemoved.size1, size2: currentItemRemoved.size2, size: currentItemRemoved.size, image: currentItemRemoved.image, color: newColor }
       ])
     } else {
-        updateCart([...cart, { codePro, nomPro, prix, quantite: newQuantite, size1, size2, size, image, color}])
+      console.log("!Le produit de code '" + codePro + "' n'existe pas dans le panier!")
     }
   }
 
-  const updateCartItemSize = (newSize, codePro) => {
+  const updateCartItemsItemSize = (newSize, codePro) => {
     const currentItemRemoved = cartItems.find((item) => item.codePro === codePro)
     if (currentItemRemoved) {
       const cartFilteredCurrentItem = cartItems.filter(
         (item) => item.codePro !== codePro
       )
-      updateCart([
+      updateCartItems([
         ...cartFilteredCurrentItem,
         { codePro, nomPro: currentItemRemoved.nomPro, prix: currentItemRemoved.prix, quantite: currentItemRemoved.quantite, size1: currentItemRemoved.size1, size2: currentItemRemoved.size2, size: newSize, image: currentItemRemoved.image, color: currentItemRemoved.color }
       ])
     } else {
-        updateCart([...cart, { codePro, nomPro, prix, quantite: newQuantite, size1, size2, size, image, color}])
+      console.log("!Le produit de code '" + codePro + "' n'existe pas dans le panier!")
     }
   }
 
@@ -101,20 +102,20 @@ export const CartContextProvider = (props) => {
   }
 
   const checkout = () => {
-    updateCart([]);
+    updateCartItems([]);
   }
 
   const contextValue = {
     cartItems,
-    updateCart,
+    updateCartItems,
     addToCart,
     getTotalCartAmount,
-    updateCartItemCount,
+    updateCartItemsItemCount,
     removeFromCart,
     cartItemCount,
     checkout,
-    updateCartItemColor,
-    updateCartItemSize
+    updateCartItemsItemColor,
+    updateCartItemsItemSize
   }
 
   return (

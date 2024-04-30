@@ -1,39 +1,35 @@
 import styled from 'styled-components'
-// import { StyledLink } from '../utils/style/Atoms'
+import { StyledLink } from '../utils/style/Atoms'
 import { useState, useEffect } from 'react'
+
 import axiosClient from '../axiosClient'
-import { useTheme } from '../utils/hooks'
-// import products from "../datas/products"
-// import categories from '../datas/categories'
 import colors from '../utils/style/colors'
 import Product from "../components/Product"
 import Header from "../components/Header"
 import Categories from '../components/Categories'
 import Footer from '../components/Footer'
 import { Loader } from '../utils/style/Atoms'
-
+import { useTheme } from '../utils/hooks'
+import { LoaderWrapper } from '../utils/style/Atoms'
 
 const HomeWrapper = styled.div`
   display: flex;
   justify-content: center;
-  margin: 10px;
+  /* margin: 10px; */
   /* background-color: ${colors.backgroundLight}; */
   /* background-color: ${({ theme }) =>
     theme === 'light' ? colors.backgroundLight : colors.backgroundDark}; */
-  padding: 60px 90px;
+  /* padding: 60px 90px;
   display: flex;
   flex-direction: row;
-  max-width: 1200px;
+  max-width: 1200px; */
 `
 
 const StyledTitle = styled.h2`
-  width: 100%;
-  text-align: center;
-  /* padding-bottom: 30px;
+  padding-bottom: 30px;
   max-width: 280px;
-  line-height: 50px; */
-  color: #381b5e;
-  /* color: ${({ theme }) => (theme === 'light' ? '#000000' : '#ffffff')}; */
+  line-height: 50px;
+  color: ${({ theme }) => (theme === 'light' ? '#000000' : '#ffffff')};
 `
 
 const ProductsWrapper = styled.div`
@@ -54,21 +50,15 @@ const SearchBar = styled.input`
   border-radius: 5px; // Bordures arrondies
 `
 
-const LoaderWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-`
-
 function Home() {
   const { theme } = useTheme()
   const [searchValue, setSearchValue] = useState('')
   const [selectedCategory, setSelectedCategory] = useState(-1)
-  const [categories, setCategories] = useState([]);
-  const [products, setProducts] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [allProducts, setAllProducts] = useState(false);
+  const [categories, setCategories] = useState([])
+  const [products, setProducts] = useState([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [allProducts, setAllProducts] = useState(false)
   const [isLoading, setLoading] = useState(false)
-  // const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true)
@@ -78,35 +68,15 @@ function Home() {
         setLoading(false)
       })
       .catch(error => {
-        console.error("Erreur lors de la récupération des catégories:", error);
+        alert(error.response.data)
+        console.error("Erreur lors de la récupération des catégories: ", error);
         setLoading(false)
-      });
-  }, []);
-
-  // useEffect(() => {
-  //   axiosClient.get('/shop/products')
-  //     .then(({data}) => {
-  //       console.log(data.data)
-  //       setProducts(data.data)
-  //     })
-  //     .catch(error => {
-  //       console.error("Erreur lors de la récupération des produits:", error);
-  //     });
-  // }, []);
+      })
+  }, [])
 
   useEffect(() => {
-    // console.log(currentPage)
-    // console.log(selectedCategory)
     loadProducts(currentPage)
-    console.log(searchValue)
   }, [currentPage, searchValue]);
-
-  // useEffect(() => {
-  //   // console.log(currentPage)
-  //   // console.log(selectedCategory)
-  //   handleSearch(searchValue)
-  // }, [searchValue]);
-
 
   const loadProducts = (page) => {
     if (currentPage === 0) {
@@ -117,48 +87,36 @@ function Home() {
     axiosClient.get(`/shop/products?page=${page}&category=${selectedCategory}&searchItem=${searchValue}`)
       .then(response => {
         const data = response.data.data
-        // console.log(data)
         if (page === 1) {
           setProducts(data)
           setAllProducts(false)
-          // console.log(data)
         } else {
           setProducts(prevProducts => [...prevProducts, ...data]);
         }
-        if (data.length == 0 || data.length < 10) {
+        if (data.length == 0 || data.length < 12) {
           setAllProducts(true)
         }
         setLoading(false)
       })
       .catch(error => {
-        console.error("Erreur lors de la récupération des produits:", error);
+        console.error("Erreur lors de la récupération des produits: ", error);
         setLoading(false)
       });
   };
 
-  // const handleSearch = (searchValue) => {
-  //   axiosClient.get(`/shop/search?&searchItem=${searchValue}&category=${selectedCategory}`)
-  //     .then(response => {
-  //       setProducts(prevProducts => [...prevProducts, ...response.data.data]);
-  //     })
-  //     .catch(error => {
-  //       console.error("Erreur lors de la récupération des produits de recherche.", error);
-  //     });
-  // };
-
   const handleLoadMore = () => {
     setCurrentPage(prevPage => prevPage + 1);
-  };
+  }
 
   return (
     <div>
       <Header />
       <StyledTitle theme={theme}>
-        <h2>"Bienvenue chez E-Shop. Vous satisfaire,notre dévise!"</h2>
+        Bienvenue chez E-Shop. Vous satisfaire, notre dévise!
       </StyledTitle>
       <SearchBar 
         type="text" 
-        placeholder="Rechercher des produits..." 
+        placeholder="Recherchez des produits par nom ou code..." 
         value={searchValue}
         onChange={(e) => setSearchValue(e.target.value)}
       />
@@ -171,18 +129,17 @@ function Home() {
           <Categories 
             categories={categories}
             setSelectedCategory={setSelectedCategory}
-            // selectedCategory={selectedCategory}
-            // currentPage={currentPage}
             setCurrentPage={setCurrentPage}
             theme={theme} 
           />
         )}
         
         <ProductsWrapper>
-          { false ? (
-            <LoaderWrapper>
-              <Loader theme={theme} data-testid="loader"/>
-            </LoaderWrapper>
+          { isLoading ? (
+            null
+            // <LoaderWrapper>
+            //   <Loader theme={theme} data-testid="loader"/>
+            // </LoaderWrapper>
           ) : (
             products
               .filter(({ nomPro }) => (nomPro.toLowerCase().includes(searchValue.toLowerCase())))
@@ -199,8 +156,12 @@ function Home() {
                 />
               ) : null
           )))}
-          {allProducts ? <p>Plus de produits disponibles.</p> : <button onClick={handleLoadMore}>Charger plus</button>}
-          <button onClick={() => window.scrollTo(0, 0)}>Revenir en haut</button>
+          {allProducts ? (
+            <p>Il n&lsquoy a plus de produits disponibles en stock.</p>
+          ) : (
+            <StyledLink onClick={handleLoadMore}>Charger plus</StyledLink>
+          )}
+          <StyledLink onClick={() => window.scrollTo(0, 0)}>Revenir en haut</StyledLink>
         </ProductsWrapper>
       </HomeWrapper>
       <Footer />
