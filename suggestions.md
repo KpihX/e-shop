@@ -1,0 +1,1 @@
+- il faudrait qu'après avoir appuyer sur valider dans le cart, le client puisse voir sa commande, ainsi il pourra décider de la modifier. En effet j'ai pensé au cas où, lorsqu'il appuie sur valider, il y a des lignes qui sont en rupture de stock. du coup ces lignes sont ignorées, mais la commande est quand-même créé. 

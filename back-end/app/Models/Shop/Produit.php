@@ -40,4 +40,15 @@ class Produit extends Model
     {
         return $this->hasMany(Photo::class, 'codePro', 'codePro');
     }
+    public function disponible(int $qte){
+        if($this->qte - $qte >= 0){
+            $this->actif = 1;
+            $this->save();
+        }
+        else{
+            $this->actif = 0;
+            $this->save();
+        }
+    }
+
 }

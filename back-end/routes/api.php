@@ -57,7 +57,7 @@ Route::prefix('/shop')->group(function () {
     //recuperer les villes
     Route::get('town', [VilleController::class, 'index']);
 
-    Route::post('command', [CommandeController::class, 'command']);
+    Route::post('command', [CommandeController::class, 'store']);
     //Cart CRUD
     // Route::controller(CommandeController::class)->group(function(){
         

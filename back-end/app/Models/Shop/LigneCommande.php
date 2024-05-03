@@ -6,7 +6,7 @@ use App\Models\Shop\Produit;
 use App\Models\Shop\Commande;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Support\Facades\Validator;
 class LigneCommande extends Model
 {
     use HasFactory;
