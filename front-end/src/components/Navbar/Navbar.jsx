@@ -28,6 +28,7 @@ import DarkMode from "./DarkMode";
 const Navbar = ({selectedCategory, setSelectedCategory, setCurrentPage, setSearchValue, currentSearchValue, setCurrentSearchValue }) => {
   // console.log(selectedCategory)
   const [categories, setCategories] = React.useState([])
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   React.useEffect(() => {
     axiosClient.get('/shop/categories')
@@ -110,7 +111,13 @@ const Navbar = ({selectedCategory, setSelectedCategory, setCurrentPage, setSearc
             </Link>
           )}
         </h1>
-        <ul className="sm:flex hidden items-center gap-4">
+        {/* Menu button for smaller screens */}
+        <button className="sm:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+          </svg>
+        </button>
+        <ul className={`sm:flex ${isMenuOpen ? 'block' : 'hidden'} items-center gap-4`}>
           {categories.map(({ idCat, nomCat }) => (
             <li 
               className="inline-block px-4 hover:text-primary duration-200" 
@@ -118,6 +125,7 @@ const Navbar = ({selectedCategory, setSelectedCategory, setCurrentPage, setSearc
               onClick={() => {
                 setSelectedCategory(idCat)
                 setCurrentPage(0)
+                setIsMenuOpen(false); // Close menu on selection
               }}
             >
               {idCat === selectedCategory ? (
