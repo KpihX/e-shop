@@ -9,9 +9,10 @@ function Product({ codePro, nomPro, description, prix, image, size1, size2 }) {
   return (
     <div key={codePro}
       data-aos="zoom-in"
-      className="rounded-2xl bg-white dark:bg-gray-800 hover:bg-black/80 dark:hover:bg-primary hover:text-white relative shadow-xl duration-300 group max-w-[300px]"
+      className="rounded-2xl bg-white dark:bg-gray-800 hover:bg-black/80 dark:hover:bg-primary hover:text-white relative shadow-xl duration-300 group w-[300px]"
     >
       {/* image section */}
+      <h1 className=" bg-orange-400 hover:scale-105 duration-300 text-white py-1 px-4 rounded-xl group-hover:bg-white group-hover:text-primary w-20">Id: {codePro}</h1>
       <div className="h-[200px] relative overflow-hidden pt-[20px]"> 
         <img
           src={image}
@@ -28,7 +29,7 @@ function Product({ codePro, nomPro, description, prix, image, size1, size2 }) {
         <FaStar className="text-yellow-500" />
         <FaStar className="text-yellow-500" />
         </div> */}
-        <h1 className="text-xl font-bold">ID: {codePro}</h1>
+        
         <h1 className="text-xl font-bold">{nomPro}</h1>
         <h1 className="text-xl font-bold">{prix} FCFA</h1>
         <p className="text-gray-500 group-hover:text-white duration-300 text-sm line-clamp-2">

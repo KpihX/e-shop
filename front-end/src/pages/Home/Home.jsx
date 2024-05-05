@@ -10,12 +10,18 @@ import "aos/dist/aos.css";
 // import Testimonials from "./components/Testimonials/Testimonials";
 import Footer from "../../components/Footer/Footer";
 
+const options=[
+  {value: 'name', label: 'Nom'},
+  {value: 'id', label: 'Id'}
+]
+
 const Home = () => {
   const [searchValue, setSearchValue] = React.useState('')
   const [selectedCategory, setSelectedCategory] = React.useState(-1)
   const [currentPage, setCurrentPage] = React.useState(1)
   const [currentSearchValue, setCurrentSearchValue] = React.useState('')
-  
+  const [searchType, setSearchType] = React.useState(options[0])
+
   React.useEffect(() => {
     AOS.init({
       offset: 100,
@@ -35,13 +41,17 @@ const Home = () => {
         setSearchValue={setSearchValue}
         currentSearchValue={currentSearchValue}
         setCurrentSearchValue={setCurrentSearchValue}
+        options={options}
+        setSearchType={setSearchType}
+
       />
-      {selectedCategory === -1 && currentSearchValue === "" && <Hero />}
+      {selectedCategory === -1 && (currentSearchValue === "" || searchValue != currentSearchValue) && <Hero />}
       <Products 
         selectedCategory={selectedCategory}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
         searchValue={searchValue}
+        searchType={searchType}
       />
       {/* <Banner />
       <Subscribe />

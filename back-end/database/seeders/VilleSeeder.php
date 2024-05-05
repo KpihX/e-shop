@@ -21,6 +21,8 @@ class VilleSeeder extends Seeder
             'Foumbot','Bangangté','Batouri','Banyo','Nkambé','Bali','Mbanga','Mokolo','Melong','Manjo','Garoua-Boulaï','Mora','Kaélé','Tibati','Ndop',
             'Akonolinga','Eséka','Mamfé','Obala','Muyuka'
         ];
+
+        sort($nomsVilles);
         $_ville = new ShopVille();
         $i=1;
         foreach ($nomsVilles as $ville) {

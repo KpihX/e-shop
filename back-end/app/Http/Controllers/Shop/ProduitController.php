@@ -13,7 +13,8 @@ use Exception;
 use Illuminate\Http\Testing\File;
 use Illuminate\Support\Facades\Storage;
 use Psy\Readline\Hoa\FileException;
-use Illuminate\Http\Response;
+// use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Config;
 
 
 // Définition de la classe ProduitController
@@ -25,6 +26,8 @@ class ProduitController extends Controller
         // Récupérez l'identifiant de la catégorie à partir de la requête, s'il est présent
         $categoryId = $request->query('category');
         
+        //On définit la pagination
+        $perPage = Config::get('pagination.perPage');
     
         // Assurez-vous que la requête contient 'page'
         $page = $request->query('page', 1);
@@ -44,8 +47,8 @@ class ProduitController extends Controller
             $query->where('nomPro', 'like', '%' . $searchItem . '%');
         }
     
-        // Paginez les produits, 10 par page
-        $produits = $query->paginate(12, ['*'], 'page', $page);
+        // Paginez les produits, 9 par page
+        $produits = $query->paginate($perPage, ['*'], 'page', $page);
     
         return ProduitResource::collection($produits);
     }
