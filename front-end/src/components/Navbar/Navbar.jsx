@@ -9,6 +9,7 @@ import DarkMode from "./DarkMode";
 import defaultTheme from 'tailwindcss/defaultTheme';
 import SmallScrren from './SmallScreen';
 import Dropdown from '../Dropdown/Dropdown';
+import { CategoryContext } from '../../utils/context/CategoryContext';
 
 // const DropdownLinks = [
 //   {
@@ -30,13 +31,18 @@ import Dropdown from '../Dropdown/Dropdown';
 
 const Navbar = ({selectedCategory, setSelectedCategory, setCurrentPage, setSearchValue, currentSearchValue, setCurrentSearchValue, setSearchType, options }) => {
   // console.log(selectedCategory)
-  const [categories, setCategories] = React.useState([])
+  const { categories, setCategories } = React.useContext(CategoryContext)
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
-  const [isLoading, setLoading] = React.useState(false)
+  const [isLoading, setLoading] = React.useState(true)
   const menuRef = React.useRef();
   const smBreakpoint = parseInt(defaultTheme.screens.sm);
   const [isSmallScreen, setIsSmallScreen] = React.useState(window.innerWidth <= smBreakpoint);
   
+  const goHome = () => {
+    setCurrentPage(0)
+    setCurrentSearchValue("")
+  }
+
   React.useEffect(() => {
     const checkScreenSize = () => {
       setIsSmallScreen(window.innerWidth < smBreakpoint);
@@ -58,7 +64,6 @@ const Navbar = ({selectedCategory, setSelectedCategory, setCurrentPage, setSearc
         setLoading(false)
       })
       .catch(error => {
-        alert(error.response.data)
         console.error("Erreur lors de la récupération des catégories: ", error);
         setLoading(false)
       })
@@ -81,6 +86,9 @@ const Navbar = ({selectedCategory, setSelectedCategory, setCurrentPage, setSearc
     };
   }, []);
 
+  // console.log("cat: ", categories)
+  // console.log("selCat: ", selectedCategory)
+  
   return (
     <div className="shadow-md bg-white dark:bg-gray-900 dark:text-white duration-200 relative z-40">
       {/* upper Navbar */}
@@ -88,7 +96,7 @@ const Navbar = ({selectedCategory, setSelectedCategory, setCurrentPage, setSearc
         <div className="bg-primary/40 py-2">
           <div className="container flex justify-between items-center">
             <div>
-              <Link to='/' className="font-bold text-2xl sm:text-3xl flex gap-2">
+              <Link onClick={() => {goHome(); setSelectedCategory(-1)}} to='/' className="font-bold text-2xl sm:text-3xl flex gap-2">
                 <img src={Logo} alt="Logo" className="w-10" />
                 e-shop
               </Link>
@@ -125,6 +133,7 @@ const Navbar = ({selectedCategory, setSelectedCategory, setCurrentPage, setSearc
               {/* order button */}
               <Link
                 to="/cart"
+                onClick={() => setSelectedCategory(-2)}
                 className="bg-gradient-to-r from-primary to-secondary transition-all duration-200 text-white  py-1 px-4 rounded-full flex items-center gap-3 group"
               >
                 <span className="group-hover:block hidden transition-all duration-200">
@@ -153,19 +162,17 @@ const Navbar = ({selectedCategory, setSelectedCategory, setCurrentPage, setSearc
         <h1
           className="inline-block px-4 hover:text-primary duration-100 gap-[2px] py-2" 
           key={-1} 
-          onClick={() => {
-            setSelectedCategory(-1)
-            setCurrentPage(0)
-          }}
         >
           {selectedCategory === -1 ? (
             <Link   
+              onClick={() => {goHome(); setSelectedCategory(-1)}}
               className="group-hover:block transition-all duration-100 text-primary"
               to="/">
               Accueil
             </Link>
             ) : (
             <Link   
+              onClick={() => {goHome(); setSelectedCategory(-1)}}
               className="group-hover:block transition-all duration-100"
               to="/">
               Accueil
@@ -175,7 +182,7 @@ const Navbar = ({selectedCategory, setSelectedCategory, setCurrentPage, setSearc
         <div className="group relative cursor-pointer py-2">
           {/* Menu button for smaller screens */}
           <button className="sm:hidden flex items-center gap-[2px] " onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            {selectedCategory === -1 ? <p>Categories</p> : 
+            {selectedCategory === -1 || selectedCategory === -2 ? <p>Categories</p> : 
               <p className="text-primary block transition-all duration-200">
                 {categories.find(({ idCat }) => idCat === selectedCategory).nomCat}
               </p>
@@ -195,6 +202,7 @@ const Navbar = ({selectedCategory, setSelectedCategory, setCurrentPage, setSearc
               >
                 {idCat === selectedCategory ? (
                   <Link   
+                    onClick={() => {goHome(); setSelectedCategory(idCat)}}
                     className={`${idCat === selectedCategory ? 'text-primary' : ''} block transition-all duration-200`}
                     to="/"
                   >
@@ -202,6 +210,7 @@ const Navbar = ({selectedCategory, setSelectedCategory, setCurrentPage, setSearc
                   </Link>
                 ) : (
                   <Link   
+                    onClick={() => {goHome(); setSelectedCategory(idCat)}}
                     className="group-hover:block transition-all duration-200"
                     to="/"
                   >

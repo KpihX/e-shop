@@ -9,18 +9,24 @@ import "aos/dist/aos.css";
 // import Subscribe from "./components/Subscribe/Subscribe";
 // import Testimonials from "./components/Testimonials/Testimonials";
 import Footer from "../../components/Footer/Footer";
-
-const options=[
-  {value: 'name', label: 'Nom'},
-  {value: 'id', label: 'Id'}
-]
+import options from "../../datas/options";
+import { CategoryContext } from "../../utils/context/CategoryContext"
+import { PageContext } from "../../utils/context/PageContext";
 
 const Home = () => {
   const [searchValue, setSearchValue] = React.useState('')
-  const [selectedCategory, setSelectedCategory] = React.useState(-1)
-  const [currentPage, setCurrentPage] = React.useState(1)
+  const { currentPage, setCurrentPage } = React.useContext(PageContext)
   const [currentSearchValue, setCurrentSearchValue] = React.useState('')
   const [searchType, setSearchType] = React.useState(options[0])
+  const { selectedCategory, setSelectedCategory} = React.useContext(CategoryContext)
+
+  const goHome = () => {
+    setCurrentPage(0)
+    setCurrentSearchValue("")
+    setSelectedCategory(-1)
+  }
+
+  // console.log(currentPage)
 
   React.useEffect(() => {
     AOS.init({
@@ -31,6 +37,12 @@ const Home = () => {
     });
     AOS.refresh();
   }, []);
+
+  React.useEffect(() => {
+    if (currentSearchValue === "") {
+      setSearchValue("")
+    }
+  }, [currentSearchValue]);
 
   return (
     <div className="bg-white dark:bg-gray-900 dark:text-white duration-200">
@@ -45,7 +57,7 @@ const Home = () => {
         setSearchType={setSearchType}
 
       />
-      {selectedCategory === -1 && (currentSearchValue === "" || searchValue != currentSearchValue) && <Hero />}
+      {selectedCategory === -1 && searchValue === "" && <Hero />}
       <Products 
         selectedCategory={selectedCategory}
         currentPage={currentPage}
@@ -57,7 +69,9 @@ const Home = () => {
       <Subscribe />
       sss
       <Testimonials /> */}
-      <Footer />
+      <Footer 
+        goHome={goHome}
+      />
     </div>
   );
 };

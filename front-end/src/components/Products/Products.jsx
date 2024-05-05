@@ -25,7 +25,7 @@ const Products = ({ selectedCategory, currentPage, setCurrentPage, searchValue, 
 
   React.useEffect(() => {
     loadProducts(currentPage)
-  }, [currentPage, searchValue, searchType]);
+  }, [currentPage, searchValue, selectedCategory, searchType]);
 
   const ajustProducts = (data) => {
     setProducts(data
@@ -44,9 +44,10 @@ const Products = ({ selectedCategory, currentPage, setCurrentPage, searchValue, 
       return
     }
     setLoading(true)
-    axiosClient.get(`/shop/products?page=${page}&category=${selectedCategory}&searchItem=${searchValue}`)
+    axiosClient.get(`/shop/products?page=${page}&category=${selectedCategory}&searchType=${searchType.value}&searchItem=${searchValue}`)
       .then(response => {
         let data = response.data.data
+        console.log("data: ", data)
         if (page === 1) {
           ajustProducts(data)
           setAllProducts(false)
@@ -74,7 +75,7 @@ const Products = ({ selectedCategory, currentPage, setCurrentPage, searchValue, 
   // console.log(searchValue)
   // console.log(searchType)
   return (
-    <div className="bg-slate-50 dark:bg-inherit">
+    <div className="bg-slate-50 dark:bg-gray-700">
       <ScrollTopButton />
       <div className="container ">
         {/* Header section */}
@@ -114,7 +115,8 @@ const Products = ({ selectedCategory, currentPage, setCurrentPage, searchValue, 
                 {products.length != 0 ? 
                   <h1 className="py-10 text-xl text-center font-bold">Il n'y a pas d'autres produits disponibles en stock!</h1>
                   : null
-                }</>
+                }
+              </>
             ) : (
                 <button
                   className="w-full border border-primary dark:border-white dark:text-white dark:bg-gray-800 bg-white hover:scale-105 duration-300 text-primary py-2 px-4 rounded-full my-10 "

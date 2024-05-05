@@ -26,6 +26,8 @@ class ProduitController extends Controller
         // Récupérez l'identifiant de la catégorie à partir de la requête, s'il est présent
         $categoryId = $request->query('category');
         
+        $searchType = $request->query('searchType');
+
         //On définit la pagination
         $perPage = Config::get('pagination.perPage');
     
@@ -44,9 +46,13 @@ class ProduitController extends Controller
         }
 
         if ($searchItem) {
-            $query->where('nomPro', 'like', '%' . $searchItem . '%');
+            if ($searchType == "name") {
+                $query->where('nomPro', 'like', '%' . $searchItem . '%');
+            } else if ($searchType == "id") {
+                $query->where('codePro', intval($searchItem));
+            }
         }
-    
+        
         // Paginez les produits, 9 par page
         $produits = $query->paginate($perPage, ['*'], 'page', $page);
     
