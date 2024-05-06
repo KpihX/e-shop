@@ -1,30 +1,46 @@
 // import React from "react";
-import Image1 from "../../assets/hero/women.png";
-import Image2 from "../../assets/hero/shopping.png";
-import Image3 from "../../assets/hero/sale.png";
+import Image1 from "../../assets/hero/hero1.png";
+import Image2 from "../../assets/hero/hero2.png";
+import Image3 from "../../assets/hero/hero3.png";
+import Image4 from "../../assets/hero/hero4.png";
+import Image5 from "../../assets/hero/hero5.png";
 import Slider from "react-slick";
 
 const ImageList = [
   {
     id: 1,
     img: Image1,
-    title: "Upto 50% off on all Men's Wear",
+    title: "Exprimez votre essence avec style",
     description:
-      "lorem His Life will forever be Changed dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "Rejoignez la révolution de la mode africaine, où chaque tenue est une affirmation de votre unicité et de votre patrimoine.",
   },
   {
     id: 2,
     img: Image2,
-    title: "30% off on all Women's Wear",
+    title: "Réinventez votre garde-robe avec audace",
     description:
-      "Who's there lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "Faites l’expérience de la transformation de la mode africaine, où tradition et modernité fusionnent pour créer des looks inoubliables.",
   },
   {
     id: 3,
     img: Image3,
-    title: "70% off on all Products Sale",
+    title: "L’art de la mode africaine à votre portée",
     description:
-      "consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "Embarquez pour une aventure de mode sans pareil, où chaque pièce raconte une histoire d’innovation et d’héritage africain",
+  },
+  {
+    id: 4,
+    img: Image5,
+    title: "Voyagez à travers les tendances avec nous",
+    description:
+      "Embarquez pour une aventure de mode sans pareil, où chaque pièce raconte une histoire d’innovation et d’héritage africain.",
+  },
+  {
+    id: 5,
+    img: Image4,
+    title: "Au carrefour de l’élégance africaine",
+    description:
+      "Là où chaque clic vous rapproche de la grandeur de la mode africaine, découvrez un monde où style et culture se rencontrent.",
   },
 ];
 

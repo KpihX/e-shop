@@ -13,10 +13,10 @@ class CategoriesTableSeeder extends Seeder
      */
     public function run(): void
     {
-        Categorie::create(['nomCat' => 'bébé']);
-        Categorie::create(['nomCat' => 'enfant']);
-        Categorie::create(['nomCat' => 'homme']);
-        Categorie::create(['nomCat' => 'femme']);
+        Categorie::create(['nomCat' => 'Bébé']);
+        Categorie::create(['nomCat' => 'Enfant']);
+        Categorie::create(['nomCat' => 'Homme']);
+        Categorie::create(['nomCat' => 'Femme']);
     }
 }
 

@@ -3,16 +3,40 @@ import React from "react";
 // import { LoaderWrapper } from '../../utils/style/Atoms'
 import axiosClient from '../../axiosClient'
 import Product from "../Product/Product";
+import Loader from "../Loader/Loader";
+import ScrollTopButton from "../ScrollTopButton/ScrollTopButton";
 // import { FaStar } from "react-icons/fa";
 
-const Products = ({ selectedCategory, currentPage, setCurrentPage, searchValue }) => {
+const Products = ({ selectedCategory, currentPage, setCurrentPage, searchValue, searchType }) => {
   const [products, setProducts] = React.useState([])
   const [allProducts, setAllProducts] = React.useState(false)
   const [isLoading, setLoading] = React.useState(false)
+  const [perPage, setPerPage] = React.useState(9)
+  
+  React.useEffect(() => {
+    axiosClient.get('/shop/pagination')
+      .then(response => {
+        setPerPage(response.data.perPage)
+      })
+      .catch(error => {
+        console.log("Erreur lors de la recuperation de la pagination: ", error);
+      })
+  }, [])
 
   React.useEffect(() => {
     loadProducts(currentPage)
-  }, [currentPage, searchValue]);
+  }, [currentPage, searchValue, selectedCategory, searchType]);
+
+  const ajustProducts = (data) => {
+    setProducts(data
+      .filter(({ nomPro, codePro }) => {
+        if (searchType.value == "name") {
+          return nomPro.toLowerCase().includes(searchValue.toLowerCase())
+        } else if (searchType.value == "id") {
+          return searchValue == "" || codePro == parseInt(searchValue)
+        }
+      }))
+    }
 
   const loadProducts = (page) => {
     if (currentPage === 0) {
@@ -20,17 +44,19 @@ const Products = ({ selectedCategory, currentPage, setCurrentPage, searchValue }
       return
     }
     setLoading(true)
-    axiosClient.get(`/shop/products?page=${page}&category=${selectedCategory}`)//&searchItem=${searchValue}`)
+    axiosClient.get(`/shop/products?page=${page}&category=${selectedCategory}&searchType=${searchType.value}&searchItem=${searchValue}`)
       .then(response => {
-        const data = response.data.data
-        // console.log(data)
+        let data = response.data.data
+        console.log("data: ", data)
         if (page === 1) {
-          setProducts(data)
+          ajustProducts(data)
           setAllProducts(false)
         } else {
-          setProducts(prevProducts => [...prevProducts, ...data]);
+          ajustProducts([...products, ...data]);
         }
-        if (data.length == 0 || data.length < 12) {
+        
+        if (data.length == 0 || data.length < perPage) {
+          console.log(page)
           setAllProducts(true)
         }
         setLoading(false)
@@ -44,65 +70,63 @@ const Products = ({ selectedCategory, currentPage, setCurrentPage, searchValue }
   const handleLoadMore = () => {
     setCurrentPage(prevPage => prevPage + 1);
   }
+
+  // console.log(products)
+  // console.log(searchValue)
+  // console.log(searchType)
   return (
-    <div>
-      <div className="container">
+    <div className="bg-slate-50 dark:bg-gray-700">
+      <ScrollTopButton />
+      <div className="container ">
         {/* Header section */}
         <div className="text-left mb-24">
-          {/* <p data-aos="fade-up" className="text-sm text-primary">
-            Top Rated Products for you
-          </p> */}
-          {/* <div className="flex justify-center items-center h-screen"> */}
-            <h1 data-aos="fade-up" className="text-3xl font-bold mx-auto text-center">
-              Nos meilleurs produits...
-            </h1>
-          {/* </div> */}
-          {/* <p data-aos="fade-up" className="text-xs text-gray-400">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sit
-            asperiores modi Sit asperiores modi
-          </p> */}
+          {/* Commented code has been preserved */}
+          <h1 data-aos="fade-up" className="py-10 text-3xl font-bold mx-auto text-center">
+            Nos meilleurs produits...
+          </h1>
         </div>
         {/* Body section */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-20 md:gap-5 place-items-center">
-        { isLoading ? (
-            null
-            // <LoaderWrapper>
-            //   <Loader data-testid="loader"/>
-            // </LoaderWrapper>
-          ) : (
-            products
-              .filter(({ nomPro }) => (nomPro.toLowerCase().includes(searchValue.toLowerCase())))
-              .map(({codePro, idCategorie, nomPro, prix, description, image, size1, size2}) => (
-                (selectedCategory == -1 || selectedCategory == idCategorie) ? (
-                <Product 
-                  key={codePro} 
-                  codePro={codePro} 
-                  nomPro={nomPro}
-                  description={description}
-                  prix={prix}
-                  image={image}
-                  size1={size1}
-                  size2={size2}
-                />
-              ) : null
-          )))}
-          {allProducts ? (
-            <h1 className="text-xl font-bold">Il n'y a plus de produits disponibles en stock.</h1>
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <div className="flex-row">
+            {products.length !== 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-20 md:gap-20 place-items-center">
+                {products.map(({ codePro, idCategorie, nomPro, prix, description, image, size1, size2 }) => (
+                  (selectedCategory === -1 || selectedCategory === idCategorie) ? (
+                    <Product
+                      key={codePro}
+                      codePro={codePro}
+                      nomPro={nomPro}
+                      description={description}
+                      prix={prix}
+                      image={image}
+                      size1={size1}
+                      size2={size2}
+                    />
+                  ) : null
+                ))}
+              </div>
             ) : (
-            <button
-              className="bg-primary hover:scale-105 duration-300 text-white py-1 px-4 rounded-full mt-4 group-hover:bg-white group-hover:text-primary"
-              onClick={handleLoadMore}
-            >
-              Charger plus de produits
-            </button>
-          )}
-          <button
-            className="bg-primary hover:scale-105 duration-300 text-white py-1 px-4 rounded-full mt-4 group-hover:bg-white group-hover:text-primary"
-            onClick={() => window.scrollTo(0, 0)}
-          >
-            Revenir plus haut
-          </button>
-        </div>
+              <h1 className="py-10 text-xl text-center font-bold">Aucun produit ne correspond à votre recherche!</h1>
+            )}
+            {allProducts ? (
+              <>
+                {products.length != 0 ? 
+                  <h1 className="py-10 text-xl text-center font-bold">Il n'y a pas d'autres produits disponibles en stock!</h1>
+                  : null
+                }
+              </>
+            ) : (
+                <button
+                  className="w-full border border-primary dark:border-white dark:text-white dark:bg-gray-800 bg-white hover:scale-105 duration-300 text-primary py-2 px-4 rounded-full my-10 "
+                  onClick={handleLoadMore}
+                >
+                  Charger plus de produits
+                </button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

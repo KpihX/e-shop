@@ -48,8 +48,9 @@ php artisan migrate // to create the databse and its schema
 php artisan db:seed --class=CategoriesTableSeeder // To insert test categories
 
 php artisan db:seed --class=ProduitPhotoSeeder // To insert test products and their images
-```
 
+php artisan db:seed --class=VilleSeeder // To insert test villes
+```
 
 ### 1.4. Generating API Key (Facultative)
 

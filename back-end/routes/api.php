@@ -9,6 +9,7 @@ use App\Http\Controllers\Shop\ProduitController;
 use App\Http\Controllers\Shop\VilleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Config;
 
 
 /*
@@ -58,6 +59,13 @@ Route::prefix('/shop')->group(function () {
     Route::get('town', [VilleController::class, 'index']);
 
     Route::post('command', [CommandeController::class, 'store']);
+
+    Route::get('/pagination', function () {
+        return response()->json([
+            'perPage' => Config::get('pagination.perPage'),
+        ]);
+    });
+
     //Cart CRUD
     // Route::controller(CommandeController::class)->group(function(){
         
