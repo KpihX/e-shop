@@ -45,7 +45,7 @@ php artisan storage:link // to link with the local storage where images are loca
 
 php artisan migrate // to create the databse and its schema
 
-php artisan db:seed --class=GestionnaireSeeder // Pour créer des gestionnaires fictifs
+php artisan db:seed --class=GestionnaireSeeder // To initialise test managers
 
 php artisan db:seed --class=CategoriesTableSeeder // To insert test categories
 
