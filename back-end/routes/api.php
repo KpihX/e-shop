@@ -1,8 +1,7 @@
 <?php
 
+use App\Http\Controllers\GestionnaireController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\LigneCarteController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\Shop\CategorieController;
 use App\Http\Controllers\Shop\CommandeController;
 use App\Http\Controllers\Shop\ProduitController;
@@ -26,17 +25,17 @@ use Illuminate\Support\Facades\Config;
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('logout', [AuthController::class, 'logout']);
 
-    Route::get('/user', function (Request $request) {
+    Route::get('gestionnaire', function (Request $request) {
         return $request->user();
     });
-    Route::apiResource('/users', UserController::class);
+
+    Route::apiResource('gestionnaires', GestionnaireController::class);
 });
 
-Route::post('login', [AuthController::class, 'login']);
-Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login'])->name('login');;
 
 // This is for the home page
-Route::prefix('/shop')->group(function () {
+Route::prefix('shop')->group(function () {
     Route::get('categories', [CategorieController::class, 'index']);
      // Routes pour les opérations CRUD sur les produits
     //  Route::apiResource('categories', ProduitController::class);
@@ -44,7 +43,7 @@ Route::prefix('/shop')->group(function () {
     // Route pour obtenir les produits paginés
     Route::get('products', [ProduitController::class, 'index']);
 
-    Route::get('search', [ProduitController::class, 'search']);
+    // Route::get('search', [ProduitController::class, 'search']);
 
     // Route pour charger plus de produits0
     // Route::get('products/load-more', [ProduitController::class, 'loadMore']);
@@ -60,7 +59,7 @@ Route::prefix('/shop')->group(function () {
 
     Route::post('command', [CommandeController::class, 'store']);
 
-    Route::get('/pagination', function () {
+    Route::get('pagination', function () {
         return response()->json([
             'perPage' => Config::get('pagination.perPage'),
         ]);

@@ -45,6 +45,8 @@ php artisan storage:link // to link with the local storage where images are loca
 
 php artisan migrate // to create the databse and its schema
 
+php artisan db:seed --class=GestionnaireSeeder // Pour créer des gestionnaires fictifs
+
 php artisan db:seed --class=CategoriesTableSeeder // To insert test categories
 
 php artisan db:seed --class=ProduitPhotoSeeder // To insert test products and their images
@@ -79,14 +81,43 @@ sudo /opt/lampp/lampp stop
 sudo /opt/lampp/lampp start
 ```
 
-## 2. Frontend Setup
+## 2. Front-int Setup
 
-### 2.1. Frontend Dependencies
+### 2.1. Front-int Dependencies
 
 Navigate to the `front-end` directory and install all the dependencies by running:
 
 ```bash
-cd ../front-end
+cd ../front-int
+npm install
+```
+
+This step is also only required the first time.
+
+### 2.2. Testing
+
+To test the frontend, run the development server by executing the following command in the `front-end` directory:
+
+```bash
+npm run dev
+```
+
+This will compile your frontend assets and start a development server.
+
+Once connected there are by default three profile:
+
+- login: ADMIN1, password: admin // it's the only profile that can access the 'Gestionnaires' page
+- login: GEST2, password: gest
+- login: CAIS3, password: cais
+
+## 2. Back-int Setup
+
+### 2.1. Front-int Dependencies
+
+Navigate to the `front-end` directory and install all the dependencies by running:
+
+```bash
+cd ../back-int
 npm install
 ```
 
