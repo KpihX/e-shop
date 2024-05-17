@@ -11,7 +11,7 @@ class StoreFactureRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->check();
     }
 
     /**
@@ -22,7 +22,20 @@ class StoreFactureRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            // Validation rules for Facture
+            'dateFac' => 'required|date',
+            'remise' => 'required|numeric',
+            'montant' => 'required|numeric',
+            'tel' => 'required|string|max:255',
+            'typeFac' => 'required|integer',
+            'idCaissiere' => 'required|integer',
+            'capital' => 'required|numeric',
+            'tva' => 'required|numeric',
+
+            // Validation rules for LigneFacture
+            'lignes.*.codePro' => 'required|integer',
+            'lignes.*.prix' => 'required|numeric',
+            'lignes.*.qte' => 'required|integer',
         ];
     }
 }

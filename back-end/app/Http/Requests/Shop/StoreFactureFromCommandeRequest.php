@@ -4,14 +4,17 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateLigneFactureRequest extends FormRequest
+/**
+ * This request is needed before we can transform a Commande into a Facture
+ */
+class StoreFactureFromCommandeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->check();
     }
 
     /**
@@ -22,7 +25,10 @@ class UpdateLigneFactureRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'typeFac' => 'required|integer',
+            'idCaissiere' => 'required|integer',
+            'capital' => 'required|numeric',
+            'tva' => 'required|numeric',
         ];
     }
 }

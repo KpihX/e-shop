@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('couleur', 255)->collate('utf8mb4_unicode_ci')->nullable();
             $table->tinyInteger('disponible');
 
+            $table->decimal('prix', 8, 0);
+
             $table->foreign('idCommande')->references('idCommande')->on('commande'); // Assuming 'commande' table exists
             $table->foreign('codePro')->references('codePro')->on('produit'); // Assuming 'produits' table with 'id' primary key exists
             $table->timestamps();

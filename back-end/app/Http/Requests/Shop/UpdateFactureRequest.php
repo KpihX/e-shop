@@ -11,7 +11,7 @@ class UpdateFactureRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->check();
     }
 
     /**
@@ -22,7 +22,21 @@ class UpdateFactureRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            // Validation rules for updating Facture
+            'dateFac' => 'sometimes|date',
+            'remise' => 'sometimes|numeric',
+            'montant' => 'sometimes|numeric',
+            'tel' => 'sometimes|string|max:255',
+            'typeFac' => 'sometimes|integer',
+            'idCaissiere' => 'sometimes|integer',
+            'capital' => 'sometimes|numeric',
+            'tva' => 'sometimes|numeric',
+
+            // Validation rules for updating LigneFacture
+            'lignes.*.idLFac' => 'sometimes|integer|exists:lignefacture,idLFac',
+            'lignes.*.codePro' => 'sometimes|integer',
+            'lignes.*.prix' => 'sometimes|numeric',
+            'lignes.*.qte' => 'sometimes|integer',
         ];
     }
 }
