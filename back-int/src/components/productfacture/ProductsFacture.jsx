@@ -122,8 +122,8 @@ const ProductsFacture = ()  => {
   const [perPage, setPerPage] = React.useState(9)
   const currentPage = 1;
   const [searchValue, setSearchValue]=React.useState(null);
-  const [selectedCategory, setSelectedCategory] = React.useState("homme");
-  const [searchType, setSearchType]=React.useState('nom');
+  const [selectedCategory, setSelectedCategory] = React.useState(1);
+  const [searchType, setSearchType]=React.useState('name');
 
   
   React.useEffect(() => {
@@ -162,7 +162,7 @@ const ProductsFacture = ()  => {
         let data = response.data.data
         console.log("data: ", data)
         if (page === 1) {
-          ajustProducts(data)
+          setProducts(data)
           setAllProducts(false)
         } else {
           ajustProducts([...products, ...data]);
@@ -203,11 +203,9 @@ const ProductsFacture = ()  => {
     <div className="bg-white dark:bg-gray-900 dark:text-white duration-200">
       <Navbar/>
 
-  <div>
-      <div>
+  <div className="flex">
         <Facture selectedProduct={selectedProduct} test={selectProduct} test1={setSelectProduct}/>
-      </div>
-      <div className="mt-14 mb-12  justify-between">
+      <div className="container w-4/5">
       <div className=" justify-between items-center gap-4">
     <div className="relative group hidden sm:block ml-auto">
         <input
@@ -224,10 +222,10 @@ const ProductsFacture = ()  => {
         <div className="container">
           {/* Header section */}
           <div className="text-center mb-10 max-w-[600px] mx-auto">
-            <h1 data-aos="fade-up" className="text-3xl font-bold">
+            <h1  className="text-3xl font-bold">
               Produits
             </h1>
-            <p data-aos="fade-up" className="text-3xs text-gray-4000">
+            <p  className="text-3xs text-gray-4000">
               Liste des produits commandés
             </p>
           </div>
@@ -237,7 +235,6 @@ const ProductsFacture = ()  => {
               {/* card section */}
               {ProductsData.map((data) => ( 
                 <div
-                  data-aos="fade-up"
                   key={data.codePro}
                   className="space-y-3"
                 >

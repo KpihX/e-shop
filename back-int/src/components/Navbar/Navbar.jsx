@@ -22,7 +22,7 @@ const Pages = [
   {
     id: 3,
     name: "STOCK",
-    link: "/#",
+    link: "/stock",
   },
   {
     id: 4,
@@ -46,15 +46,19 @@ const Navbar = () => {
     ev.preventDefault();
     axiosClient.get('/logout')
     .then(({}) => {
-       goHome()
        setSelectedCategory(-1)
        setGestionnaire(null)
        setToken(null)
+       goHome()
        localStorage.removeItem('ACCESS_TOKEN');
        console.log("Test")
       //  window.location.reload(true)
     })
     }
+
+  const goHome = () => {
+    window.location.reload(true)
+  }
 
   React.useEffect(() => {
     const checkScreenSize = () => {
@@ -108,7 +112,7 @@ const Navbar = () => {
               </select> */}
 
               {/* order button */}
-              { gestionnaire && gestionnaire.typeGest == 0 &&
+              {/* { gestionnaire && gestionnaire.typeGest == 0 &&
                 <Link
                   to="/gestionnaires"
                   onClick={() => setSelectedCategory(-2)}
@@ -119,7 +123,7 @@ const Navbar = () => {
                   </span>
                   <FaUsers className="text-xl text-white drop-shadow-sm cursor-pointer" />
                 </Link>
-              }
+              } */}
               <div>
               {/* <FaUserCircle className="account-icon" style={{ color: 'blue' }} /> */}
               <button

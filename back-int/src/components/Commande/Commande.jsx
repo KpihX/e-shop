@@ -5,6 +5,44 @@ import Popup from '../PopupCommande/Popup';
 import Navbar from '../Navbar/Navbar';
 import Footer from '../Footer/Footer';
 import axiosClient from '../../axiosClient'
+import {
+  MagnifyingGlassIcon,
+  ChevronUpDownIcon,
+} from "@heroicons/react/24/outline";
+import { PencilIcon, UserPlusIcon, TrashIcon } from "@heroicons/react/24/solid";
+import {
+  Card,
+  CardHeader,
+  Input,
+  Typography,
+  Button,
+  CardBody,
+  Chip,
+  CardFooter,
+  Tabs,
+  TabsHeader,
+  Tab,
+  Avatar,
+  IconButton,
+  Tooltip,
+} from "@material-tailwind/react";
+
+const TABS = [
+  {
+    label: "Tous",
+    value: "all",
+  },
+  {
+    label: "Livrée",
+    value:1,
+  },
+  {
+    label: "Non Livrée",
+    value: 0,
+  },
+];
+
+
 function Commande() {
   const [commandes, setCommandes]=useState([]);
   const [isLoading, setLoading] = React.useState(true)
@@ -49,6 +87,35 @@ function Commande() {
 
     <div className="bg-white dark:bg-gray-900 dark:text-white duration-200">
     <Navbar />
+    <CardHeader floated={false} shadow={false} className="rounded-none">
+            <div className="mt-4 flex items-center justify-between gap-8">
+              <div>
+                <Typography variant="h5" color="blue-gray">
+                  Liste des Commandes
+                </Typography>
+                <Typography color="gray" className="mt-1 font-normal">
+                  Obtenir les informations sur une commande   
+                </Typography>
+              </div>
+            </div>
+            <div className="flex items-center justify-between gap-4 m-2 flex-row">
+              <Tabs value="all" className="w-full md:w-max flex">
+                <TabsHeader>
+                  {TABS.map(({ label, value }) => (
+                    <Tab key={value} value={value}>
+                      &nbsp;&nbsp;{label}&nbsp;&nbsp;
+                    </Tab>
+                  ))}
+                </TabsHeader>
+              </Tabs>
+              <div className="w-full md:w-72">
+                <Input
+                  label="Search"
+                  icon={<MagnifyingGlassIcon className="h-5 w-5" />}
+                />
+              </div>
+            </div>
+          </CardHeader>
     <div className="overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">

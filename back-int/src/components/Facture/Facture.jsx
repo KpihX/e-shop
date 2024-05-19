@@ -27,7 +27,7 @@ const Facture = ({ selectedProduct, test, test1 }) => {
 
     
     return (
-       <div className="absolute top-20 left-0 h-full w-1/3 bg-orange-200 shadow-md p-4 text-center" style={{ overflowY: 'auto' }}>
+       <div className="contenair flex rounded-md p-3 bg-primary/40 m-2 h-full w-2/5 flex-col justify-between" style={{ overflowY: 'auto' }}>
            <h1 className="text-4xl font-bold mb-4">Facture</h1>
            
            <div className="mb-4 flex items-center font-bold">

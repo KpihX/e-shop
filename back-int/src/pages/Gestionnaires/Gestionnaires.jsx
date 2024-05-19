@@ -121,16 +121,7 @@ export default function Gestionnaires(){
 
       return (
         <div className="bg-white dark:bg-gray-700 dark:text-white transition duration-200">
-        <Navbar 
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-          setCurrentPage={setCurrentPage}
-          setSearchValue={setSearchValue}
-          currentSearchValue={currentSearchValue}
-          setCurrentSearchValue={setCurrentSearchValue}
-          options={options}
-          setSearchType={setSearchType}
-        />
+        <Navbar />
         <Card className="h-full w-full overflow-scroll">
         <GestPopupProvider popup={popup} setPopup={setPopup} configEnd={configEnd} setConfigEnd={setConfigEnd}>
           <Outlet />
@@ -304,9 +295,7 @@ export default function Gestionnaires(){
             </div>
           </CardFooter> */}
         </Card>
-        <Footer 
-          goHome={goHome}
-        />
+        <Footer />
         </div>
       )
     }
