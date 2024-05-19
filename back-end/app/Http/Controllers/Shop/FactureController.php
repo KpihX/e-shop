@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreClientCarteRequest;
 use App\Http\Requests\StoreFactureFromCommandeRequest;
 use App\Http\Requests\StoreFactureRequest;
 use App\Http\Requests\UpdateFactureRequest;
@@ -12,6 +13,7 @@ use App\Models\Shop\Commande;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use LigneCarte;
 
 // use Illuminate\Support\Facades\Request;
 
@@ -25,7 +27,7 @@ class FactureController extends Controller
         $factures = Facture::latest()->paginate(10);
         //On définit la pagination
         $page = $request->query('page', 1);
-        $perPage = Config::get('pagination.perPageAdmin');
+        $perPage = config('pagination.perPageAdmin', 20);
         $factures = Facture::latest()->paginate($perPage, ['*'], 'page', $page);
 
         return FactureResource::collection($factures);
@@ -34,13 +36,13 @@ class FactureController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     * 
+     * Similar to create Facture with no cart
      */
     public function store(StoreFactureRequest $request)
     {
-        $data = $request->validated();
-
         // Create a new facture instance
-        $facture = Facture::create($data);
+        $facture = Facture::create($request->validated());
 
         // Return the newly created facture as FactureResource
         return new FactureResource($facture);
@@ -118,6 +120,57 @@ class FactureController extends Controller
         });
 
         // Return a response indicating the deletion was successful
-        return response()->json(['message' => 'La factures a ete detruite.'], 200);
+        return response()->json(['message' => 'La facture à été bien détruite.'], 200);
+    }
+
+    // Here we create facture and then the LigneCarte
+    public function createFactureWithCarte(StoreFactureRequest $request, string $idCarte)
+    {
+        // We try to validate
+        $request->validated();
+
+        // We create the facture
+        $factureResponse = $this->store($request); // Returns a resource
+        if ($factureResponse) {
+            $factureData = $factureResponse->resource->toArray();
+
+            $ligneCarteData = [
+                "idCarte" => $idCarte,
+                "idFac" => $factureData['idFac'], // Get from the FactureResponse resource
+                "dateOpera" => now(), //Now,
+                "point" => 0,
+                "montantFac" => $factureData['montant'] //Get it from response resource
+            ];
+            // Create the ligneFacture
+            LigneCarte::create($ligneCarteData);
+
+            return response()->json(['message' => 'Creation de la facture et LigneCarte Reussi'], 201);
+        } else {
+            return response()->json(['message' => 'Echèc de création facture '], 500);
+        }
+    }
+
+    // In this case, we create the clientcarte then we move on to create the Facture with LigneCarte
+    public function createFactureWithNewCarte(StoreFactureRequest $factureRequest, StoreClientCarteRequest $carteRequest)
+    {
+        //Make sure the carte Request is correct
+        $carteRequest->validated();
+
+        $clientCarteController = new ClientCarteController();
+        $clientCarteResponse = $clientCarteController->store($carteRequest);
+
+        if ($clientCarteResponse->getStatusCode() === 201) {
+            $carteData = $clientCarteResponse->resource->toArray();
+            // On recupere le matricule du client
+            return $this->createFactureWithCarte($factureRequest, $carteData['matr']);
+        } else {
+            return response()->json(['message' => 'La creation de facture a échoué'], 500);
+        }
+    }
+
+    // In this case we just create the facture and nothing else
+    public function createFactureWithNoCarte(StoreFactureRequest $request)
+    {
+        return $this->store($request);
     }
 }

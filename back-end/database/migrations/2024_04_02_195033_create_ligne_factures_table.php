@@ -9,7 +9,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('lignefacture', function (Blueprint $table) {
-            $table->id('idLFac');  // Use id() for auto-incrementing primary key
+            $table->increments('idLFac');  // Use id() for auto-incrementing primary key
             $table->unsignedInteger('codePro');
             $table->unsignedInteger('idFac');
             $table->decimal('prix', 8, 2);

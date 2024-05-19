@@ -31,25 +31,25 @@ class Commande extends Model
     }
 
     /**
-     * The $data must contain the typeFac, idCaissiere, capital and tva fields
+     * The $data must contain the idCaissiere and tva fields
      */
     public function toFactureData(array $data)
     {
         return [
-            'idFac' => null, 
+            'idFac' => null,
             'dateFac' => $this->dateCom,
-            'remise' => $this->remise, 
+            'remise' => $this->remise,
             'montant' => $this->montant,
             'tel' => $this->mobile,
-            'typeFac' => $data['typeFac'], 
-            'idCaissiere' => $data['idCaissiere'], 
-            'capital' => $data['capital'], 
-            'tva' => $data['tva'] 
+            'typeFac' => 0,
+            'idCaissiere' => $data['idCaissiere'],
+            'capital' => 0,
+            'tva' => $data['tva']
         ];
     }
 
     public function ligneCommandes()
     {
-        $this->hasMany(LigneCommande::class);
+        $this->hasMany(LigneCommande::class, 'idCommande');
     }
 }

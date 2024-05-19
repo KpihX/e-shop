@@ -14,7 +14,7 @@ class StoreFactureFromCommandeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->check();
+        return true; //TODO: require Auth
     }
 
     /**
@@ -25,9 +25,7 @@ class StoreFactureFromCommandeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'typeFac' => 'required|integer',
             'idCaissiere' => 'required|integer',
-            'capital' => 'required|numeric',
             'tva' => 'required|numeric',
         ];
     }

@@ -9,8 +9,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('facture', function (Blueprint $table) {
-            $table->unsignedInteger('idFac');
-            $table->primary('idFac');
+            $table->increments('idFac');
             $table->datetime('dateFac');
             $table->decimal('remise', 8, 2);
             $table->decimal('montant', 8, 2);
