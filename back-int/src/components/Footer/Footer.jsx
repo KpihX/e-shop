@@ -21,8 +21,12 @@ const BannerImg = {
 };
 
 
-const Footer = ({ goHome }) => {
+const Footer = () => {
 
+  const goHome = () => {
+    setCurrentPage(0)
+    setCurrentSearchValue("")
+  }
   return (
     <div style={BannerImg} className="text-white">
       <div className="container">

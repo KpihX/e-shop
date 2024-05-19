@@ -78,3 +78,11 @@ Route::prefix('shop')->group(function () {
     // });
     
 });
+
+Route::prefix('admin')->group(function () {
+
+    Route::post('login', [AuthController::class, 'loginAdmin']);
+    Route::get('allCommands', [CommandeController::class, 'allCommands']);
+    Route::get('getCommand', [CommandeController::class, 'getCommand']);
+
+});
