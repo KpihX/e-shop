@@ -24,7 +24,7 @@ const BannerImg = {
 const Footer = () => {
 
   return (
-    <div className="bg-primary text-white items-center justify-center flex fixed bottom-0 left-0 w-full" >
+    <div className="bg-secondary dark:bg-primary text-white  items-center justify-center flex fixed bottom-0 left-0 w-full" >
       <h3>ESHOP-MARKET</h3>
     </div>
   );

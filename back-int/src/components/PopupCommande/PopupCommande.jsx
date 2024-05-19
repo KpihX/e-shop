@@ -1,30 +1,38 @@
-import React, { useState } from 'react';
-import PopupCommande from './PopupCommande.jsx';
+import React from 'react';
+import axiosClient from '../../axiosClient'
 
-        // ,commandeSelect
-const Popup = (  { handleClose,commande }) => {
+const TABLE_HEAD = [
+    'ID',
+    'nomClient',
+    'mobile',
+    'Date',
+    'Montant',
+    'adresse',
+    'Lieu',
+    'livrer',
+  ''];
 
-  const [popupCommandeVisible, setPopupCommandeVisible] = useState(false);
+const PopupCommande = ({onClose}) => {
+      // Appel de la fonction pour afficher toutes les lignes d'une commande
+  const [isLoading, setLoading] = React.useState(true)
+  const [LignesCommande, setLignesCommande] = React.useState([])
+  React.useEffect(() => {
+    setLoading(true)
+    axiosClient.get(`/admin/getCommand?idCommande=${commande.idCommande}`)
+    .then((response) => {
+      setLignesCommande(response.data);
+      setLoading(false);
+    })
+    .catch(error => {
+      alert(error.response.data.message); // Assurez-vous que le message d'erreur est bien dans error.response.data.message
+      console.error(error.response);
+      setLoading(false);
+    });
+  }, []);
 
-  const [formData, setFormData] = useState({
-    ID: commande.idCommande,
-    Date: commande.dateCom,
-    Montant: commande.montant,
-    nomClient: commande.nomClient,
-    mobile: commande.mobile,
-    adresse: commande.adresse,
-    commentaire: commande.commentaire,
-    livrer: commande.livrer,
-    avance: commande.avance,
-    remise: commande.remise,
-    type: commande.type,
-    idVille: commande.idVille,
+  React.useEffect(()=>{
+    axiosClient.post('/')
   });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
 
   return (
     <div className="popup">
@@ -39,7 +47,7 @@ const Popup = (  { handleClose,commande }) => {
             <div>
               <button
                 className="text-1xl cursor-pointer"
-                onClick={handleClose}
+                onClick={onClose}
               >
                 Fermer
               </button>
@@ -209,8 +217,8 @@ const Popup = (  { handleClose,commande }) => {
             {/* Make sure to add proper names and values */}
             <div className="flex justify-between items-center">
             <button className="bg-gradient-to-r from-primary to-secondary hover:scale-105 duration-200 text-white py-1 px-4 rounded-full"
-             onClick={() => {setPopupCommandeVisible(true); handleClose}}>
-                Voir La Commande
+             onClick={() => {setPopupVisible(true)}}>
+                Voir Les Infos
               </button>
               <button className="bg-gradient-to-r from-primary to-secondary hover:scale-105 duration-200 text-white py-1 px-4 rounded-full">
                 Enregistrer 
@@ -219,12 +227,8 @@ const Popup = (  { handleClose,commande }) => {
           </div>
         </div>
       </div>
-      {popupCommandeVisible && <PopupCommande onClose={handleClose} />}
     </div>
-  );
-};
+  )
+}
 
-export default Popup;
-
-
-
+export default PopupCommande

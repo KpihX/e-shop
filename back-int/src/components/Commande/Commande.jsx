@@ -37,12 +37,26 @@ const TABS = [
     value:1,
   },
   {
-    label: "Non Livrée",
+    label: "Non_Livrée",
     value: 0,
   },
 ];
 
+const options = [
+  { value: 'name', label: 'Nom' },
+  { value: 'id', label: 'Login' }
+];
 
+const TABLE_HEAD = [
+  'ID',
+  'nomClient',
+  'mobile',
+  'Date',
+  'Montant',
+  'adresse',
+  'Lieu',
+  'livrer',
+''];
 function Commande() {
   const [commandes, setCommandes]=useState([]);
   const [isLoading, setLoading] = React.useState(true)
@@ -85,21 +99,22 @@ function Commande() {
 
   return (
 
-    <div className="bg-white dark:bg-gray-900 dark:text-white duration-200">
+    <>
     <Navbar />
+    <div className="bg-white dark:bg-gray-900 dark:text-white duration-200 ">
     <CardHeader floated={false} shadow={false} className="rounded-none">
-            <div className="mt-4 flex items-center justify-between gap-8">
-              <div>
-                <Typography variant="h5" color="blue-gray">
+            <div className="pt-4 flex items-center justify-between gap-8 bg-white dark:bg-gray-900 dark:text-white">
+              <div className='bg-white dark:bg-gray-900 dark:text-white'>
+                <Typography variant="h5" color="inherit dark:text-secondary" className='pl-5'>
                   Liste des Commandes
                 </Typography>
-                <Typography color="gray" className="mt-1 font-normal">
+                <Typography color="gray dark:text-white" className="mt-1 font-normal pl-5">
                   Obtenir les informations sur une commande   
                 </Typography>
               </div>
             </div>
-            <div className="flex items-center justify-between gap-4 m-2 flex-row">
-              <Tabs value="all" className="w-full md:w-max flex">
+            <div className="flex items-center justify-between gap-4 flex-row bg-white dark:bg-gray-900 dark:text-white p-5">
+              <Tabs value="all" className="w-full flex">
                 <TabsHeader>
                   {TABS.map(({ label, value }) => (
                     <Tab key={value} value={value}>
@@ -118,44 +133,145 @@ function Commande() {
           </CardHeader>
     <div className="overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
-          <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Montant</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lieu </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">livrer</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">nomClient</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">mobile</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">adresse</th>
-          </tr>
+        <thead className="bg-gray-50 dark:bg-gray-900 dark:text-white">
+
+        <tr>
+                  {TABLE_HEAD.map((head, index) => (
+                    <th
+                      key={head}
+                      className="cursor-pointer border-y border-inherit-100 bg-inherit-50/50 p-4 transition-colors hover:bg-inherit-50"
+                    >
+                      <Typography
+                        variant="small"
+                        color="inherit dark:text-white"
+                        className="flex items-center justify-between gap-2 font-normal leading-none opacity-70"
+                      >
+                        {head}{" "}
+                        {/* {index !== TABLE_HEAD.length - 1 && (
+                          <ChevronUpDownIcon strokeWidth={2} className="h-4 w-4" />
+                        )} */}
+                      </Typography>
+                    </th>
+                  ))}
+                </tr>
         </thead>
         <tbody >
-          {commandes.map((commande) => (
-            <tr key={commande.idCommande} 
-                onMouseEnter={() => handleMouseEnter(commande.idCommande)} 
-                onMouseLeave={handleMouseLeave} 
-                onClick={()=>handleClick(commande)}
-                style={{ backgroundColor: hoveredRow === commande.idCommande ? 'lightgray' : 'inherit' }}
-            >
-              <td className="px-6 py-4 whitespace-nowrap">{commande.idCommande}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{commande.dateCom}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{commande.montant}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{commande.idVille}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{commande.livrer}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{commande.nomClient}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{commande.mobile}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{commande.adresse}</td>
-            </tr>
-          ))}
+                {commandes
+                .map(
+                  (commande) => {
+                    // const isLast = index === commandeionnaires.length - 1;
+                    const classes = "px-6 py-4 whitespace-nowrap"
+                    //   ? "p-4"
+                    //   : "p-4 border-b border-inherit-50";
+     
+                    return (
+                      <tr key={commande.idCommande} 
+                      onMouseEnter={() => handleMouseEnter(commande.idCommande)} 
+                      onMouseLeave={handleMouseLeave} 
+                      onClick={()=>handleClick(commande)}
+                      style={{ backgroundColor: hoveredRow === commande.idCommande ? 'lightgray' : 'inherit' }}
+                  >
+                        <td className={classes}>
+                          <Typography
+                            variant="small"
+                            color='inherit'
+                            className="font-normal"
+                          >
+                            {commande.idCommande}
+                          </Typography>
+                        </td>
+                        <td className={classes}>
+                          <Typography
+                            variant="small"
+                            color="inherit"
+                            className="font-normal"
+                          >
+                            {commande.nomClient}
+                          </Typography>
+                        </td>
+                        <td className={classes}>
+                          <div className="w-max">
+                          <Typography
+                            variant="small"
+                            color="inherit"
+                            className="font-normal"
+                          >
+                            {commande.mobile}
+                          </Typography>
+                          </div>
+                        </td>
+                        <td className={classes}>
+                          <div className="w-max">
+                          <Typography
+                            variant="small"
+                            color="inherit"
+                            className="font-normal"
+                          >
+                            {commande.dateCom}
+                          </Typography>
+                          </div>
+                        </td>
+                        <td className={classes}>
+                          <Typography
+                            variant="small"
+                            color="inherit"
+                            className="font-normal"
+                          >
+                            {commande.montant}
+                          </Typography>
+                        </td>
+                        <td className={classes}>
+                          <Typography
+                            variant="small"
+                            color="inherit"
+                            className="font-normal"
+                          >
+                            {commande.adresse}
+                          </Typography>
+                        </td>
+                        <td className={classes}>
+                          <Typography
+                            variant="small"
+                            color="inherit"
+                            className="font-normal"
+                          >
+                            {commande.idVille}
+                          </Typography>
+                        </td>
+                        <td className={classes}>
+                          <Typography
+                            variant="small"
+                            color={commande.livrer == 0 ? "red" : "green"}
+                            className="font-normal"
+                          >
+                            {commande.livrer == 0 ? "Non livrée" : "Livrée"}
+                          </Typography>
+                        </td>
+                        <td className={`${classes} flex gap-10`}>
+                          <Tooltip content="Editer"  className="bg-blue-500">
+                            <IconButton variant="text" className="bg-blue-100" onClick={() => {setPopupVisible(true)}}>
+                              <PencilIcon className="h-4 w-4" />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip content="Supprimer" className="bg-red-500">
+                             <IconButton variant="text" className="bg-red-100" /*onClick={() => onDeleteClick(commande.idcommande)/*}*/> 
+                              <TrashIcon className="h-4 w-4" /> {/* Assurez-vous d'importer TrashIcon depuis vos icônes */}
+                            </IconButton>
+                          </Tooltip>
+                        </td>
+                      </tr>
+                    );
+                  },
+                )}
         </tbody>
       </table>
       {/* Condition pour afficher le Popup */}
       
       {popupVisible && <Popup handleClose={handleClose} commande={commande} />}
     </div>
-    <Footer />
     </div>
+    <Footer />
+    </>
   );
 }
 
