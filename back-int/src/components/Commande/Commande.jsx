@@ -48,9 +48,7 @@ function Commande() {
   return (
 
     <div className="bg-white dark:bg-gray-900 dark:text-white duration-200">
-      
     <Navbar />
-
     <div className="overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
@@ -89,7 +87,6 @@ function Commande() {
       
       {popupVisible && <Popup handleClose={handleClose} commande={commande} />}
     </div>
-
     <Footer />
     </div>
   );

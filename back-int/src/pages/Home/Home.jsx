@@ -6,20 +6,18 @@ import Footer from "../../components/Footer/Footer";
 import { Outlet } from 'react-router-dom';
 import Login from '../../components/Login/Login';
 import { useGestionnaireContext } from '../../utils/context/GestionnaireContext';
+import Commande from "../../components/Commande/Commande";
+import ProductsFacture from "../../components/productfacture/ProductsFacture";
 
 
 const Home = () => {
   const { token } = useGestionnaireContext();
   
   return (
-    <div className="bg-white dark:bg-gray-900 duration-200">
-      
-      <Navbar />
-      <Outlet />
-      {!token && <Login />}
-      <div className="">
-        <Footer />
-      </div>
+    <div className="bg-white dark:bg-gray-900 duration-200 justify-between">
+
+        <Outlet />
+        {!token && <Login />}
     </div>
   );
 };

@@ -13,10 +13,6 @@ const router = createBrowserRouter([
     element: <AppLayout />,
     children: [
       {
-        index: true,
-        element: <Home />,
-      },
-      {
           path:'/facture',
           element:<ProductsFacture />
       },

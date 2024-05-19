@@ -86,7 +86,7 @@ const Navbar = () => {
   // console.log("selCat: ", selectedCategory)
   
   return (
-    <div className="shadow-md bg-white dark:bg-gray-900 dark:text-white duration-200 relative z-40">
+    <div className="shadow-md bg-white dark:bg-gray-900 text-black dark:text-white duration-200 relative z-40">
       {/* upper Navbar */}
       { !isSmallScreen ?
         <div className="bg-primary/40 py-2">
@@ -148,7 +148,7 @@ const Navbar = () => {
         /> 
       }
       {/* lower Navbar */}
-      <div data-aos="zoom-in" className="flex justify-center">
+      <div className="flex justify-center">
         <ul className="sm:flex hidden items-center gap-4">
           {Pages.map((data) => (
             <li key={data.id}>

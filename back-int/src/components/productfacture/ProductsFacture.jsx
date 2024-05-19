@@ -7,6 +7,7 @@ import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
 import Facture from '../Facture/Facture';
 import { IoMdSearch } from "react-icons/io";
+import axiosClient from "../../axiosClient";
 
 const ProductsData = [
   {
@@ -112,9 +113,76 @@ const ProductsData = [
     },
 ];
 
-const ProductsFacture = () => {
+const ProductsFacture = ()  => {
   const [selectProduct, setSelectProduct]=useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [ProductsData, setProducts] = React.useState([])
+  const [allProducts, setAllProducts] = React.useState(false)
+  const [isLoading, setLoading] = React.useState(false)
+  const [perPage, setPerPage] = React.useState(9)
+  const currentPage = 1;
+  const [searchValue, setSearchValue]=React.useState(null);
+  const [selectedCategory, setSelectedCategory] = React.useState("homme");
+  const [searchType, setSearchType]=React.useState('nom');
+
+  
+  React.useEffect(() => {
+    axiosClient.get('/shop/pagination')
+      .then(response => {
+        setPerPage(response.data.perPage)
+      })
+      .catch(error => {
+        console.log("Erreur lors de la recuperation de la pagination: ", error);
+      })
+  }, [])
+
+  React.useEffect(() => {
+    loadProducts(currentPage)
+  }, [currentPage, searchValue, selectedCategory, searchType]);
+
+  const ajustProducts = (data) => {
+    setProducts(data
+      .filter(({ nomPro, codePro }) => {
+        if (searchType.value == "name") {
+          return nomPro.toLowerCase().includes(searchValue.toLowerCase())
+        } else if (searchType.value == "id") {
+          return searchValue == "" || codePro == parseInt(searchValue)
+        }
+      }))
+    }
+
+  const loadProducts = (page) => {
+    if (currentPage === 0) {
+      setCurrentPage(1)
+      return
+    }
+    setLoading(true)
+    axiosClient.get(`/shop/products?page=${page}&category=${selectedCategory}&searchType=${searchType.value}&searchItem=${searchValue}`)
+      .then(response => {
+        let data = response.data.data
+        console.log("data: ", data)
+        if (page === 1) {
+          ajustProducts(data)
+          setAllProducts(false)
+        } else {
+          ajustProducts([...products, ...data]);
+        }
+        
+        if (data.length == 0 || data.length < perPage) {
+          console.log(page)
+          setAllProducts(true)
+        }
+        setLoading(false)
+      })
+      .catch(error => {
+        console.error("Erreur lors de la récupération des produits: ", error);
+        setLoading(false)
+      });
+  };
+
+  const handleLoadMore = () => {
+    setCurrentPage(prevPage => prevPage + 1);
+  }
 
   const handleProductClick = (product) => {
     setSelectProduct(true);
@@ -133,8 +201,7 @@ const ProductsFacture = () => {
   return (
 
     <div className="bg-white dark:bg-gray-900 dark:text-white duration-200">
-      
-    <Navbar />
+      <Navbar/>
 
   <div>
       <div>
@@ -213,7 +280,7 @@ const ProductsFacture = () => {
         </div>
       </div>
       </div>
-    <Footer />
+      <Footer/>
   </div>
 
 
