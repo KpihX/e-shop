@@ -27,14 +27,6 @@ class CommandeController extends Controller
         $commandes = Commande::all();
         // Check if there are any commandes
         if ($commandes) {
-            // Get all the commandes
-            // Add the name of the product to each ligneCommande
-            foreach ($commandes as $commande) {
-                foreach ($commande->items as $ligneCommande) {
-                    $produit = Produit::where('id', $ligneCommande->codePro)->pluck('name');
-                    $ligneCommande->nomPro = $produit['0'];
-                }
-            }
             // Return all the commandes with their items and products
             return CommandeResource::collection($commandes, 200);
         }
@@ -141,7 +133,8 @@ class CommandeController extends Controller
         return response()->json('Commande Livrée', 200);
     }
 
-    public function update(UpdateCommandeRequest $request, Commande $commande){
+    public function update(UpdateCommandeRequest $request){
+
 
         // On ne va pas se tuer!!!!!!!!!!!!!!!!!!!!!
 
@@ -153,8 +146,8 @@ class CommandeController extends Controller
         if ($data->fails()) {
             return response()->json('Commande Inexistante', 400);
         }
-        $controller = new LigneCommandeController();
-        return $controller->show($request->idCommande);
+        $controller= new LigneCommandeController();
+        return $controller->getLignesCommande($request->idCommande);    
     }
     /**
      * Destroy a command and all its lines

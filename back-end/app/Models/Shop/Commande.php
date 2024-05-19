@@ -4,9 +4,6 @@ namespace App\Models\Shop;
 
 use App\Models\Facture;
 use App\Models\LigneFacture;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
 
 
 class Commande extends Model
@@ -51,5 +48,6 @@ class Commande extends Model
     public function ligneCommandes()
     {
         $this->hasMany(LigneCommande::class, 'idCommande');
+
     }
 }
