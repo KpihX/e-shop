@@ -19,14 +19,26 @@ Quand une tâche est terminée, il faut:
 **NB**: Si une erreur survient, il faut envoyer le screenshoot de l'erreur dans le groupe avec une explication suscinte
 
 ## Front-end
-
-- [Pavel & Kenfack] arranger le style de la page home
 - [Pavel & Kenfack] styliser la page de cart [Maeva & Kenfack]
-- [Pavel & Kenfack] rendre le site responsive
 - [Kamdem] reset le contenu du Cart après qu'on ait appuyer sur **valider**
+- faire le bouton charger plus de produits sur toute la largeur de l'ecran. Et le bouton revenir plus haut doitetre une icon de fleche vers le haut.
+- retirer le backgroung des images des produits
+- Kenfack qui fera le footer reglera l'affichage centrer des composantes.
+- Arranger la barre de recherche pour effectuer la recherche par nomPro et par idCat
+- Le bouton definit dans Hero doit ajouter l'element dans le Cart
+- Modifier le loader wrapper pour qu'il ait la couleur du site et eviter de recharger la page dès le début.
+- La casse des mots sur le site.
+- Faire un padding sur le titre "Nos meilleurs Produits"
+- combo box pour la couleur et la taille
+- bien styliser le cart(l'image à gauche et les autres composants à droite)
+- arranger les routes depuis le cart pour le home( cliquer sur une categorie ...)
+- A la validation de la commande, afficher un popup de confirmation
+- un petit souci de validation dans le popup au niveau de la couleur.
+- l'email doit nous renvoyer dans gmail.
 ## Back-end
 
 * [Isis] Utiliser store comme controller au lieu de command dans CommandeController
 * [Isis] Utiliser LigneCommandeController au lieu de tout faire dans CommandeController
 * ecrire le necessaire pour l'enregistrement des commandes via la route /shop/command. Renvoyez les erreur avec des response contenant explicitement en fr le message d'erreur  à afficher directement par le front-end
 * ecrire les controllers pour l'interface backend
+* Isis trier les villes avant l'envoie au frontend.

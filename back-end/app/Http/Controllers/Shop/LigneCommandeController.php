@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Shop;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateLigneCommandeRequest;
-use App\Http\Resources\LigneCommandeResource;
+use App\Http\Resources\Shop\LigneCommandeResource;
 use App\Models\Shop\LigneCommande;
 use App\Models\Shop\Produit;
 use Illuminate\Http\Request;
@@ -40,7 +40,7 @@ class LigneCommandeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($idCommande)
+    public function getLignesCommande($idCommande)
     {
         $lignesCommande = LigneCommande::where('idCommande',$idCommande)->get();
         return LigneCommandeResource::collection($lignesCommande, 200);

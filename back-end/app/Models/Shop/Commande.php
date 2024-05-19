@@ -2,7 +2,6 @@
 
 namespace App\Models\Shop;
 
-use App\Models\LigneFacture;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
@@ -32,6 +31,6 @@ class Commande extends Model
         $this->belongsTo(User::class, 'idClient');
     }
     public function items(){
-        $this->hasMany(LigneFacture::class);
+        $this->hasMany(LigneCommande::class);
     }
 }

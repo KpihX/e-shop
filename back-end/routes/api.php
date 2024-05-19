@@ -78,3 +78,16 @@ Route::prefix('shop')->group(function () {
     // });
     
 });
+
+Route::prefix('admin')->group(function () {
+
+    Route::post('login', [AuthController::class, 'loginAdmin']);
+    Route::get('allCommands', [CommandeController::class, 'allCommands']);
+    Route::get('getCommand', [CommandeController::class, 'getCommand']);
+    Route::get('categories', [CategorieController::class, 'index']);
+     // Routes pour les opérations CRUD sur les produits
+    
+    // Route pour obtenir les produits paginés
+    Route::get('products', [ProduitController::class, 'index']);
+
+});
