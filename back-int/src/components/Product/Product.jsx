@@ -1,10 +1,19 @@
-// import PropTypes from 'prop-types'
+import React from 'react';
 import { useContext } from 'react'
 import { CartContext } from '../../utils/context/CartContext'
+import ProductPopup from './ProductPopup';
 
 function Product({ codePro, nomPro, description, prix, image, size1, size2 }) {
-  const {addToCart, cartItemCount } = useContext(CartContext);
+  const {addToCart, cartItemCount, getCartItem } = useContext(CartContext);
   const cartItemCountValue = cartItemCount(codePro)
+  const [orderPopup, setOrderPopup] = React.useState(false);
+  const currentProduct = getCartItem(codePro)
+
+  React.useEffect(() => {
+    if (!currentProduct) {
+      setOrderPopup(false)
+    }
+  }, [currentProduct])
 
   return (
     <div key={codePro}
@@ -22,13 +31,6 @@ function Product({ codePro, nomPro, description, prix, image, size1, size2 }) {
       </div>
       {/* details section */}
       <div className="p-4 text-center">
-        {/* star rating */}
-        {/* <div className="w-full flex items-center justify-center gap-1">
-        <FaStar className="text-yellow-500" />
-        <FaStar className="text-yellow-500" />
-        <FaStar className="text-yellow-500" />
-        <FaStar className="text-yellow-500" />
-        </div> */}
         
         <h1 className="text-xl font-bold">{nomPro}</h1>
         <h1 className="text-xl font-bold">{prix} FCFA</h1>
@@ -37,12 +39,25 @@ function Product({ codePro, nomPro, description, prix, image, size1, size2 }) {
         </p>
         <button
           className="bg-primary hover:scale-105 duration-300 text-white py-1 px-4 rounded-full mt-4 group-hover:bg-white group-hover:text-primary"
-          onClick={() => addToCart(codePro, nomPro, prix, size1, size2, size1, image, size2)}
+          onClick={() => {addToCart(codePro, nomPro, prix, size1, size2, "Défaut", image, 'Défaut'); setOrderPopup(!orderPopup);}}
         >
           Ajouter au panier {cartItemCountValue != 0 && <> ({cartItemCountValue})</>}
         </button>
       </div>
-      </div>     
+      { orderPopup &&
+          <ProductPopup 
+            orderPopup={orderPopup} 
+            setOrderPopup={setOrderPopup} 
+            codePro={codePro}
+            nomPro={nomPro}
+            prix={prix}
+            quantite={currentProduct ? currentProduct.quantite : 0}
+            size1={size1}
+            size2={size2}
+            image={image}
+          />
+        }
+    </div>     
   )
 }
 

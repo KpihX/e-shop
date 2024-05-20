@@ -10,6 +10,7 @@ import {
   FaLocationArrow,
   FaMobileAlt,
 } from "react-icons/fa";
+import pages from "../../pages";
 
 const BannerImg = {
   backgroundImage: `url(${Banner})`,
@@ -21,7 +22,7 @@ const BannerImg = {
 };
 
 
-const Footer = ({ goHome }) => {
+const Footer = () => {
 
   return (
     <div style={BannerImg} className="text-white">
@@ -46,19 +47,15 @@ const Footer = ({ goHome }) => {
                   Liens
                 </h1>
                 <ul className="flex flex-col gap-3">
-                  <Link
-                    onClick={goHome}
-                    to="/"
-                    className="inline-block hover:text-primary duration-200"
-                  >
-                    Accueil
-                  </Link>
-                  <Link
-                    to="/cart"
-                    className="inline-block hover:text-primary duration-200"
-                  >
-                    Panier
-                  </Link>
+                  {pages.map((page) => (
+                    <Link
+                      key={page.name}
+                      to={page.link}
+                      className="inline-block hover:text-primary duration-200"
+                    >
+                      {page.name}
+                    </Link>
+                  ))}
                 </ul>
               </div>
 

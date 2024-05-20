@@ -17,13 +17,15 @@ const colorOptions = [
 ];
 
 function CartItem({ codePro, nomPro, description, prix, quantite, image, size1, size2 }) {
-  const { addToCart, removeFromCart, updateCartItemCount, updateCartItemColor, updateCartItemSize } = React.useContext(CartContext)
+  const { getCartItem, cartItems, addToCart, removeFromCart, updateCartItemCount, updateCartItemColor, updateCartItemSize } = React.useContext(CartContext)
+  const currentProduct = getCartItem(codePro)
   const [inputValue, setInputValue] = React.useState(quantite ? quantite.toString() : '')
-  const [sizeClothe, setSizeClothe] = React.useState(size2)
+  const [sizeClothe, setSizeClothe] = React.useState(currentProduct.size)
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const [selectedOption, setSelectedOption] = React.useState(colorOptions[0]);
+  const [selectedOption, setSelectedOption] = React.useState(colorOptions.filter((option) => (option.label == currentProduct.color))[0]);
 	const menuRef = React.useRef();
 
+  // console.log("*****", currentProduct.color, colorOptions.filter((option) => (option.label == currentProduct.color))[0])
 
   function isInt(str) {
     const num = parseInt(str, 10);
@@ -68,6 +70,8 @@ function CartItem({ codePro, nomPro, description, prix, quantite, image, size1, 
     const size = e.target.value
     if (e.type === 'blur' || (e.type === 'keydown' && e.key === 'Enter')) {
       updateCartItemSize(size, codePro);
+      console.log(codePro, size)
+      console.log(cartItems)
       setSizeClothe(size); // Assurez-vous que la valeur est une chaîne pour l'attribut value de l'input
       // alert(sizeClothe)
     }
