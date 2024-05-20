@@ -4,15 +4,13 @@ import {
   // MagnifyingGlassIcon,
   // ChevronUpDownIcon,
 } from "@heroicons/react/24/outline";
-import { PencilIcon, UserPlusIcon, TrashIcon } from "@heroicons/react/24/solid";
+import { IoMdSearch } from "react-icons/io";
+import { PencilIcon, TrashIcon, PlusIcon } from "@heroicons/react/24/solid";
 import {
   Card,
-  CardHeader,
   // Input,
   Typography,
-  Button,
   CardBody,
-  Chip,
   // CardFooter,
   // Tabs,
   // TabsHeader,
@@ -22,6 +20,7 @@ import {
   Tooltip,
 } from "@material-tailwind/react";
 import ProductPopup from '../Product/ProductPopup';
+import { Input } from "@material-tailwind/react";
 
 const TABLE_HEAD = ["Libelle", "Prix (FCFA)", "Quantite", "Actions"];
 
@@ -154,6 +153,45 @@ const BillNav = () => {
               
           {totalAmount > 0 ? (
             <div className="flex-row">
+              <div className="pt-2 flex flex-col gap-6 justify-center">
+                <Input color="blue" label="Code promo" />
+                <input
+        type="range"
+        min="0" // Valeur minimale
+        max="100" // Valeur maximale
+        value={"15"}
+        className="slider"
+        // onChange={handleChange}
+      />
+              </div>
+              <div>
+                <h1>Carte Client</h1>
+                <div>
+                  <Tooltip content="Ajouter"  className="bg-green-500">
+                                  <IconButton variant="text" className="bg-green-100" onClick={() => {}}>
+                                    <PlusIcon className="h-4 w-4" />
+                                  </IconButton>
+                  </Tooltip>
+                  <Tooltip content="Rechercher" className="bg-gray-500">
+                                  <IconButton variant="text" className="bg-gray-100" onClick={() => {}}>
+                                    <IoMdSearch className="h-4 w-4" /> {/* Assurez-vous d'importer TrashIcon depuis vos icônes */}
+                                  </IconButton>
+                  </Tooltip>
+                </div>
+                <div>
+                  <p>Carte N</p>
+                  <Tooltip content="Editer"  className="bg-blue-500">
+                                  <IconButton variant="text" className="bg-blue-100" onClick={() => {}}>
+                                    <PencilIcon className="h-4 w-4" />
+                                  </IconButton>
+                  </Tooltip>
+                  <Tooltip content="Supprimer" className="bg-red-500">
+                                  <IconButton variant="text" className="bg-red-100" onClick={() => {}}>
+                                    <TrashIcon className="h-4 w-4" /> {/* Assurez-vous d'importer TrashIcon depuis vos icônes */}
+                                  </IconButton>
+                  </Tooltip>
+                </div>
+              </div>
               <h1 className="mx-10 flex flex-row text-2xl justify-center bg-primary hover:scale-105 duration-300 text-white py-4 px-4 rounded-full mt-10 group-hover:bg-white group-hover:text-primary">
                 <p className="font-bold">Total :&nbsp;&nbsp;</p> {totalAmount} FCFA
               </h1>
