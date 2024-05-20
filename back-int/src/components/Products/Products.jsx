@@ -1,17 +1,40 @@
 import React from "react";
-// import { Loader } from '../../utils/style/Atoms'
-// import { LoaderWrapper } from '../../utils/style/Atoms'
 import axiosClient from '../../axiosClient'
 import Product from "../Product/Product";
 import Loader from "../Loader/Loader";
 import ScrollTopButton from "../ScrollTopButton/ScrollTopButton";
-// import { FaStar } from "react-icons/fa";
+import options from "../../datas/options";
+import { IoMdSearch } from "react-icons/io";
+import Dropdown from "../Dropdown/Dropdown";
+import { FaCaretDown } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import Categories from "../../components/Categories/Categories";
 
-const Products = ({ selectedCategory, currentPage, setCurrentPage, searchValue, searchType }) => {
+const Products = () => {
+  const [searchValue, setSearchValue] = React.useState('')
+  const [ currentPage, setCurrentPage ] = React.useState(1)
+  const [currentSearchValue, setCurrentSearchValue] = React.useState('')
+  const [searchType, setSearchType] = React.useState(options[0])
+  const [ selectedCategory, setSelectedCategory] = React.useState(-1)
   const [products, setProducts] = React.useState([])
   const [allProducts, setAllProducts] = React.useState(false)
   const [isLoading, setLoading] = React.useState(false)
   const [perPage, setPerPage] = React.useState(9)
+  const [hasSearchValueTypeChanged, setHasSearchValueTypeChanged] = React.useState(true)
+ 
+  React.useEffect(() => {
+    if (currentSearchValue === "") {
+      setSearchValue("")
+    }
+  }, [currentSearchValue]);
+
+  // React.useEffect(() => {
+  //   if (currentSearchValue !== "") {
+  //     setHasSearchValueTypeChanged(true)
+  //   } else {
+  //     setHasSearchValueTypeChanged(false)
+  //   }
+  // }, [searchType]);
   
   React.useEffect(() => {
     axiosClient.get('/shop/pagination')
@@ -24,7 +47,9 @@ const Products = ({ selectedCategory, currentPage, setCurrentPage, searchValue, 
   }, [])
 
   React.useEffect(() => {
-    loadProducts(currentPage)
+    // if (hasSearchValueTypeChanged) {
+      loadProducts(currentPage)
+    // }
   }, [currentPage, searchValue, selectedCategory, searchType]);
 
   const ajustProducts = (data) => {
@@ -39,6 +64,7 @@ const Products = ({ selectedCategory, currentPage, setCurrentPage, searchValue, 
     }
 
   const loadProducts = (page) => {
+    
     if (currentPage === 0) {
       setCurrentPage(1)
       return
@@ -71,12 +97,40 @@ const Products = ({ selectedCategory, currentPage, setCurrentPage, searchValue, 
     setCurrentPage(prevPage => prevPage + 1);
   }
 
-  // console.log(products)
-  // console.log(searchValue)
-  // console.log(searchType)
+  
   return (
-    <div className="bg-slate-50 dark:bg-gray-700">
+    <div className="bg-slate-50 dark:bg-gray-700 w-full">
       <ScrollTopButton />
+      <div className="group relative cursor-pointer py-2">
+          {/* Menu button for smaller screens */}
+          <Categories 
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+            setCurrentPage={setCurrentPage}
+          />
+          
+      </div>
+      <div className="relative group flex justify-center pl-2 pt-3 gap-2">
+              <div className="relative group block">
+                <input
+                  type="text"
+                  placeholder="Recherchez vos produits"
+                  value={currentSearchValue}
+                  onChange={(e) => setCurrentSearchValue(e.target.value)}
+                  className="w-[250px] sm:w-[200px] group-hover:w-[300px] transition-all duration-300 rounded-full border border-gray-300 px-2 py-1 focus:outline-none focus:border-1 focus:border-primary dark:border-gray-500 dark:bg-gray-800  "
+                />
+                <IoMdSearch 
+                  className="text-gray-500 group-hover:text-primary absolute top-1/2 -translate-y-1/2 right-3" 
+                  onClick={() => setSearchValue(currentSearchValue)}
+                />
+                
+              </div>
+              <Dropdown 
+                options={options}
+                onSelect={setSearchType}
+                className="px-2"
+              />
+      </div>
       <div className="container ">
         {/* Header section */}
         <div className="text-left mb-24">

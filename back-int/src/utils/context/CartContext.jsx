@@ -5,6 +5,10 @@ export const CartContext = createContext();
 export const CartContextProvider = (props) => {
   const [cartItems, updateCartItems] = useState([]);
 
+  function getCartItem(codePro) {
+    return cartItems.find((item) => item.codePro === codePro);
+  }
+
   function addToCart(codePro, nomPro, prix, size1, size2, size, image, color) {
     let itemExists = false;
   
@@ -157,7 +161,8 @@ export const CartContextProvider = (props) => {
     cartItemCount,
     checkout,
     updateCartItemColor,
-    updateCartItemSize
+    updateCartItemSize,
+    getCartItem
   }
 
   return (
