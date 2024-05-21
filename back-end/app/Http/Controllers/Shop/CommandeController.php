@@ -60,6 +60,7 @@ class CommandeController extends Controller
         $produits = $validatedData['produits'];
         $client = $validatedData['client'];
         $montant = $validatedData['montant'];
+        print_r($montant);
         $report = '';
 
         // Create a new command

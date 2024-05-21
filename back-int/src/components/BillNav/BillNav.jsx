@@ -22,11 +22,17 @@ import {
 import ProductPopup from '../Product/ProductPopup';
 import { Input } from "@material-tailwind/react";
 import ClientCart from './ClientCart';
+import Dropdown from '../Dropdown/Dropdown';
 
 const TABLE_HEAD = ["Libelle", "Prix (FCFA)", "Quantite", "Actions"];
 
+const options = [
+  { value: 'yes', label: 'Oui' },
+  { value: 'no', label: 'Non' }
+];
+
 const BillNav = () => {
-  const [orderPopup, setOrderPopup] = React.useState(false);
+ 
   const { cartItems, getTotalCartAmount, checkout, updateCartItemCount } = React.useContext(CartContext)
   // const [currentProduct, setCurrentProduct] = React.useState(null)
   const totalAmount = getTotalCartAmount();
@@ -35,20 +41,50 @@ const BillNav = () => {
   // const codeProRef = React.useRef()
   const [tva, setTva] =  React.useState("19.25");
   // const tvaRef = React.useRef()
-  const [remise, setRemise] =  React.useState(0);
+  const [remise, setRemise] =  React.useState("0");
+  const [useTontine, setUseTontine] = React.useState(options[0]);
   // const remiseRef = React.useRef()
   const [clientCart, setClientCart] = React.useState({
     matr: null,
     nom: null,
     sexe: null,
     dateNaiss: null,
-    ville: null,
+    idVille: null,
     mobile: null,
     whatsapp: null,
     point: null,
     montantTontine: null
   });
+  const [typeOper, setTypeOper] = React.useState("add")
   const [clientPopup, setClientPopup] = React.useState(false);
+  const [realAmount, setRealAmount] = React.useState(totalAmount * (1 - (parseFloat(remise) + parseFloat(tva)) / 100))
+  const [isLoading, setLoading] = React.useState(false)
+  const [endCommand, setEndCommand] = React.useState(false)
+  
+
+  const changeAmounts = () => {
+    const newAmount = totalAmount * (1 - (parseFloat(remise) + parseFloat(tva)) / 100)
+    if (!clientCart.montantTontine) {
+      return
+    }
+    if (useTontine) {
+      const diff = newAmount - clientCart.montantTontine
+      setRealAmount(Math.max(diff, 0))
+      if (diff > 0) {
+        setClientCart({
+          ...clientCart, montantTontine: 0
+        })
+      } else {
+        setClientCart({
+          ...clientCart, montantTontine: Math.abs(diff)
+        })
+      }
+    }
+  }
+
+  React.useEffect(() => { 
+    changeAmounts()
+  }, [totalAmount, clientCart.montantTontine, tva, remise])
 
   function isFloat(str) {
     const num = parseFloat(str, 10);
@@ -126,11 +162,7 @@ const BillNav = () => {
     setCodePro(e.target.value);
   };
 
-  // React.useEffect(() => {
-  //   if (!currentProduct) {
-  //     setPopup(false)
-  //   }
-  // }, [currentProduct])
+  
 
   const setPopupAtIndex = (index, value) => {
     setPopups(currentPopups => {
@@ -139,6 +171,59 @@ const BillNav = () => {
       return newPopups;
     });
   };
+
+
+
+    
+
+  const handleValidation = () => {
+    setLoading(true);
+    setEndCommand(false)
+    const client = {
+      nomClient: nomClient,
+      mobile: mobile,
+      adresse: adresse,
+      idVille: selectedVille.value
+    };
+
+    // setClientInfos(JSON.stringify(client));
+    setClientInfos({
+      nomClient: nomClient,
+      mobile: mobile,
+      adresse: adresse,
+      selectedVille: selectedVille
+    })
+    
+    const produits = cartItems.map(({codePro, quantite, size, color}) => {
+      return {
+        "codePro": codePro,
+        "quantite": quantite,
+        "taille": size,
+        "couleur": color
+      };
+    });
+    const montant = getTotalCartAmount();
+    console.log(client);
+    console.log(produits);
+    console.log(montant);
+  
+    axiosClient.post('/shop/command', {
+      client: client,
+      produits: produits,
+      montant: montant
+    })
+    .then((response) => {
+      console.log(response.data);
+      setLoading(false);
+      setEndCommand(true)
+      alert("Votre commande a bien été enregistrée!");
+    })
+    .catch(error => {
+      alert(error.response.data.message); // Assurez-vous que le message d'erreur est bien dans error.response.data.message
+      console.error(error.response);
+      setLoading(false);
+    });
+  }
     
     console.log("*", cartItems)
     return (
@@ -258,12 +343,12 @@ const BillNav = () => {
                 {clientCart.matr == null ? (
                   <div>
                     <Tooltip content="Ajouter"  className="bg-green-500">
-                                    <IconButton variant="text" className="bg-green-100" onClick={() => {setClientPopup(true)}}>
+                                    <IconButton variant="text" className="bg-green-100" onClick={() => {setClientPopup(true); setTypeOper("add")}}>
                                       <PlusIcon className="h-4 w-4" />
                                     </IconButton>
                     </Tooltip>
                     <Tooltip content="Rechercher" className="bg-gray-500">
-                                    <IconButton variant="text" className="bg-gray-100" onClick={() => {setClientPopup(true)}}>
+                                    <IconButton variant="text" className="bg-gray-100" onClick={() => {setClientPopup(true); setTypeOper("search")}}>
                                       <IoMdSearch className="h-4 w-4" /> {/* Assurez-vous d'importer TrashIcon depuis vos icônes */}
                                     </IconButton>
                     </Tooltip>
@@ -272,19 +357,21 @@ const BillNav = () => {
                   <div>
                   <p>Carte de M/Mme {clientCart.nom}</p>
                   <Tooltip content="Editer"  className="bg-blue-500">
-                                  <IconButton variant="text" className="bg-blue-100" onClick={() => {setClientPopup(true)}}>
+                                  <IconButton variant="text" className="bg-blue-100" onClick={() => {setClientPopup(true); setTypeOper("edit")}}>
                                     <PencilIcon className="h-4 w-4" />
                                   </IconButton>
                   </Tooltip>
                   <Tooltip content="Supprimer" className="bg-red-500">
-                                  <IconButton variant="text" className="bg-red-100" onClick={() => {setClientPopup(true)}}>
+                                  <IconButton variant="text" className="bg-red-100" onClick={() => {}}>
                                     <TrashIcon className="h-4 w-4" /> {/* Assurez-vous d'importer TrashIcon depuis vos icônes */}
                                   </IconButton>
                   </Tooltip>
                   <ClientCart
                     clientCart={clientCart}
+                    setClientCart={setClientCart}
                     clientPopup={clientPopup}
                     setClientPopup={(value) => setClientPopup(value)}
+                    typeOper={typeOper}
                   />
                 </div>
                 )}
@@ -292,6 +379,16 @@ const BillNav = () => {
               </div>
               <h1 className="mx-10 flex flex-row text-2xl justify-center bg-primary hover:scale-105 duration-300 text-white py-4 px-4 rounded-full mt-10 group-hover:bg-white group-hover:text-primary">
                 <p className="font-bold">Total :&nbsp;&nbsp;</p> {totalAmount} FCFA
+              </h1>
+              <p>Utiliser votre montant tontine ?</p>
+              <Dropdown
+                options={options}
+                onSelect={setUseTontine}
+                className="px-2"
+              />
+              {useTontine.value == "yes" && <p>Votre montant tontine s'élèvera à {clientCart.montantTontine} FCFA</p>}
+              <h1 className="mx-10 flex flex-row text-2xl justify-center bg-primary hover:scale-105 duration-300 text-white py-4 px-4 rounded-full mt-10 group-hover:bg-white group-hover:text-primary">
+                <p className="font-bold">Net à payer :&nbsp;&nbsp;</p> {realAmount} FCFA
               </h1>
               <div className="mt-10 mx-10 grid grid-rows-1 place-items-center">
                 <button
@@ -304,7 +401,7 @@ const BillNav = () => {
                 </button>
                 <button
                   className="w-full border border-primary dark:border-white dark:text-white dark:bg-gray-800 bg-white hover:scale-105 duration-300 text-primary py-2 px-4 rounded-full mb-10 "
-                  onClick={() => {setOrderPopup(true)}}
+                  onClick={handleValidation}
                 >
                   Facturer
                 </button>

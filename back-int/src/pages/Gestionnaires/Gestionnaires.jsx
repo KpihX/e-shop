@@ -6,12 +6,10 @@ import { useGestionnaireContext } from '../../utils/context/GestionnaireContext'
 import Error from '../../components/Error/Error';
 import { useNavigate } from 'react-router-dom'
 import { Outlet } from 'react-router-dom';
-import Navbar from '../../components/Navbar/Navbar';
-import { PageContext } from '../../utils/context/PageContext';
-import { CategoryContext } from '../../utils/context/CategoryContext';
 import AOS from "aos";
 import { GestPopupProvider } from '../../utils/context/GestionnaireContext';
-import Footer from '../../components/Footer/Footer';
+import { IoMdSearch } from "react-icons/io";
+import Dropdown from "../../components/Dropdown/Dropdown";
 import {
   // MagnifyingGlassIcon,
   // ChevronUpDownIcon,
@@ -67,14 +65,7 @@ export default function Gestionnaires(){
     const [searchValue, setSearchValue] = React.useState('')
     const [currentSearchValue, setCurrentSearchValue] = React.useState('')
     const [searchType, setSearchType] = React.useState(options[0])
-    const { setCurrentPage } = React.useContext(PageContext)
-    const { selectedCategory, setSelectedCategory} = React.useContext(CategoryContext)
     
-    const goHome = () => {
-      setCurrentPage(0)
-      setCurrentSearchValue("")
-      setSelectedCategory(-1)
-    }
 
     React.useEffect(()=> {
       AOS.init({
@@ -121,16 +112,27 @@ export default function Gestionnaires(){
 
       return (
         <div className="bg-white dark:bg-gray-700 dark:text-white transition duration-200">
-        <Navbar 
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-          setCurrentPage={setCurrentPage}
-          setSearchValue={setSearchValue}
-          currentSearchValue={currentSearchValue}
-          setCurrentSearchValue={setCurrentSearchValue}
-          options={options}
-          setSearchType={setSearchType}
-        />
+        <div className="relative group flex justify-center pl-2 pt-3 gap-2">
+              <div className="relative group block">
+                <input
+                  type="text"
+                  placeholder="Recherchez vos produits"
+                  value={currentSearchValue}
+                  onChange={(e) => setCurrentSearchValue(e.target.value)}
+                  className="w-[250px] sm:w-[200px] group-hover:w-[300px] transition-all duration-300 rounded-full border border-gray-300 px-2 py-1 focus:outline-none focus:border-1 focus:border-primary dark:border-gray-500 dark:bg-gray-800  "
+                />
+                <IoMdSearch 
+                  className="text-gray-500 group-hover:text-primary absolute top-1/2 -translate-y-1/2 right-3" 
+                  onClick={() => setSearchValue(currentSearchValue)}
+                />
+                
+              </div>
+              <Dropdown 
+                options={options}
+                onSelect={setSearchType}
+                className="px-2 pt-3"
+              />
+      </div>
         <Card className="h-full w-full overflow-scroll">
         <GestPopupProvider popup={popup} setPopup={setPopup} configEnd={configEnd} setConfigEnd={setConfigEnd}>
           <Outlet />
@@ -304,9 +306,6 @@ export default function Gestionnaires(){
             </div>
           </CardFooter> */}
         </Card>
-        <Footer 
-          goHome={goHome}
-        />
         </div>
       )
     }

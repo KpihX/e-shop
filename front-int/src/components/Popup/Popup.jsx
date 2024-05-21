@@ -37,7 +37,7 @@ const Popup = ({ orderPopup, setOrderPopup, setEndCommand }) => {
         setLoading(false)
       })
       .catch(error => {
-        alert(error)
+        // alert(error)
         console.error("Erreur lors de la récupération des villes: ", error);
         setLoading(false)
       });
@@ -87,7 +87,7 @@ const Popup = ({ orderPopup, setOrderPopup, setEndCommand }) => {
       alert("Votre commande a bien été enregistrée!");
     })
     .catch(error => {
-      alert(error.response.data.message); // Assurez-vous que le message d'erreur est bien dans error.response.data.message
+      alert(error.response.data); // Assurez-vous que le message d'erreur est bien dans error.response.data.message
       console.error(error.response);
       setLoading(false);
     });
