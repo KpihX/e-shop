@@ -28,10 +28,27 @@ class Commande extends Model
     {
         return $this->belongsTo(Ville::class, 'idVille');
     }
-    public function user(){
-        $this->belongsTo(User::class, 'idClient');
-    }
+    // public function user(){
+    //     $this->belongsTo(User::class, 'idClient');
+    // }
     public function items(){
         $this->hasMany(LigneFacture::class);
     }
+
+    public function toFactureData(array $data)
+    {
+        return [
+            'idFac' => null,
+            'dateFac' => $this->dateCom,
+            'remise' => $this->remise,
+            'montant' => $this->montant,
+            'tel' => $this->mobile,
+            'typeFac' => 0,
+            'idCaissiere' => $data['idCaissiere'],
+            'capital' => 0,
+            'tva' => $data['tva']
+        ];
+    }
+
+    
 }

@@ -6,23 +6,23 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreClientCarteRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            //
+            'nom' => 'required|string|max:255',
+            'sexe' => 'required|integer|in:0,1',
+            'dateNaiss' => 'required|string|max:255',
+            'idVille' => 'required|integer|exists:villes,idVille',
+            'mobile' => 'required|string|max:255',
+            'whatsapp' => 'required|integer|in:0,1',
+            'creation' => 'required|date',
+            'point' => 'required|integer',
+            'montantTontine' => 'required|numeric|min:0',
         ];
     }
 }

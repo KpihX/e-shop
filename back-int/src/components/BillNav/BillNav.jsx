@@ -23,6 +23,8 @@ import ProductPopup from '../Product/ProductPopup';
 import { Input } from "@material-tailwind/react";
 import ClientCart from './ClientCart';
 import Dropdown from '../Dropdown/Dropdown';
+import axiosClient from '../../axiosClient';
+import { useGestionnaireContext } from '../../utils/context/GestionnaireContext.jsx'
 
 const TABLE_HEAD = ["Libelle", "Prix (FCFA)", "Quantite", "Actions"];
 
@@ -45,18 +47,20 @@ const BillNav = () => {
   const [useTontine, setUseTontine] = React.useState(options[0]);
   // const remiseRef = React.useRef()
   const [clientCart, setClientCart] = React.useState({
-    matr: null,
+    idCarte: null,
     nom: null,
     sexe: null,
     dateNaiss: null,
     idVille: null,
     mobile: null,
     whatsapp: null,
+    creation: null,
     point: null,
     montantTontine: null
   });
+  const { gestionnaire } = useGestionnaireContext()
   const [typeOper, setTypeOper] = React.useState("add")
-  const [clientPopup, setClientPopup] = React.useState(false);
+  const [clientPopup, setClientPopup] = React.useState(true);
   const [realAmount, setRealAmount] = React.useState(totalAmount * (1 - (parseFloat(remise) + parseFloat(tva)) / 100))
   const [isLoading, setLoading] = React.useState(false)
   const [endCommand, setEndCommand] = React.useState(false)
@@ -173,56 +177,108 @@ const BillNav = () => {
   };
 
 
-
+  const deleteCart = () => {
+    if (!window.confirm("Êtes vous sûr de vouloir supprimer cet utilisateur ?")) {
+      return
+    }
+    setLoading(true)
+    axiosClient.delete(`/admin/clientcarte/${clientCart.idCarte}`, )
+      .then(() => {
+        setClientCart({
+          idCarte: null,
+          nom: null,
+          sexe: null,
+          dateNaiss: null,
+          idVille: null,
+          mobile: null,
+          whatsapp: null,
+          creation: null,
+          point: null,
+          montantTontine: null
+        })
+      })
+      .catch(error => {
+        console.error("Erreur lors de la sauvegarde de la carte du client: ", error);
+        setLoading(false)
+      });
+  };
     
 
   const handleValidation = () => {
     setLoading(true);
     setEndCommand(false)
-    const client = {
-      nomClient: nomClient,
-      mobile: mobile,
-      adresse: adresse,
-      idVille: selectedVille.value
-    };
 
     // setClientInfos(JSON.stringify(client));
-    setClientInfos({
-      nomClient: nomClient,
-      mobile: mobile,
-      adresse: adresse,
-      selectedVille: selectedVille
-    })
+    // setClientInfos({
+    //   nomClient: nomClient,
+    //   mobile: mobile,
+    //   adresse: adresse,
+    //   selectedVille: selectedVille
+    // })
     
-    const produits = cartItems.map(({codePro, quantite, size, color}) => {
+    const lignes = cartItems.map(({codePro, quantite, size, color, prix}) => {
       return {
         "codePro": codePro,
         "quantite": quantite,
-        "taille": size,
-        "couleur": color
+        "prix": prix * quantite,
+        // "taille": size,
+        // "couleur": color
       };
     });
-    const montant = getTotalCartAmount();
-    console.log(client);
-    console.log(produits);
-    console.log(montant);
+    // const montant = getTotalCartAmount();
+    // console.log(client);
+    console.log(lignes);
+    // console.log(montant);
+
+    if (clientCart.idCarte) {
+      axiosClient.post(`/admin/facture/create-with-carte/${clientCart.idCarte}`, {
+        // 'dateFac': clientCart.idCarte,
+        'remise': remise,
+        'montant': realAmount,
+        'tel': clientCart.mobile,
+        'typeFac': 0,
+        'capital': 0,
+        'idCaissiere': gestionnaire.idGest,
+        'tva': tva,
+        'lignes': lignes,
+      })
+      .then((response) => {
+        console.log(response.data);
+        setLoading(false);
+        setEndCommand(true)
+        alert("Votre facture a bien été enregistrée!");
+      })
+      .catch(error => {
+        alert(error.response.data.message); // Assurez-vous que le message d'erreur est bien dans error.response.data.message
+        console.error(error.response);
+        setLoading(false);
+      });
+    } else {
+      axiosClient.post(`/admin/facture/create-with-no-carte`, {
+        // 'dateFac': clientCart.idCarte,
+        'remise': remise,
+        'montant': realAmount,
+        'tel': clientCart.mobile,
+        'typeFac': 0,
+        'capital': 0,
+        'idCaissiere': gestionnaire.idGest,
+        'tva': tva,
+        'lignes': lignes,
+      })
+      .then((response) => {
+        console.log(response.data);
+        setLoading(false);
+        setEndCommand(true)
+        alert("Votre facture a bien été enregistrée!");
+      })
+      .catch(error => {
+        alert(error.response.data.message); // Assurez-vous que le message d'erreur est bien dans error.response.data.message
+        console.error(error.response);
+        setLoading(false);
+      });
+    }
   
-    axiosClient.post('/shop/command', {
-      client: client,
-      produits: produits,
-      montant: montant
-    })
-    .then((response) => {
-      console.log(response.data);
-      setLoading(false);
-      setEndCommand(true)
-      alert("Votre commande a bien été enregistrée!");
-    })
-    .catch(error => {
-      alert(error.response.data.message); // Assurez-vous que le message d'erreur est bien dans error.response.data.message
-      console.error(error.response);
-      setLoading(false);
-    });
+    
   }
     
     console.log("*", cartItems)
@@ -340,7 +396,7 @@ const BillNav = () => {
               </div>
               <div>
                 <h1>Carte Client</h1>
-                {clientCart.matr == null ? (
+                {clientCart.idCarte == null ? (
                   <div>
                     <Tooltip content="Ajouter"  className="bg-green-500">
                                     <IconButton variant="text" className="bg-green-100" onClick={() => {setClientPopup(true); setTypeOper("add")}}>
@@ -362,24 +418,26 @@ const BillNav = () => {
                                   </IconButton>
                   </Tooltip>
                   <Tooltip content="Supprimer" className="bg-red-500">
-                                  <IconButton variant="text" className="bg-red-100" onClick={() => {}}>
+                                  <IconButton variant="text" className="bg-red-100" onClick={deleteCart()}>
                                     <TrashIcon className="h-4 w-4" /> {/* Assurez-vous d'importer TrashIcon depuis vos icônes */}
                                   </IconButton>
                   </Tooltip>
-                  <ClientCart
-                    clientCart={clientCart}
-                    setClientCart={setClientCart}
-                    clientPopup={clientPopup}
-                    setClientPopup={(value) => setClientPopup(value)}
-                    typeOper={typeOper}
-                  />
                 </div>
                 )}
                 
               </div>
+              <ClientCart
+                    clientCart={clientCart}
+                    setClientCart={setClientCart}
+                    clientPopup={clientPopup}
+                    setClientPopup={setClientPopup}
+                    typeOper={typeOper}
+                  />
               <h1 className="mx-10 flex flex-row text-2xl justify-center bg-primary hover:scale-105 duration-300 text-white py-4 px-4 rounded-full mt-10 group-hover:bg-white group-hover:text-primary">
                 <p className="font-bold">Total :&nbsp;&nbsp;</p> {totalAmount} FCFA
               </h1>
+              {clientCart.idCarte && 
+              <>
               <p>Utiliser votre montant tontine ?</p>
               <Dropdown
                 options={options}
@@ -387,6 +445,7 @@ const BillNav = () => {
                 className="px-2"
               />
               {useTontine.value == "yes" && <p>Votre montant tontine s'élèvera à {clientCart.montantTontine} FCFA</p>}
+              </>}
               <h1 className="mx-10 flex flex-row text-2xl justify-center bg-primary hover:scale-105 duration-300 text-white py-4 px-4 rounded-full mt-10 group-hover:bg-white group-hover:text-primary">
                 <p className="font-bold">Net à payer :&nbsp;&nbsp;</p> {realAmount} FCFA
               </h1>

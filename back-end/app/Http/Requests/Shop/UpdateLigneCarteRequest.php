@@ -6,23 +6,19 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateLigneCarteRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        return false;
+        return true; // Ensure the user is authenticated
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            //
+            'idFac' => 'sometimes|required|integer|exists:facture,idFac',
+            'idCarte' => 'sometimes|required|integer|exists:client_carte,idCarte',
+            'point' => 'sometimes|required|integer',
+            'dateOpera' => 'sometimes|required|date',
+            'montantFac' => 'sometimes|required|numeric|min:0',
         ];
     }
 }

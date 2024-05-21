@@ -4,63 +4,68 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreClientCarteRequest;
 use App\Http\Requests\UpdateClientCarteRequest;
+use App\Http\Resources\ClientCarteResource;
 use App\Models\ClientCarte;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Request;
 
 class ClientCarteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $page = $request->query('page', 1);
+        $perPage = config('pagination.perPageAdmin', 20);
+
+        $perPage = config('pagination.perAdminpage', 20);
+        $clients = ClientCarte::latest()->paginate($perPage, ['*'], 'page', $page);
+        return ClientCarteResource::collection($clients);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreClientCarteRequest $request)
     {
-        //
+        $clientCarte = ClientCarte::create($request->validated());
+        return new ClientCarteResource($clientCarte);
+    }
+
+    public function show($id)
+    {
+        $clientCarte = ClientCarte::with('lignesCarte')->findOrFail($id);
+        return new ClientCarteResource($clientCarte);
+    }
+
+    public function update(UpdateClientCarteRequest $request, $id)
+    {
+        $clientCarte = ClientCarte::findOrFail($id);
+        $clientCarte->update($request->validated());
+        return new ClientCarteResource($clientCarte);
     }
 
     /**
-     * Display the specified resource.
+     * Destroy a CarteClient with all its LigneCarte
      */
-    public function show(ClientCarte $clientCarte)
+    public function destroy($id)
     {
-        //
+        DB::transaction(function () use ($id) {
+            $clientCarte = ClientCarte::findOrFail($id);
+            $clientCarte->ligneCartes()->delete();
+            $clientCarte->delete();
+        });
+        return response()->json(['message' => 'ClientCarte deleted successfully.'], 200);
     }
-
     /**
-     * Show the form for editing the specified resource.
+     * Search a client carte by his phone number
      */
-    public function edit(ClientCarte $clientCarte)
+    public function searchByPhone(string $phone)
     {
-        //
-    }
+        $query = ClientCarte::query()->where;
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateClientCarteRequest $request, ClientCarte $clientCarte)
-    {
-        //
-    }
+        if (!empty($phone)) {
+            $query->where('mobile', 'like', "%{$phone}%");
+        } else {
+            return response()->json(['message' => 'Le mobile est vide!'], 404);
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(ClientCarte $clientCarte)
-    {
-        //
+        $clients = $query->with('ligneCartes');
+        return ClientCarteResource::collection($clients);
     }
 }

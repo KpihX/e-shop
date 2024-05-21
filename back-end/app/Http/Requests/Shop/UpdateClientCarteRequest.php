@@ -11,7 +11,7 @@ class UpdateClientCarteRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,15 @@ class UpdateClientCarteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'nom' => 'sometimes|required|string|max:255',
+            'sexe' => 'sometimes|required|integer|in:0,1',
+            'dateNaiss' => 'sometimes|required|string|max:255',
+            'idVille' => 'sometimes|required|integer|exists:villes,idVille',
+            'mobile' => 'sometimes|required|string|max:255',
+            'whatsapp' => 'sometimes|required|integer|in:0,1',
+            'creation' => 'sometimes|required|date',
+            'point' => 'sometimes|required|integer',
+            'montantTontine' => 'sometimes|required|numeric|min:0',
         ];
     }
 }

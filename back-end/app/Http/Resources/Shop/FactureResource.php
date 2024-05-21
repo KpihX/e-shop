@@ -7,6 +7,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class FactureResource extends JsonResource
 {
+
     /**
      * Transform the resource into an array.
      *
@@ -14,6 +15,18 @@ class FactureResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'idFac' => $this->idFac,
+            'dateFac' => $this->dateFac,
+            'remise' => $this->remise,
+            'montant' => $this->montant,
+            'tel' => $this->tel,
+            'typeFac' => $this->typeFac,
+            'idCaissiere' => $this->idCaissiere,
+            'capital' => $this->capital,
+            'tva' => $this->tva,
+            // Include the LigneFactures relationship using LigneFactureResource collection
+            'lignesFactures' => LigneFactureResource::collection($this->whenLoaded('lignesFactures')),
+        ];
     }
 }

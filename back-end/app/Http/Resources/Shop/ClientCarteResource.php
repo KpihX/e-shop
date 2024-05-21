@@ -14,6 +14,18 @@ class ClientCarteResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'idCarte' => $this->idCarte,
+            'nom' => $this->nom,
+            'sexe' => $this->sexe,
+            'dateNaiss' => $this->dateNaiss,
+            'idVille' => $this->idVille,
+            'mobile' => $this->mobile,
+            'whatsapp' => $this->whatsapp,
+            'creation' => $this->creation,
+            'point' => $this->point,
+            'montantTontine' => $this->montantTontine,
+            'ligneCartes' => LigneCarteResource::collection($this->whenLoaded('ligneCartes'))
+        ];
     }
 }

@@ -8,6 +8,7 @@ import { ClientContext } from "../../utils/context/ClientContext";
 import Dropdown from "../Dropdown/Dropdown";
 import CartItem from "../CartItem/CartItem";
 import { IoMdSearch } from "react-icons/io";
+import { Input } from "@material-tailwind/react";
 
 import {
   Button,
@@ -38,7 +39,7 @@ const ClientCart = ({ clientCart, setClientCart, clientPopup, setClientPopup, ty
   const addClientCart = () => {
     
     setLoading(true)
-    axiosClient.post(`/clientcarte`, clientCart)
+    axiosClient.post(`/admin/clientcarte`, clientCart)
       .then(response => {
         let data = response.data.data
         // console.log("data: ", data)
@@ -54,7 +55,7 @@ const ClientCart = ({ clientCart, setClientCart, clientPopup, setClientPopup, ty
   const saveClientCart = () => {
     
     setLoading(true)
-    axiosClient.post(`/clientcarte/${clientCart.matr}`, clientCart)
+    axiosClient.post(`/admin/clientcarte/${clientCart.idCarte}`, clientCart)
       .then(response => {
         let data = response.data.data
         // console.log("data: ", data)
@@ -83,7 +84,7 @@ const ClientCart = ({ clientCart, setClientCart, clientPopup, setClientPopup, ty
       });
   };
 
-
+  // alert("Hi")
   return (
     <>
       
@@ -94,12 +95,13 @@ const ClientCart = ({ clientCart, setClientCart, clientPopup, setClientPopup, ty
                   <IoCloseOutline
                     className="text-2xl cursor-pointer "
                     onClick={() => {
-                      setClientPopup(clientPopup)
+                      setClientPopup(false)
                     }}
                   />
           </div>
         </DialogHeader>
-        {typeOper == "add" ? (
+        <DialogBody>
+        {typeOper == "add" || typeOper == "edit" ? (
         <>
         <Input color="blue" label="Nom" value={clientCart.nom} onChange={(e) => setClientCart({...clientCart, nom: e.target.value})}/>
         <Input color="blue" label="Sexe" value={clientCart.sexe} onChange={(e) => setClientCart({...clientCart, sexe: e.target.value})}/>
@@ -124,17 +126,18 @@ const ClientCart = ({ clientCart, setClientCart, clientPopup, setClientPopup, ty
                   />
                   <IoMdSearch 
                     className="text-gray-500 group-hover:text-primary absolute top-1/2 -translate-y-1/2 right-3" 
-                    onClick={() => setSearchValue(currentSearchValue)}
+                    onClick={() => setCurrentSearchValue(currentSearchValue)}
                   />
                   
                 </div>
         </div>
         <button>
-          Résultat: {clientCart.matr ? "Carte client de M/Mme" + clientCart.nom : "Aucun résultat trouvé"}
+          Résultat: {clientCart.idCarte ? "Carte client de M/Mme" + clientCart.nom : "Aucun résultat trouvé"}
         </button>
         </div>
       ) : null}
       </>)}
+      </DialogBody>
         <DialogFooter className=" justify-center">
           <Button 
             variant="gradient" 

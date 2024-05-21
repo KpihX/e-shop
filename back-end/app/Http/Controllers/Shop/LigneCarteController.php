@@ -5,64 +5,44 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreLigneCarteRequest;
 use App\Http\Requests\UpdateLigneCarteRequest;
-use App\Models\LigneCarte;
+use App\Http\Resources\LigneCarteResource;
+use LigneCarte;
 
 class LigneCarteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
-     //
-        
+        $page = $request->query('page', 1);
+        $perPage = $request->config('pagination.perPageAdmin', 20);
+        $ligneCartes = LigneCarte::latest()->paginate($perPage, ['*'], 'page', $page);
+        return LigneCarteResource::collection($ligneCartes);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreLigneCarteRequest $request)
     {
-        //
+        $ligneCarte = LigneCarte::create($request->validated());
+        return new LigneCarteResource($ligneCarte);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(LigneCarte $ligneCarte)
+    public function show($id)
     {
-        //
+        $ligneCarte = LigneCarte::findOrFail($id);
+        return new LigneCarteResource($ligneCarte);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(LigneCarte $ligneCarte)
+    public function update(UpdateLigneCarteRequest $request, $id)
     {
-        //
+        $ligneCarte = LigneCarte::findOrFail($id);
+        $ligneCarte->update($request->validated());
+        return new LigneCarteResource($ligneCarte);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateLigneCarteRequest $request, LigneCarte $ligneCarte)
+    public function destroy($id)
     {
-        //
+        $ligneCarte = LigneCarte::findOrFail($id);
+        $ligneCarte->delete();
+        return response()->json(['message' => 'La LigneCarte à été bien détruite.'], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(LigneCarte $ligneCarte)
-    {
-        //
-    }
+    
 }
