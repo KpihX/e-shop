@@ -21,6 +21,7 @@ import {
 } from "@material-tailwind/react";
 import ProductPopup from '../Product/ProductPopup';
 import { Input } from "@material-tailwind/react";
+import ClientCart from './ClientCart';
 
 const TABLE_HEAD = ["Libelle", "Prix (FCFA)", "Quantite", "Actions"];
 
@@ -30,6 +31,100 @@ const BillNav = () => {
   // const [currentProduct, setCurrentProduct] = React.useState(null)
   const totalAmount = getTotalCartAmount();
   const [popups, setPopups] = React.useState(Array(cartItems.length).fill(false));
+  const [codePro, setCodePro] = React.useState("");
+  // const codeProRef = React.useRef()
+  const [tva, setTva] =  React.useState("19.25");
+  // const tvaRef = React.useRef()
+  const [remise, setRemise] =  React.useState(0);
+  // const remiseRef = React.useRef()
+  const [clientCart, setClientCart] = React.useState({
+    matr: null,
+    nom: null,
+    sexe: null,
+    dateNaiss: null,
+    ville: null,
+    mobile: null,
+    whatsapp: null,
+    point: null,
+    montantTontine: null
+  });
+  const [clientPopup, setClientPopup] = React.useState(false);
+
+  function isFloat(str) {
+    const num = parseFloat(str, 10);
+    // console.log(num)
+    return !isNaN(num) && str === num.toString();
+  }
+
+  const handleTvaChange = (e) => {
+    const value = e.target.value
+    if (isFloat(value) && parseFloat(value) >= 0) {
+      setTva(value)
+      // alert(value)
+    } else if (value == "") {
+      setTva("0")
+    } else {
+      alert('Veuillez saisir un entier positif pour la TVA!');
+    }
+  }
+
+  // Appelé lorsque l'utilisateur quitte l'input ou appuie sur Entrée
+  const handleTvaBlurOrEnter = (e) => {
+    
+    let value = e.target.value
+    // alert("Value: " + value)
+    if (value == "") {
+      value = "0"
+    } else if (!isFloat(value) || parseFloat(value) < 0) {
+      alert('Veuillez saisir un entier positif pour la quantité!')
+      return
+    }
+    
+    if (e.type === 'blur' || (e.type === 'keydown' && e.key === 'Enter')) {
+      const newValue = Number(value) || 0;
+      
+      setTva(newValue.toString()); // Assurez-vous que la valeur est une chaîne pour l'attribut value de l'input
+      // console.log(inputValue)
+    }
+    
+  };
+
+  const handleRemiseChange = (e) => {
+    const value = e.target.value
+    if (isFloat(value) && parseFloat(value) >= 0) {
+      setRemise(value)
+      // alert(value)
+    } else if (value == "") {
+      setRemise("0")
+    } else {
+      alert('Veuillez saisir un entier positif pour la TVA!');
+    }
+  }
+
+  // Appelé lorsque l'utilisateur quitte l'input ou appuie sur Entrée
+  const handleRemiseBlurOrEnter = (e) => {
+    
+    let value = e.target.value
+    // alert("Value: " + value)
+    if (value == "") {
+      value = "0"
+    } else if (!isFloat(value) || parseFloat(value) < 0) {
+      alert('Veuillez saisir un entier positif pour la quantité!')
+      return
+    }
+    
+    if (e.type === 'blur' || (e.type === 'keydown' && e.key === 'Enter')) {
+      const newValue = Number(value) || 0;
+      
+      setRemise(newValue.toString()); // Assurez-vous que la valeur est une chaîne pour l'attribut value de l'input
+      // console.log(inputValue)
+    }
+    
+  };
+  
+  const handleCodeProChange = (e) => {
+    setCodePro(e.target.value);
+  };
 
   // React.useEffect(() => {
   //   if (!currentProduct) {
@@ -154,43 +249,46 @@ const BillNav = () => {
           {totalAmount > 0 ? (
             <div className="flex-row">
               <div className="pt-2 flex flex-col gap-6 justify-center">
-                <Input color="blue" label="Code promo" />
-                <input
-        type="range"
-        min="0" // Valeur minimale
-        max="100" // Valeur maximale
-        value={"15"}
-        className="slider"
-        // onChange={handleChange}
-      />
+                <Input color="blue" label="Code promo" value={codePro} onChange={handleCodeProChange}/>
+                <Input color="blue" label="Remise (en %)" value={remise} onChange={handleRemiseChange} onBlur={handleRemiseBlurOrEnter} onKeyDown={handleRemiseBlurOrEnter}/>
+                <Input color="blue" label="TVA (en %)" value={tva} onChange={handleTvaChange} onBlur={handleTvaBlurOrEnter} onKeyDown={handleTvaBlurOrEnter}/>
               </div>
               <div>
                 <h1>Carte Client</h1>
-                <div>
-                  <Tooltip content="Ajouter"  className="bg-green-500">
-                                  <IconButton variant="text" className="bg-green-100" onClick={() => {}}>
-                                    <PlusIcon className="h-4 w-4" />
-                                  </IconButton>
-                  </Tooltip>
-                  <Tooltip content="Rechercher" className="bg-gray-500">
-                                  <IconButton variant="text" className="bg-gray-100" onClick={() => {}}>
-                                    <IoMdSearch className="h-4 w-4" /> {/* Assurez-vous d'importer TrashIcon depuis vos icônes */}
-                                  </IconButton>
-                  </Tooltip>
-                </div>
-                <div>
-                  <p>Carte N</p>
+                {clientCart.matr == null ? (
+                  <div>
+                    <Tooltip content="Ajouter"  className="bg-green-500">
+                                    <IconButton variant="text" className="bg-green-100" onClick={() => {setClientPopup(true)}}>
+                                      <PlusIcon className="h-4 w-4" />
+                                    </IconButton>
+                    </Tooltip>
+                    <Tooltip content="Rechercher" className="bg-gray-500">
+                                    <IconButton variant="text" className="bg-gray-100" onClick={() => {setClientPopup(true)}}>
+                                      <IoMdSearch className="h-4 w-4" /> {/* Assurez-vous d'importer TrashIcon depuis vos icônes */}
+                                    </IconButton>
+                    </Tooltip>
+                  </div>
+                ) : (
+                  <div>
+                  <p>Carte de M/Mme {clientCart.nom}</p>
                   <Tooltip content="Editer"  className="bg-blue-500">
-                                  <IconButton variant="text" className="bg-blue-100" onClick={() => {}}>
+                                  <IconButton variant="text" className="bg-blue-100" onClick={() => {setClientPopup(true)}}>
                                     <PencilIcon className="h-4 w-4" />
                                   </IconButton>
                   </Tooltip>
                   <Tooltip content="Supprimer" className="bg-red-500">
-                                  <IconButton variant="text" className="bg-red-100" onClick={() => {}}>
+                                  <IconButton variant="text" className="bg-red-100" onClick={() => {setClientPopup(true)}}>
                                     <TrashIcon className="h-4 w-4" /> {/* Assurez-vous d'importer TrashIcon depuis vos icônes */}
                                   </IconButton>
                   </Tooltip>
+                  <ClientCart
+                    clientCart={clientCart}
+                    clientPopup={clientPopup}
+                    setClientPopup={(value) => setClientPopup(value)}
+                  />
                 </div>
+                )}
+                
               </div>
               <h1 className="mx-10 flex flex-row text-2xl justify-center bg-primary hover:scale-105 duration-300 text-white py-4 px-4 rounded-full mt-10 group-hover:bg-white group-hover:text-primary">
                 <p className="font-bold">Total :&nbsp;&nbsp;</p> {totalAmount} FCFA
