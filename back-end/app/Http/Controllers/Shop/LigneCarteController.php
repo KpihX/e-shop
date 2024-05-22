@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Shop;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreLigneCarteRequest;
-use App\Http\Requests\UpdateLigneCarteRequest;
-use App\Http\Resources\LigneCarteResource;
-use LigneCarte;
+use App\Http\Requests\Shop\StoreLigneCarteRequest;
+use App\Http\Requests\Shop\UpdateLigneCarteRequest;
+use App\Http\Resources\Shop\LigneCarteResource;
+use App\Http\Controllers\Controller;
+use App\Models\Shop\LigneCarte;
 
 class LigneCarteController extends Controller
 {

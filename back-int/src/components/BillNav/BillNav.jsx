@@ -44,10 +44,11 @@ const BillNav = () => {
   const [tva, setTva] =  React.useState("19.25");
   // const tvaRef = React.useRef()
   const [remise, setRemise] =  React.useState("0");
-  const [useTontine, setUseTontine] = React.useState(options[0]);
+  const [tel, setTel] =  React.useState("");
+  const [useTontine, setUseTontine] = React.useState(options[1]);
   // const remiseRef = React.useRef()
   const [clientCart, setClientCart] = React.useState({
-    idCarte: null,
+    idCarte: 7,
     nom: null,
     sexe: null,
     dateNaiss: null,
@@ -166,6 +167,14 @@ const BillNav = () => {
     setCodePro(e.target.value);
   };
 
+  const handleTelChange = (e) => {
+    if (!clientCart.idCarte) {
+      setTel(e.target.value);
+    } else {
+      setTel(clientCart.mobile);
+    }
+    
+  };
   
 
   const setPopupAtIndex = (index, value) => {
@@ -219,7 +228,7 @@ const BillNav = () => {
     const lignes = cartItems.map(({codePro, quantite, size, color, prix}) => {
       return {
         "codePro": codePro,
-        "quantite": quantite,
+        "qte": quantite,
         "prix": prix * quantite,
         // "taille": size,
         // "couleur": color
@@ -255,10 +264,10 @@ const BillNav = () => {
       });
     } else {
       axiosClient.post(`/admin/facture/create-with-no-carte`, {
-        // 'dateFac': clientCart.idCarte,
+        'dateFac': new Date().toISOString().split('T')[0] + ' ' + new Date().toTimeString().split(' ')[0],
         'remise': remise,
         'montant': realAmount,
-        'tel': clientCart.mobile,
+        'tel': tel,
         'typeFac': 0,
         'capital': 0,
         'idCaissiere': gestionnaire.idGest,
@@ -390,6 +399,7 @@ const BillNav = () => {
           {totalAmount > 0 ? (
             <div className="flex-row">
               <div className="pt-2 flex flex-col gap-6 justify-center">
+                {!clientCart.idCarte && <Input color="blue" label="Téléphone" value={tel} onChange={handleTelChange}/>}
                 <Input color="blue" label="Code promo" value={codePro} onChange={handleCodeProChange}/>
                 <Input color="blue" label="Remise (en %)" value={remise} onChange={handleRemiseChange} onBlur={handleRemiseBlurOrEnter} onKeyDown={handleRemiseBlurOrEnter}/>
                 <Input color="blue" label="TVA (en %)" value={tva} onChange={handleTvaChange} onBlur={handleTvaBlurOrEnter} onKeyDown={handleTvaBlurOrEnter}/>

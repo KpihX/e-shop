@@ -1,19 +1,22 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Shop;
 
-use App\Http\Requests\StoreClientCarteRequest;
-use App\Http\Requests\StoreFactureFromCommandeRequest;
-use App\Http\Requests\StoreFactureRequest;
-use App\Http\Requests\UpdateFactureRequest;
-use App\Http\Resources\FactureResource;
-use App\Models\Facture;
-use App\Models\LigneFacture;
+use App\Http\Requests\Shop\StoreClientCarteRequest;
+use App\Http\Requests\Shop\StoreFactureFromCommandeRequest;
+use App\Http\Requests\Shop\StoreFactureRequest;
+use App\Http\Requests\Shop\UpdateFactureRequest;
+use App\Http\Resources\Shop\FactureResource;
+use App\Http\Controllers\Shop\LigneCommandeController;
+use App\Http\Controllers\Controller;
+use App\Models\Shop\Facture;
+use App\Models\Shop\LigneFacture;
 use App\Models\Shop\Commande;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
-use LigneCarte;
+use App\Models\Shop\LigneCarte;
+use App\Http\Controllers\Shop\ClientCarteController;
 
 // use Illuminate\Support\Facades\Request;
 
@@ -24,12 +27,14 @@ class FactureController extends Controller
      */
     public function index(Request $request)
     {
-        $factures = Facture::latest()->paginate(10);
-        //On définit la pagination
-        $page = $request->query('page', 1);
-        $perPage = config('pagination.perPageAdmin', 20);
-        $factures = Facture::latest()->paginate($perPage, ['*'], 'page', $page);
+        // $factures = Facture::latest()->paginate(10);
+        // //On définit la pagination
+        // $page = $request->query('page', 1);
+        // $perPage = config('pagination.perPageAdmin', 20);
+        // $factures = Facture::latest()->paginate($perPage, ['*'], 'page', $page);
 
+        // return FactureResource::collection($factures);
+        $factures = Facture::all();
         return FactureResource::collection($factures);
     }
 
@@ -63,26 +68,61 @@ class FactureController extends Controller
     /**
      * This functions takes a commandeId and some other data about the facture, then uses it to convert he commande into the facture in a transaction. We return the newly created facture after
      */
-    public function convertCommandeToFacture(StoreFactureFromCommandeRequest $request, string $commandeId)
+    // public function convertCommandeToFacture(StoreFactureFromCommandeRequest $request, string $commandeId)
+    // {
+    //     $data = $request->validated();
+
+    //     $facture = DB::transaction(function () use ($commandeId, $data) {
+    //         // Retrieve the Commande and its associated LignesCommande
+    //         $commande = Commande::with('lignesCommande')->findOrFail($commandeId);
+
+    //         $factureData = $commande->toFactureData($data);
+    //         $facture = Facture::create($factureData);
+
+    //         foreach ($commande->lignesCommande as $ligneCommande) {
+    //             LigneFacture::create($ligneCommande->toFactureLigneData($facture->idFac));
+    //         }
+
+    //         return $facture;
+    //     });
+
+    //     $facture->load('lignesFactures');
+    //     return new FactureResource($facture);
+    // }
+
+    public function convertCommandeToFacture($idCommande, $data, $gest)
     {
-        $data = $request->validated();
+        try{
 
-        $facture = DB::transaction(function () use ($commandeId, $data) {
-            // Retrieve the Commande and its associated LignesCommande
-            $commande = Commande::with('lignesCommande')->findOrFail($commandeId);
+            $facture = DB::transaction(function () use ($idCommande, $data, $gest) {
+                // Retrieve the Commande and its associated LignesCommande
+                $commande = Commande::findOrFail($idCommande);
 
-            $factureData = $commande->toFactureData($data);
-            $facture = Facture::create($factureData);
+                $controller = new LigneCommandeController();
+                $lignesCommande = $controller->getLignesCommande($idCommande);
+                
+                // error_log($commande);
+                // print_r($lignesCommande);
+                
+                $factureData = $commande->toFactureData($data);
+                error_log($factureData);
+                $facture = Facture::create($factureData);
+                // print_r($facture);
+                $facture->idCaissiere = $gest;
+                $facture->save();
+                foreach ($lignesCommande as $ligneCommande) {
+                    LigneFacture::create($ligneCommande->toFactureLigneData($facture->idFac));
+                    error_log($ligneCommande);
+                }
+            });
 
-            foreach ($commande->lignesCommande as $ligneCommande) {
-                LigneFacture::create($ligneCommande->toFactureLigneData($facture->idFac));
-            }
-
-            return $facture;
-        });
-
-        $facture->load('lignesFactures');
-        return new FactureResource($facture);
+            $facture->load('lignesFactures');
+            // return new FactureResource($facture);
+            return response()->json(['error' => 'okay.', 'message' => 'okay']);
+    }catch(\Exception $e){
+        print_r($e->getMessage());
+            return response()->json(['error' => 'Une erreur est survenue lors de la mise à jour de la commande.', 'message' => $e->getMessage()], 500);
+        }
     }
 
 

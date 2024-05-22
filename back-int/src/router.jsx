@@ -7,6 +7,7 @@ import Stock from './pages/Stock/Stock.jsx';
 import AppLayout from './AppLayout.jsx';
 import Gestionnaires from './pages/Gestionnaires/Gestionnaires.jsx';
 import GestionnaireForm from './pages/Gestionnaires/GestionnaireForm.jsx';
+import ListeFacrure from './pages/ListeFacture/ListeFacture.jsx'
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
       {
         path: 'bills',
         element: <Bills />,
+      },
+      {
+        path: '/factures',
+        element: <ListeFacrure />,
       },
       {
         path: 'commands',

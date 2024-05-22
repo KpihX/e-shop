@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Shop;
 
-use App\Http\Resources\Shop\ProduitResource;
-use App\Models\LigneFacture;
+// use App\Http\Resources\Shop\ProduitResource;
+// use App\Models\LigneFacture;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

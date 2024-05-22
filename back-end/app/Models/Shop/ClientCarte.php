@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Shop;
 
 use App\Models\Shop\ville;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

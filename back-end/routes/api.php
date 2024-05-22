@@ -2,15 +2,15 @@
 
 use App\Http\Controllers\GestionnaireController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ClientCarteController;
-use App\Http\Controllers\FactureController;
-use App\Http\Controllers\LigneCarteController;
+use App\Http\Controllers\Shop\ClientCarteController;
+use App\Http\Controllers\Shop\FactureController;
+use App\Http\Controllers\Shop\LigneCarteController;
 use App\Http\Controllers\Shop\CategorieController;
 use App\Http\Controllers\Shop\CommandeController;
 use App\Http\Controllers\Shop\ProduitController;
 use App\Http\Controllers\Shop\VilleController;
-use App\Http\Requests\StoreFactureFromCommandeRequest;
-use App\Models\ClientCarte;
+use App\Http\Requests\Shop\StoreFactureFromCommandeRequest;
+use App\Models\Shop\Shop\ClientCarte;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Config;
@@ -116,6 +116,7 @@ Route::prefix('admin')->group(function () {
     Route::post('login', [AuthController::class, 'loginAdmin']);
     Route::get('allCommands', [CommandeController::class, 'allCommands']);
     Route::get('getCommand', [CommandeController::class, 'getCommand']);
+    Route::post('updateCommand/{idCommande}', [CommandeController::class, 'updateCommand']);
     Route::get('categories', [CategorieController::class, 'index']);
      // Routes pour les opérations CRUD sur les produits
     

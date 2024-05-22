@@ -1,7 +1,9 @@
 <?php
 
-use App\Models\ClientCarte;
-use App\Models\Facture;
+namespace App\Models\Shop;
+
+use App\Models\Shop\ClientCarte;
+use App\Models\Shop\Facture;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

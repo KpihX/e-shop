@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Shop;
 
-use App\Http\Requests\StoreLigneFactureRequest;
-use App\Http\Requests\UpdateLigneFactureRequest;
-use App\Models\LigneFacture;
+use App\Http\Requests\Shop\StoreLigneFactureRequest;
+use App\Http\Requests\Shop\UpdateLigneFactureRequest;
+use App\Models\Shop\LigneFacture;
+use App\Http\Controllers\Controller;
 
 class LigneFactureController extends Controller
 {

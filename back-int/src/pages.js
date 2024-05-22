@@ -15,6 +15,10 @@ const pages = [
     name: 'Stock',
     link: '/stock'
   },
+  {
+    name: 'Factures',
+    link: '/factures'
+  },
 ]
 
 export default pages

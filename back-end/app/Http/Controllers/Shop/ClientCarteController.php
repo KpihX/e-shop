@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Shop;
 
-use App\Http\Requests\StoreClientCarteRequest;
-use App\Http\Requests\UpdateClientCarteRequest;
-use App\Http\Resources\ClientCarteResource;
-use App\Models\ClientCarte;
+use App\Http\Requests\Shop\StoreClientCarteRequest;
+use App\Http\Requests\Shop\UpdateClientCarteRequest;
+use App\Http\Resources\Shop\ClientCarteResource;
+use App\Models\Shop\ClientCarte;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
+use App\Http\Controllers\Controller;
 
 class ClientCarteController extends Controller
 {

@@ -1,49 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import Popup from './Popup';
 import axiosClient from '../../axiosClient';
 import { MagnifyingGlassIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { CardHeader, Input, Typography, IconButton, Tooltip } from "@material-tailwind/react";
 
-
 const TABLE_HEAD = [
-  'ID',
-  'nomClient',
-  'mobile',
-  'Date',
-  'Montant',
-  'adresse',
-  'Lieu',
-  'livrer',
-  ''
+  'idFac',
+  'dateFac',
+  'remise',
+  'montant',
+  'tel',
+  'typeFac',
+  'idCaissiere',
+  'capital',
+  'tva',
 ];
 
-function Commands() {
-  const [commandes, setCommandes] = useState([]);
-  const [filteredCommandes, setFilteredCommandes] = useState([]);
-  const [commande, setCommande] = useState(null);
+function ListeFacture() {
+  const [factures, setFactures] = useState([]);
+  const [filteredFactures, setFilteredFactures] = useState([]);
   const [hoveredRow, setHoveredRow] = useState(null);
-  const [popupVisible, setPopupVisible] = useState(false);
   const [filter, setFilter] = useState('all');
+
   useEffect(() => {
-    axiosClient.get('/admin/allCommands')
+    axiosClient.get('/admin/facture')
       .then(({ data }) => {
-        setCommandes(data.data);
-        setFilteredCommandes(data.data);
+        setFactures(data.data);
+        //setFilteredFactures(data.data);
       })
       .catch(error => {
-        console.error("Erreur lors de la récupération des Commandes: ", error);
+        console.error("Erreur lors de la récupération des Factures: ", error);
       });
   }, []);
 
   useEffect(() => {
     if (filter === 'all') {
-      setFilteredCommandes(commandes);
+      setFilteredFactures(factures);
     } else if (filter === '1') {
-      setFilteredCommandes(commandes.filter(commande => commande.livrer === 1));
+      setFilteredFactures(factures.filter(commande => commande.livrer === 1));
     } else if (filter === '0') {
-      setFilteredCommandes(commandes.filter(commande => commande.livrer === 0));
+      setFilteredFactures(factures.filter(commande => commande.livrer === 0));
     }
-  }, [filter, commandes]);
+  }, [filter, factures]);
 
   const handleMouseEnter = (ID) => {
     setHoveredRow(ID);
@@ -54,12 +51,12 @@ function Commands() {
   };
 
   const handleClick = (commande) => {
-    setPopupVisible(true);
-    setCommande(commande);
+    // setPopupVisible(true);
+    // setCommande(commande);
   };
 
   const handleClose = () => {
-    setPopupVisible(false);
+    // setPopupVisible(false);
   };
 
   const handleFilterChange = (newFilter) => {
@@ -67,14 +64,13 @@ function Commands() {
   };
 
   return (
-<>{true ?
     <>
       <div className="bg-white dark:bg-gray-900 dark:text-white duration-200">
         <CardHeader floated={false} shadow={false} className="rounded-none">
           <div className="pt-4 flex items-center justify-between gap-8 bg-white dark:bg-gray-900 dark:text-white">
             <div className='bg-white dark:bg-gray-900 dark:text-white'>
               <Typography variant="h5" color="inherit dark:text-secondary" className='pl-5'>
-                Liste des Commandes
+                Liste des Factures
               </Typography>
               <Typography color="gray dark:text-white" className="mt-1 font-normal pl-5">
                 Obtenir les informations sur une commande
@@ -82,7 +78,7 @@ function Commands() {
             </div>
           </div>
           <div className="flex items-center justify-between gap-4 flex-row bg-white dark:bg-gray-900 dark:text-white p-5">
-            <div className="flex space-x-4">
+            {/* <div className="flex space-x-4">
               <button
                 className={`py-2 px-4 ${filter === 'all' ? 'bg-blue-500 text-white' : 'bg-gray-200 dark:bg-gray-700 dark:text-white'} rounded`}
                 onClick={() => handleFilterChange('all')}
@@ -101,7 +97,7 @@ function Commands() {
               >
                 Non Livrée
               </button>
-            </div>
+            </div> */}
           </div>
         </CardHeader>
         <div className="overflow-x-auto">
@@ -125,15 +121,15 @@ function Commands() {
               </tr>
             </thead>
             <tbody>
-              {filteredCommandes.map((commande) => {
+              {filteredFactures.map((facture) => {
                 const classes = "px-6 py-4 whitespace-nowrap";
                 return (
                   <tr
-                    key={commande.idCommande}
-                    onMouseEnter={() => handleMouseEnter(commande.idCommande)}
+                    key={facture.idFac}
+                    onMouseEnter={() => handleMouseEnter(facture.idFac)}
                     onMouseLeave={handleMouseLeave}
-                    onClick={() => handleClick(commande)}
-                    style={{ backgroundColor: hoveredRow === commande.idCommande ? 'lightgray' : 'inherit' }}
+                    onClick={() => handleClick(facture)}
+                    style={{ backgroundColor: hoveredRow === facture.idFac ? 'lightgray' : 'inherit' }}
                   >
                     <td className={classes}>
                       <Typography
@@ -141,7 +137,7 @@ function Commands() {
                         color='inherit'
                         className="font-normal"
                       >
-                        {commande.idCommande}
+                        {facture.idFac}
                       </Typography>
                     </td>
                     <td className={classes}>
@@ -150,7 +146,7 @@ function Commands() {
                         color="inherit"
                         className="font-normal"
                       >
-                        {commande.nomClient}
+                        {facture.dateFac}
                       </Typography>
                     </td>
                     <td className={classes}>
@@ -160,7 +156,7 @@ function Commands() {
                           color="inherit"
                           className="font-normal"
                         >
-                          {commande.mobile}
+                          {facture.remise}
                         </Typography>
                       </div>
                     </td>
@@ -171,7 +167,7 @@ function Commands() {
                           color="inherit"
                           className="font-normal"
                         >
-                          {commande.dateCom}
+                          {facture.montant}
                         </Typography>
                       </div>
                     </td>
@@ -181,7 +177,7 @@ function Commands() {
                         color="inherit"
                         className="font-normal"
                       >
-                        {commande.montant}
+                        {facture.tel}
                       </Typography>
                     </td>
                     <td className={classes}>
@@ -190,7 +186,7 @@ function Commands() {
                         color="inherit"
                         className="font-normal"
                       >
-                        {commande.adresse}
+                        {facture.typeFac}
                       </Typography>
                     </td>
                     <td className={classes}>
@@ -199,16 +195,34 @@ function Commands() {
                         color="inherit"
                         className="font-normal"
                       >
-                        {commande.idVille}
+                        {facture.idCaissiere}
                       </Typography>
                     </td>
                     <td className={classes}>
                       <Typography
                         variant="small"
-                        color={commande.livrer === 0 ? "red" : "green"}
+                        color="inherit"
                         className="font-normal"
                       >
-                        {commande.livrer === 0 ? "Non livrée" : "Livrée"}
+                        {facture.capital}
+                      </Typography>
+                    </td>
+                    <td className={classes}>
+                      <Typography
+                        variant="small"
+                        color="inherit"
+                        className="font-normal"
+                      >
+                        {facture.tva}
+                      </Typography>
+                    </td>
+                    {/* <td className={classes}>
+                      <Typography
+                        variant="small"
+                        color={facture.livrer === 0 ? "red" : "green"}
+                        className="font-normal"
+                      >
+                        {facture.livrer === 0 ? "Non livrée" : "Livrée"}
                       </Typography>
                     </td>
                     <td className={`${classes} flex gap-10`}>
@@ -222,20 +236,16 @@ function Commands() {
                           <TrashIcon className="h-4 w-4" />
                         </IconButton>
                       </Tooltip>
-                    </td>
+                    </td> */}
                   </tr>
                 );
               })}
             </tbody>
           </table>
-          {popupVisible && <Popup handleClose={handleClose} commande={commande} setCommandes={setCommandes} setFilteredCommandes={setFilteredCommandes}/>}
         </div>
       </div>
     </>
-    : null
-  }
-</>
   );
 }
 
-export default Commands;
+export default ListeFacture;

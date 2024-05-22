@@ -12,6 +12,8 @@ use App\Http\Controllers\Shop\LigneCommandeController;
 use App\Http\Requests\UpdateCommandeRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\FactureController;
 
 // use DB;
 
@@ -27,14 +29,6 @@ class CommandeController extends Controller
         $commandes = Commande::all();
         // Check if there are any commandes
         if ($commandes) {
-            // Get all the commandes
-            // Add the name of the product to each ligneCommande
-            foreach ($commandes as $commande) {
-                foreach ($commande->items as $ligneCommande) {
-                    $produit = Produit::where('id', $ligneCommande->codePro)->pluck('name');
-                    $ligneCommande->nomPro = $produit['0'];
-                }
-            }
             // Return all the commandes with their items and products
             return CommandeResource::collection($commandes, 200);
         }
@@ -142,10 +136,36 @@ class CommandeController extends Controller
         return response()->json('Commande Livrée', 200);
     }
 
-    public function update(UpdateCommandeRequest $request, Commande $commande){
+    public function updateCommand(UpdateCommandeRequest $request, $idCommande)
+    {
 
+        $validatedData = $request->validated();
+        $data = $validatedData['convertedFormData'];
+        $gest = $validatedData['gest'];
+        // $commande = Commande::where('idCommande', $validatedData['idCommande'])->first();
+        $commande = Commande::findOrFail($idCommande);
+
+        try {
+            DB::transaction(function () use ($commande, $gest, $data) {
+                if ($commande->livrer == 0){
+                    $commande->update($data);
+
+                    if($commande->livrer == 1){
+
+                        $controller = new FactureController();
+                        $controller->convertCommandeToFacture($commande->idCommande, $data, $gest);
+                        
+                    }
+                }
+                $commande->update($data);
+            });
+            return response()->json('Commande Updated', 200);
+        } catch (\Exception $e) {
+            print_r($e->getMessage());
+            return response()->json(['error' => 'Une erreur est survenue lors de la mise à jour de la commande.', 'message' => $e->getMessage()], 500);
+        }
+        return response()->json('Commande Updated', 200);
         // On ne va pas se tuer!!!!!!!!!!!!!!!!!!!!!
-
     }
     public function getCommand(Request $request){
         $data = Validator::make($request->all(), [
