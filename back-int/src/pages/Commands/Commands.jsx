@@ -130,9 +130,6 @@ function Commands() {
                 return (
                   <tr
                     key={commande.idCommande}
-                    onMouseEnter={() => handleMouseEnter(commande.idCommande)}
-                    onMouseLeave={handleMouseLeave}
-                    onClick={() => handleClick(commande)}
                     style={{ backgroundColor: hoveredRow === commande.idCommande ? 'lightgray' : 'inherit' }}
                   >
                     <td className={classes}>
@@ -213,7 +210,14 @@ function Commands() {
                     </td>
                     <td className={`${classes} flex gap-10`}>
                       <Tooltip content="Editer" className="bg-blue-500">
-                        <IconButton variant="text" className="bg-blue-100" onClick={() => { setPopupVisible(true) }}>
+                        <IconButton 
+                          variant="text" 
+                          className="bg-blue-100"
+
+                          onMouseEnter={() => handleMouseEnter(commande.idCommande)}
+                          onMouseLeave={handleMouseLeave}
+                          onClick={() => handleClick(commande)}
+                        >
                           <PencilIcon className="h-4 w-4" />
                         </IconButton>
                       </Tooltip>

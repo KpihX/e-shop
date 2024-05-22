@@ -56,7 +56,10 @@ const Popup = (  { handleClose, commande, setCommandes, setFilteredCommandes }) 
         handleClose();
       })
       .catch(err => {
+
+        alert(err.response.data.message)
         const response = err.response;
+        alert(err.reponse.data)
         console.log(response.data)
         if (!response) {
           alert("Une erreur interne est survenue!")

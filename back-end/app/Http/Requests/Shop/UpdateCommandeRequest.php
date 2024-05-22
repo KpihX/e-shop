@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Shop;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -11,7 +11,7 @@ class UpdateCommandeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,6 +22,18 @@ class UpdateCommandeRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'convertedFormData.dateCom' => 'required|date',
+            'convertedFormData.montant' => 'required|numeric',
+            'convertedFormData.nomClient' => 'required|string',
+            'convertedFormData.mobile' => 'required|string',
+            'convertedFormData.adresse' => 'required|string',
+            'convertedFormData.commentaire' => 'nullable|string',
+            'convertedFormData.livrer' => 'required|in:0,1',
+            'convertedFormData.avance' => 'nullable|numeric',
+            'convertedFormData.remise' => 'nullable|numeric',
+            'convertedFormData.type' => 'in:0,1',
+            'convertedFormData.idVille' => 'required',
+            'gest' => 'sometimes',
             //
         ];
     }

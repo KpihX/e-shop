@@ -35,20 +35,23 @@ class Commande extends Model
         $this->hasMany(LigneFacture::class);
     }
 
-    public function toFactureData(array $data)
+    public function toFactureData(int $gest) 
     {
         return [
-            'idFac' => null,
-            'dateFac' => $this->dateCom,
+            'dateFac' => now(),
             'remise' => $this->remise,
             'montant' => $this->montant,
             'tel' => $this->mobile,
             'typeFac' => 0,
-            'idCaissiere' => $data['idCaissiere'],
+            'idCaissiere' => $gest,
             'capital' => 0,
-            'tva' => $data['tva']
+            'tva' => 19.25,
         ];
     }
 
+    public function ligneCommandes()
+    {
+       return $this->hasMany(LigneCommande::class, 'idCommande');
+    }
     
 }

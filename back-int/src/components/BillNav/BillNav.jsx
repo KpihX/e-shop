@@ -48,7 +48,7 @@ const BillNav = () => {
   const [useTontine, setUseTontine] = React.useState(options[1]);
   // const remiseRef = React.useRef()
   const [clientCart, setClientCart] = React.useState({
-    idCarte: 7,
+    idCarte: null,
     nom: null,
     sexe: null,
     dateNaiss: null,

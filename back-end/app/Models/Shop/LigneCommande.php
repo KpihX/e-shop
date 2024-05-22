@@ -23,6 +23,16 @@ class LigneCommande extends Model
         'taille',
         'disponible'
     ];
+
+    public function toLigneFacture(string $idFacture){
+        return [
+            'codePro' => $this->codePro,
+            'idFac' => $idFacture,
+            'prix' => $this->produit->prix,
+            'qte' => $this->quantite
+        ];
+    }
+    
     public function commande()
     {
         return $this->belongsTo(Commande::class, 'idCommande');

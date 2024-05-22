@@ -9,11 +9,11 @@ use App\Models\Shop\Commande;
 use App\Models\Shop\Produit;
 use App\Models\Shop\LigneCommande;
 use App\Http\Controllers\Shop\LigneCommandeController;
-use App\Http\Requests\UpdateCommandeRequest;
+use App\Http\Requests\Shop\UpdateCommandeRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\FactureController;
+use App\Http\Controllers\Shop\FactureController;
 
 // use DB;
 
@@ -149,12 +149,10 @@ class CommandeController extends Controller
             DB::transaction(function () use ($commande, $gest, $data) {
                 if ($commande->livrer == 0){
                     $commande->update($data);
-
                     if($commande->livrer == 1){
-
                         $controller = new FactureController();
                         $controller->convertCommandeToFacture($commande->idCommande, $data, $gest);
-                        
+                        return response()->json('Commande Updated', 200);
                     }
                 }
                 $commande->update($data);
@@ -167,6 +165,7 @@ class CommandeController extends Controller
         return response()->json('Commande Updated', 200);
         // On ne va pas se tuer!!!!!!!!!!!!!!!!!!!!!
     }
+
     public function getCommand(Request $request){
         $data = Validator::make($request->all(), [
             'idCommande' => 'required|integer',

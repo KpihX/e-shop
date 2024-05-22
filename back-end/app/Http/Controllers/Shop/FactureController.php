@@ -68,61 +68,17 @@ class FactureController extends Controller
     /**
      * This functions takes a commandeId and some other data about the facture, then uses it to convert he commande into the facture in a transaction. We return the newly created facture after
      */
-    // public function convertCommandeToFacture(StoreFactureFromCommandeRequest $request, string $commandeId)
-    // {
-    //     $data = $request->validated();
-
-    //     $facture = DB::transaction(function () use ($commandeId, $data) {
-    //         // Retrieve the Commande and its associated LignesCommande
-    //         $commande = Commande::with('lignesCommande')->findOrFail($commandeId);
-
-    //         $factureData = $commande->toFactureData($data);
-    //         $facture = Facture::create($factureData);
-
-    //         foreach ($commande->lignesCommande as $ligneCommande) {
-    //             LigneFacture::create($ligneCommande->toFactureLigneData($facture->idFac));
-    //         }
-
-    //         return $facture;
-    //     });
-
-    //     $facture->load('lignesFactures');
-    //     return new FactureResource($facture);
-    // }
-
     public function convertCommandeToFacture($idCommande, $data, $gest)
     {
-        try{
+        $commande = Commande::with("ligneCommandes")->findOrFail($idCommande);
+        $factureData = $commande->toFactureData($gest);
+        $facture = Facture::create($factureData);
 
-            $facture = DB::transaction(function () use ($idCommande, $data, $gest) {
-                // Retrieve the Commande and its associated LignesCommande
-                $commande = Commande::findOrFail($idCommande);
-
-                $controller = new LigneCommandeController();
-                $lignesCommande = $controller->getLignesCommande($idCommande);
-                
-                // error_log($commande);
-                // print_r($lignesCommande);
-                
-                $factureData = $commande->toFactureData($data);
-                error_log($factureData);
-                $facture = Facture::create($factureData);
-                // print_r($facture);
-                $facture->idCaissiere = $gest;
-                $facture->save();
-                foreach ($lignesCommande as $ligneCommande) {
-                    LigneFacture::create($ligneCommande->toFactureLigneData($facture->idFac));
-                    error_log($ligneCommande);
-                }
-            });
-
-            $facture->load('lignesFactures');
-            // return new FactureResource($facture);
-            return response()->json(['error' => 'okay.', 'message' => 'okay']);
-    }catch(\Exception $e){
-        print_r($e->getMessage());
-            return response()->json(['error' => 'Une erreur est survenue lors de la mise à jour de la commande.', 'message' => $e->getMessage()], 500);
+        foreach($commande->ligneCommandes as $ligne){
+            LigneFacture::create($ligne->toLigneFacture($facture->idFac));  
         }
+
+        return new FactureResource($facture);
     }
 
 
