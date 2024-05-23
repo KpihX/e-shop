@@ -6,7 +6,7 @@ import ScrollTopButton from "../../../components/ScrollTopButton/ScrollTopButton
 import options from "../../../datas/options";
 import { IoMdSearch } from "react-icons/io";
 import Dropdown from "../../../components/Dropdown/Dropdown";
-import Categories from "../../../components/Categories/Categories";
+import CategoriesStock from "../../../components/Categories/CategoriesStock";
 import ProductPopupNew from "../Product/ProductPopupNew";
 const Products = () => {
   const [searchValue, setSearchValue] = React.useState('')
@@ -139,7 +139,7 @@ const Products = () => {
       <ScrollTopButton />
       <div className="group relative cursor-pointer py-2">
           {/* Menu button for smaller screens */}
-          <Categories 
+          <CategoriesStock 
             selectedCategory={selectedCategory}
             setSelectedCategory={setSelectedCategory}
             setCurrentPage={setCurrentPage}

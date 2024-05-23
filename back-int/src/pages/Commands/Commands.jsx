@@ -96,7 +96,7 @@ function Commands() {
         <CardHeader floated={false} shadow={false} className="rounded-none">
           <div className="pt-4 flex items-center justify-between gap-8 bg-white dark:bg-gray-900 dark:text-white">
             <div className='bg-white dark:bg-gray-900 dark:text-white'>
-              <Typography variant="h5" color="inherit dark:text-secondary" className='pl-5'>
+              <Typography variant="h5" color="inherit" className='pl-5'>
                 Liste des Commandes
               </Typography>
               <Typography color="gray dark:text-white" className="mt-1 font-normal pl-5">
