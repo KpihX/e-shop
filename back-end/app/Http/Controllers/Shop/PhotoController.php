@@ -18,12 +18,21 @@ class PhotoController extends Controller
         return PhotoResource::collection($photos);
     }
 
-    public function store(StorePhotoRequest $request)
+    public function store(Request $request)
     {
-        $photo = Photo::create($request->validated());
-        return new PhotoResource($photo);
-    }
+        if ($request->hasFile('file')) {
+            $files = $request->file('file');
 
+            foreach ($files as $file) {
+                // Enregistrez le fichier dans le dossier de destination
+                $file->store('public/storage/images');
+            }
+
+            return response()->json(['message' => 'Files uploaded successfully'], 200);
+        } else {
+            return response()->json(['error' => 'No files uploaded'], 400);
+        }
+    }
     public function getPhotos(Request $request)
     {
         $codePro = $request->query('codePro');

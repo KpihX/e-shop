@@ -56,6 +56,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::Post('destroyProduct/{codePro}', [ProduitController::class, 'destroy']);
         Route::Post('destroyPhoto/{idPhoto}', [PhotoController::class, 'destroy']);
         Route::get('getPhotos', [PhotoController::class, 'getPhotos']);
+        Route::post('/upload', [PhotoController::class, 'store']);
     });
 });
 

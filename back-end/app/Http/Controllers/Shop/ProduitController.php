@@ -45,13 +45,8 @@ class ProduitController extends Controller
     {
         $validatedData = $request->validated();
         $product = $validatedData['convertedFormData'];
-        $filename = $validatedData['image'] ?? $request['image'];
 
         $codePro = Produit::create($product);
-        Photo::create([
-            'codePro' => $codePro->codePro,
-            'lienPhoto' => $filename
-        ]);
 
         return new ProduitResource($codePro);
     }

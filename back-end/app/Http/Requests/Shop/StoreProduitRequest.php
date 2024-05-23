@@ -28,7 +28,6 @@ class StoreProduitRequest extends FormRequest
             'convertedFormData.size1' => 'required|string',
             'convertedFormData.size2' => 'required|string',
             'convertedFormData.typeSize' => 'sometimes|integer',
-            'image' => 'required|string'
         ];
     }
 }
