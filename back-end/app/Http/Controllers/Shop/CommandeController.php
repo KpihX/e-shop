@@ -182,14 +182,9 @@ class CommandeController extends Controller
      * @param int $idCommande The id of the command to destroy
      * @return void
      */
-    public function destroy(Request $request){
-        $data = Validator::make($request->all(), [
-            'idCommande' => 'required|integer',
-        ]);
-        if ($data->fails()) {
-            return response()->json('Commande Inexistante', 400);
-        }
-        $lignesCommande = LigneCommande::where('idCommande', $request->idCommande)->get();
+    public function destroy($idCommande){
+        error_log("Commande $idCommande");
+        $lignesCommande = LigneCommande::where('idCommande', $idCommande)->get();
         /** @var LigneCommande $ligne */
         foreach ($lignesCommande as $ligne) {
             $produit = Produit::where('codePro', $ligne->codePro)->first();
@@ -197,9 +192,9 @@ class CommandeController extends Controller
             $produit->save();
             $ligne->delete();
         }
-        $commande = Commande::where('idCommande', $request->idCommande)->first();
+        $commande = Commande::where('idCommande', $idCommande)->first();
         $commande->delete();
-        return response()->json('Commande Supprimée', 400);
+        return response()->json('Commande Supprimée', 200);
 
     }
 

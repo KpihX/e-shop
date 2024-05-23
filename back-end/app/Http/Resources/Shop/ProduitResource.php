@@ -21,15 +21,15 @@ class ProduitResource extends JsonResource
             'prix' => $this->prix,
             'qte' => $this->qte,
             'description' => $this->description,
-            // 'codeArrivage' => $this->codeArrivage,
-            // 'actif' => $this->actif,
-            // 'dateInsertion' => $this->dateInsertion->format('Y-m-d'),
-            // 'prixAchat' => $this->prixAchat,
-            // 'pourcentage' => $this->pourcentage,
+            'codeArrivage' => $this->codeArrivage,
+            'actif' => $this->actif,
+            'dateInsertion' => $this->dateInsertion,
+            'prixAchat' => $this->prixAchat,
+            'pourcentage' => $this->pourcentage,
             'promo' => $this->promo,
             'size1' => $this->size1,
             'size2' => $this->size2,
-            // 'typeSize' => $this->typeSize,
+            'typeSize' => $this->typeSize,
             'image' => $photo ? $photo->lienPhoto : null, // Lien vers une image aléatoire du produit
         ];
     }
