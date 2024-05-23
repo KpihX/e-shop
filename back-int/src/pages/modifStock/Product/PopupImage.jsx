@@ -1,7 +1,11 @@
 import React, { useState } from 'react'
 import { IoCloseOutline } from "react-icons/io5";
 import axiosClient from "../../../axiosClient";
-
+import {
+  IconButton,
+  Tooltip,
+} from '@material-tailwind/react';
+import { TrashIcon } from '@heroicons/react/24/solid';
 const PopupImage = ({setPopupImage,codePro}) => {
 
     const [ImagesProduct, setImagesProduct] = useState([]);
@@ -9,26 +13,39 @@ const PopupImage = ({setPopupImage,codePro}) => {
         setPopupImage(false);
       };
     React.useEffect(()=>{
-        axiosClient.get(`admin/photos?codePro=${codePro}`)
+        axiosClient.get(`admin/getPhotos?codePro=${codePro}`)
         .then(({data}) => {
             setImagesProduct(data.data)
-            setLoading(false)
           })
           .catch(error => {
             console.error("Erreur lors de la récupération des ProductsData: ", error);
-            setLoading(false)
           })
       }, [])
+
+      const handleDelete = (code) => {
+        axiosClient
+          .post(`/admin/destroyPhoto/${code}`)
+          .then(() => {})
+          .catch((err) => {
+            const response = err.response;
+            console.log(response?.data);
+            if (!response) {
+              alert('Une erreur interne est survenue!');
+              return;
+            }
+            if (response.status === 422) {
+              alert(response.data.message);
+            }
+          });
+      };
     
   return (
     <div className="popup">
       <div className="h-screen w-screen fixed top-0 left-0 bg-black/50 z-50 backdrop-blur-sm">
-        <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 shadow-md bg-white dark:bg-gray-900 rounded-md duration-200 w-[900px]">
+        <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 shadow-md bg-white text-black dark:bg-gray-900 dark:text-white rounded-md duration-200 w-[900px]">
               {/* header */}
-              <div className="flex items-center justify-between">
-                <div>
-                  <h1>Images Produit</h1>
-                </div>
+              <div className="flex items-center justify-between p-3">
+                  <h1 className="text-2xl">Images Produit</h1>
                 <div>
                   <IoCloseOutline
                     className="text-2xl cursor-pointer "
@@ -36,7 +53,7 @@ const PopupImage = ({setPopupImage,codePro}) => {
                   />
                 </div>
               </div>
-              <div className='scroll'>
+              <div className='scroll p-3'>
             <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 place-items-center gap-5 dark:text-white">
               {ImagesProduct.map((data) => (
               <div
@@ -46,14 +63,19 @@ const PopupImage = ({setPopupImage,codePro}) => {
                 <img
                   src={data.lienPhoto}
                   alt=""
-                  className="h-[100px] w-[80px] object-cover rounded-md"
+                  className="h-[150px] w-[80px] object-cover rounded-md"
                 />
                 <div>
-                  <div className="flex items-center gap-1">
-                    <button className="text-center mt-2 cursor-pointer bg-primary text-white px-5 rounded-md"
-                    onClick={() => handleOrderPopup(data)}>
-                      Supprimer
-                    </button>
+                  <div className="flex items-center justify-center">
+                  <Tooltip content="Supprimer" className="bg-red-500">
+            <IconButton
+              variant="text"
+              className="bg-red-100"
+              onClick={() => handleDelete(parseInt(data.idPhoto))}
+            >
+              <TrashIcon className="h-4 w-4" color="red" />
+            </IconButton>
+          </Tooltip>
                   </div>
                 </div>
               </div>

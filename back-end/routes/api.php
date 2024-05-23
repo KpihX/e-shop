@@ -7,6 +7,7 @@ use App\Http\Controllers\Shop\LigneCarteController;
 use App\Http\Controllers\Shop\CategorieController;
 use App\Http\Controllers\Shop\CommandeController;
 use App\Http\Controllers\Shop\ProduitController;
+use App\Http\Controllers\Shop\PhotoController;
 use App\Http\Controllers\Shop\VilleController;
 use App\Http\Controllers\GestionnaireController;
 use Illuminate\Http\Request;
@@ -52,6 +53,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('storeProduct', [ProduitController::class, 'store']);
         Route::post('updateProduct/{codePro}', [ProduitController::class, 'update']);
         Route::post('addCategorie', [CategorieController::class, 'store']);
+        Route::Post('destroyProduct/{codePro}', [ProduitController::class, 'destroy']);
+        Route::Post('destroyPhoto/{idPhoto}', [PhotoController::class, 'destroy']);
+        Route::get('getPhotos', [PhotoController::class, 'getPhotos']);
     });
 });
 

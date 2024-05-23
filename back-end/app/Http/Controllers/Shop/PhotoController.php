@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Shop;
 
 use App\Http\Resources\Shop\PhotoResource;
 use App\Http\Requests\Shop\StorePhotoRequest;
-// use Illuminate\Http\Request;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Shop\Photo;
 
@@ -24,9 +24,11 @@ class PhotoController extends Controller
         return new PhotoResource($photo);
     }
 
-    public function show(Photo $photo)
+    public function getPhotos(Request $request)
     {
-        return new PhotoResource($photo);
+        $codePro = $request->query('codePro');
+        $photos = Photo::where('codePro', $codePro)->get();
+        return PhotoResource::collection($photos);
     }
 
     public function update(StorePhotoRequest $request, Photo $photo)
@@ -35,8 +37,9 @@ class PhotoController extends Controller
         return new PhotoResource($photo);
     }
 
-    public function destroy(Photo $photo)
+    public function destroy($idPhoto)
     {
+        $photo = Photo::findOrFail($idPhoto);
         $photo->delete();
         return response()->json(null, 204);
     }
