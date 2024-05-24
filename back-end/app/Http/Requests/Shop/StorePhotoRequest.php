@@ -15,7 +15,7 @@ class StorePhotoRequest extends FormRequest
     public function rules()
     {
         return [
-            'lienPhoto' => 'required|url|max:255',
+            'photos.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'codePro' => 'required|exists:produits,codePro',
         ];
     }

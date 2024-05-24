@@ -74,8 +74,8 @@ const Facture = ({ selectedProduct, test, test1 }) => {
            Remise:<input type="text" placeholder="Remise" className="w-full bg-orange-100 p-2 mb-4 rounded" />
            TVA:<input type="text" placeholder="TVA" className="w-full bg-orange-100 p-2 mb-4 rounded" />
 
-           <button className="bg-orange-500 text-white p-2 rounded mr-2">Enregistrer</button>
-           <button className="bg-orange-500 text-white p-2 rounded">Imprimer</button>
+           <button className="bg-primary text-white p-2 rounded mr-2">Enregistrer</button>
+           <button className="bg-primary text-white p-2 rounded">Imprimer</button>
        </div>
     );
 };
