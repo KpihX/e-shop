@@ -99,7 +99,7 @@ function Commands() {
               <Typography variant="h5" color="inherit" className='pl-5'>
                 Liste des Commandes
               </Typography>
-              <Typography color="gray dark:text-white" className="mt-1 font-normal pl-5">
+              <Typography color="inherit" className="mt-1 font-normal pl-5">
                 Obtenir les informations sur une commande
               </Typography>
             </div>

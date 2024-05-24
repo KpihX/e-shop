@@ -23,7 +23,7 @@ class StoreProduitRequest extends FormRequest
             'convertedFormData.actif' => 'required|in:0,1',
             'convertedFormData.dateInsertion' => 'required|date',
             'convertedFormData.prixAchat' => 'required|numeric',
-            'convertedFormData.pourcentage' => 'nullable|numeric|between:0,99.99',
+            'convertedFormData.pourcentage' => 'nullable|numeric|min:0|max:0.99',
             'convertedFormData.promo' => 'nullable|in:0,1',
             'convertedFormData.size1' => 'required|string',
             'convertedFormData.size2' => 'required|string',
