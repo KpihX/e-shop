@@ -9,6 +9,7 @@ import { TrashIcon } from '@heroicons/react/24/solid';
 
 const PopupImage = ({setPopupImage, codePro}) => {
   const [imagesProduct, setImagesProduct] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const handleClose = () => {
     setPopupImage(false);
@@ -57,9 +58,9 @@ const PopupImage = ({setPopupImage, codePro}) => {
       });
   }, [codePro]);
 
-  const handleDelete = (code) => {
+  const handleDelete = (idPhoto) => {
     axiosClient
-      .post(`/admin/destroyPhoto/${code}`)
+      .post(`/admin/destroyPhoto/${idPhoto}`)
       .then(() => {})
       .catch((err) => {
         const response = err.response;
@@ -91,28 +92,29 @@ const PopupImage = ({setPopupImage, codePro}) => {
             <div className="scroll p-3">
               <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 place-items-center gap-5 dark:text-white">
                 {imagesProduct.map((data) => (
-                  <div key={data.idPhoto} className="space-y-3">
+                  <span key={data.idPhoto} 
+                        className="space-y-3"
+                  >
                     <img
                       src={data.lienPhoto}
                       alt=""
                       className="h-auto w-auto object-cover rounded-md"
                     />
-                    <div>
-                      <div className="flex items-center justify-center">
+                      <span className="flex items-center justify-center"
+                       >
                         <Tooltip content="Supprimer" className="bg-red-500">
                           <IconButton
                             variant="text"
                             className="bg-red-100"
-                            onClick={() => handleDelete(parseInt(data.idPhoto))}
+                            onClick={() =>handleDelete(data.idPhoto)}
                           >
                             <TrashIcon className="h-4 w-4" color="red" />
                           </IconButton>
                         </Tooltip>
-                      </div>
-                    </div>
-                  </div>
+                      </span>
+                  </span>
                 ))}
-                {selectedFiles.map((data) => (
+                {/* {selectedFiles.map((data) => (
                   <div key={data.index} className="space-y-3">
                     <img
                       src={data}
@@ -133,7 +135,7 @@ const PopupImage = ({setPopupImage, codePro}) => {
                       </div>
                     </div>
                   </div>
-                ))}
+                ))} */}
               </div>
               <label className="flex items-center justify-between flex-row">
                 <p>Ajouter des images :</p>

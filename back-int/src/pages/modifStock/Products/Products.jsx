@@ -154,7 +154,7 @@ const Products = () => {
                   placeholder="Recherchez vos produits"
                   value={currentSearchValue}
                   onChange={(e) => setCurrentSearchValue(e.target.value)}
-                  className="w-[250px] sm:w-[200px] group-hover:w-[300px] transition-all duration-300 rounded-full border border-gray-300 px-2 py-1 focus:outline-none focus:border-1 focus:border-primary dark:border-gray-500 dark:bg-gray-800  "
+                  className="w-[250px] sm:w-[200px] group-hover:w-[300px] transition-all duration-300 rounded-4 border border-gray-300 px-2 py-1 focus:outline-none focus:border-1 focus:border-primary dark:border-gray-500 dark:bg-gray-800  "
                 />
                 <IoMdSearch 
                   className="text-gray-500 group-hover:text-primary absolute top-1/2 -translate-y-1/2 right-3" 
@@ -170,26 +170,28 @@ const Products = () => {
             </div>
             <div className="justify-evenly flex">
               <button
-                  className="bg-primary justify-end hover:scale-105 duration-300 text-white py-1 pr-4 rounded-full mt-4 group-hover:bg-white group-hover:text-primary"
+                  disabled={selectedCategory === -1}
+                  className={selectedCategory === -1 ? "bg-gray-500 justify-end hover:scale-105 duration-300 text-white py-1 pr-4 rounded-1 mt-4 group-hover:bg-white group-hover:text-primary":"bg-green-500 justify-end hover:scale-105 duration-300 text-white py-1 pr-4 rounded-1 mt-4 group-hover:bg-white group-hover:text-primary"}
                   onClick={() => {setOrderPopup(!orderPopup);}}
                 >
-                Créer un nouveau produit
+                Ajouter un produit
               </button>
             </div>
             <div>
               {isEditing ? (
                 <input
                   type="text"
+                  placeholder="nom de la nouvelle categorie"
                   value={editedText}
                   onChange={handleChange}
                   onKeyPress={handleKeyPress}
                   onBlur={handleBlur}
                   autoFocus
-                  className="bg-primary justify-end hover:scale-105 duration-300 text-white py-1 pr-4 rounded-full mt-4 group-hover:bg-white group-hover:text-primary"
+                  className="justify-end hover:scale-105 duration-300 text-black py-1 pr-4 rounded-2 mt-4 group-hover:bg-white group-hover:text-primary"
                 />
               ) : (
                 <button
-                  className="bg-primary justify-end hover:scale-105 duration-300 text-white py-1 pr-4 rounded-full mt-4 group-hover:bg-white group-hover:text-primary"
+                  className="bg-green-500 justify-end hover:scale-105 duration-300 text-white py-1 pr-4 rounded-1 mt-4 group-hover:bg-white group-hover:text-primary"
                   onClick={handleDoubleClick}
                 >
                 Créer une Categorie

@@ -41,7 +41,7 @@ function Product({
       .then(() => {})
       .catch((err) => {
         const response = err.response;
-        console.log(response?.data);
+        console.log(response.data);
         if (!response) {
           alert('Une erreur interne est survenue!');
           return;
