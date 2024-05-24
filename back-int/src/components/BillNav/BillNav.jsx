@@ -292,7 +292,7 @@ const BillNav = () => {
     
     console.log("*", cartItems)
     return (
-       <div className=" bg-orange-200 min-w-fit min-h-lvh shadow-md p-4 text-center" style={{ overflowY: 'auto' }}>
+       <div className=" bg-primary/30 min-w-fit min-h-lvh shadow-md p-4 text-center" style={{ overflowY: 'auto' }}>
            <h1 className="text-4xl font-bold mb-4">Facture</h1>
            {cartItems.length !== 0 ? (
            <Card className=" w-full overflow-scroll">
@@ -443,7 +443,7 @@ const BillNav = () => {
                     setClientPopup={setClientPopup}
                     typeOper={typeOper}
                   />
-              <h1 className="mx-10 flex flex-row text-2xl justify-center bg-primary hover:scale-105 duration-300 text-white py-4 px-4 rounded-full mt-10 group-hover:bg-white group-hover:text-primary">
+              <h1 className="mx-10 flex flex-row text-2xl justify-center bg-primary/40 hover:scale-105 duration-300 text-white py-4 px-4 rounded-full mt-10 group-hover:bg-white group-hover:text-primary">
                 <p className="font-bold">Total :&nbsp;&nbsp;</p> {totalAmount} FCFA
               </h1>
               {clientCart.idCarte && 

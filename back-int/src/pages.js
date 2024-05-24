@@ -18,7 +18,7 @@ const pages = [
   {
     name: 'Factures',
     link: '/factures'
-  },
+  }
 ]
 
 export default pages

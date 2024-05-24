@@ -8,52 +8,60 @@ import AppLayout from './AppLayout.jsx';
 import Gestionnaires from './pages/Gestionnaires/Gestionnaires.jsx';
 import GestionnaireForm from './pages/Gestionnaires/GestionnaireForm.jsx';
 import ListeFacrure from './pages/ListeFacture/ListeFacture.jsx'
+import DefaultLayout from './DefaultLayout.jsx';
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: '',
     element: <AppLayout />,
     children: [
       {
-        index: true,
-        element: <Bills />,
-      },
-      {
-        path: 'bills',
-        element: <Bills />,
-      },
-      {
-        path: '/factures',
-        element: <ListeFacrure />,
-      },
-      {
-        path: 'commands',
-        element: <Commands />,
-      },
-      {
-        path: 'stock',
-        element: <Stock />,
-      },
-      {
-        path: 'gestionnaires',
-        element: <Gestionnaires />,
+        path: '',
+        element: <DefaultLayout />,
         children: [
           {
-            path: 'new',
-            element: <GestionnaireForm key="gestionnaireCreate"/>
+            index: true,
+            element: <Bills />,
           },
           {
-            path: ':id/edit',
-            element: <GestionnaireForm key="gestionnaireUpdate"/>
+            path: 'bills',
+            element: <Bills />,
+          },
+          {
+            path: 'factures',
+            element: <ListeFacrure />,
+          },
+          {
+            path: 'commands',
+            element: <Commands />,
+          },
+          {
+            path: 'stock',
+            element: <Stock />,
+          },
+          {
+            path: 'gestionnaires',
+            element: <Gestionnaires />,
+            children: [
+              {
+                path: 'new',
+                element: <GestionnaireForm key="gestionnaireCreate"/>
+              },
+              {
+                path: ':id/edit',
+                element: <GestionnaireForm key="gestionnaireUpdate"/>
+              }
+            ]
           }
-        ]
-      }
-    ],
-  },
-  {
-    path: '*',
-    element: <Error />,
-  },
+        ],
+      },
+      {
+        path: '*',
+        element: <Error />,
+      },
+      
+    ]
+  }
 ]);
 
 export default router;

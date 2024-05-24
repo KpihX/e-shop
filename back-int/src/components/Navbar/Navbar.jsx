@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import axiosClient from '../../axiosClient'
 import Logo from "../../assets/logo.png";
 import { Link } from 'react-router-dom'
@@ -6,20 +6,30 @@ import DarkMode from "./DarkMode";
 import { useGestionnaireContext } from "../../utils/context/GestionnaireContext";
 import { FaUsers, FaUser } from 'react-icons/fa';
 import pages from "../../pages";
+import { useLocation } from 'react-router-dom';
 
 const Navbar = () => {
-  const {gestionnaire, setGestionnaire, setToken} = useGestionnaireContext();
+  const {token, gestionnaire, setGestionnaire, setToken} = useGestionnaireContext();
   const [selectedPage, setSelectedPage] = React.useState(pages[0])
+  const location = useLocation()
   
+  useEffect(() => {
+    const currentPage = location.pathname
+    if (pages.filter(page => page.link === currentPage).length == 0) {
+      setSelectedPage(null)
+    }
+  }, [location])
+
   const onLogout =  (ev) =>{
     ev.preventDefault();
     axiosClient.get('/logout')
     .then(() => {
        setGestionnaire(null)
        setToken(null)
+      //  navigate()
        localStorage.removeItem('ACCESS_TOKEN');
     })
-    }
+  }
   
   return (
     <div className="shadow-md bg-white dark:bg-gray-900 dark:text-white duration-200 relative z-40">
@@ -48,6 +58,7 @@ const Navbar = () => {
                 </Link>
               }
               <div>
+              {token &&
               <button
                 onClick={onLogout}
                 className="bg-gradient-to-r from-primary to-secondary transition-all duration-200 text-white  py-1 px-4 rounded-full flex items-center gap-3 group"
@@ -56,6 +67,7 @@ const Navbar = () => {
                 {gestionnaire && <span className='text-base'>{gestionnaire.nomGest}</span>}
                 <span className="text-base group-hover:block hidden transition-all duration-200"> Déconnexion </span> 
               </button>
+              }
 
               </div>
               {/* Darkmode Switch */}
@@ -66,7 +78,7 @@ const Navbar = () => {
           </div>
         </div>
       {/* lower Navbar */}
-      <div data-aos="zoom-in" className="flex justify-center">
+      <div className="flex justify-center">
         <div className="group relative cursor-pointer py-2">
           {/* Menu button for smaller screens */}
           <ul className={`sm:flex sm:items-center`}>
@@ -77,6 +89,7 @@ const Navbar = () => {
                 onClick={() => setSelectedPage(page)}
               >
                 {selectedPage === page ? (
+        
                   <Link   
                     className="group-hover:block transition-all duration-100 text-primary"
                     to={page.link}>

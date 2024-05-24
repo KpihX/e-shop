@@ -10,7 +10,7 @@ Avant de faire toute tâche, il faudra faire: (étant dans sa branche)
     * `git rebase origin/master --forced`
 * Sinon (rien n'a marché) , envoyer le screenshoot de l'erreur dans le groupe avec une brève explication de ce qui a conduit à l'erreur
 
-Quand une tâche est terminée, il faut: 
+Quand une tâche est terminée, il faut:
 
 * mettre [OK] à la fin
 * puisfaire un `git push -u origin [nomVotreBranche]` pour mettre le contenu de votre branche en ligne
@@ -18,15 +18,12 @@ Quand une tâche est terminée, il faut:
 
 **NB**: Si une erreur survient, il faut envoyer le screenshoot de l'erreur dans le groupe avec une explication suscinte
 
+S'il faut eréser sa branche avec une plus nouvelle il faudra faire:
+
+- git fetch
+
+- git reset --hard origin/master // pour se rebaser avec la branche master en ligne
+
 ## Front-end
 
-- [Pavel & Kenfack] arranger le style de la page home
-- [Pavel & Kenfack] styliser la page de cart [Maeva & Kenfack]
-- [Pavel & Kenfack] rendre le site responsive
-- [Kamdem] reset le contenu du Cart après qu'on ait appuyer sur **valider**
 ## Back-end
-
-* [Isis] Utiliser store comme controller au lieu de command dans CommandeController
-* [Isis] Utiliser LigneCommandeController au lieu de tout faire dans CommandeController
-* ecrire le necessaire pour l'enregistrement des commandes via la route /shop/command. Renvoyez les erreur avec des response contenant explicitement en fr le message d'erreur  à afficher directement par le front-end
-* ecrire les controllers pour l'interface backend
