@@ -3,7 +3,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import Commands from './pages/Commands/Commands.jsx';
 import Bills from './pages/Bills/Bills.jsx';
 import Error from './components/Error/Error.jsx';
-import Stock from './pages/Stock/Stock.jsx';
+import Stock from './pages/modifStock/Stock/Stock.jsx';
 import AppLayout from './AppLayout.jsx';
 import Gestionnaires from './pages/Gestionnaires/Gestionnaires.jsx';
 import GestionnaireForm from './pages/Gestionnaires/GestionnaireForm.jsx';

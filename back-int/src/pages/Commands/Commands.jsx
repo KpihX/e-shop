@@ -24,6 +24,8 @@ function Commands() {
   const [hoveredRow, setHoveredRow] = useState(null);
   const [popupVisible, setPopupVisible] = useState(false);
   const [filter, setFilter] = useState('all');
+
+  const updateCommands = () => {
   useEffect(() => {
     axiosClient.get('/admin/allCommands')
       .then(({ data }) => {
@@ -34,6 +36,26 @@ function Commands() {
         console.error("Erreur lors de la récupération des Commandes: ", error);
       });
   }, []);
+}
+
+  const handleDelete = (idCommande) => {
+
+    axiosClient.post(`/admin/destroyCommand/${idCommande}`)
+      .then(() => {
+      })
+      .catch(err => {
+        const response = err.response;
+        console.log(response.data)
+        if (!response) {
+          alert("Une erreur interne est survenue!")
+          return
+        }
+        if(response.status === 422){
+          alert(response.data.message)
+        } 
+      })
+  }
+
 
   useEffect(() => {
     if (filter === 'all') {
@@ -69,11 +91,12 @@ function Commands() {
   return (
 <>{true ?
     <>
+    {updateCommands()}
       <div className="bg-white dark:bg-gray-900 dark:text-white duration-200">
         <CardHeader floated={false} shadow={false} className="rounded-none">
           <div className="pt-4 flex items-center justify-between gap-8 bg-white dark:bg-gray-900 dark:text-white">
             <div className='bg-white dark:bg-gray-900 dark:text-white'>
-              <Typography variant="h5" color="inherit dark:text-secondary" className='pl-5'>
+              <Typography variant="h5" color="inherit" className='pl-5'>
                 Liste des Commandes
               </Typography>
               <Typography color="gray dark:text-white" className="mt-1 font-normal pl-5">
@@ -221,8 +244,11 @@ function Commands() {
                           <PencilIcon className="h-4 w-4" />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip content="Supprimer" className="bg-red-500">
-                        <IconButton variant="text" className="bg-red-100">
+                      <Tooltip content="Supprimer" className="bg-red-500" >
+                        <IconButton 
+                          variant="text" 
+                          className="bg-red-100"
+                          onClick={() => handleDelete(parseInt(commande.idCommande))}>
                           <TrashIcon className="h-4 w-4" />
                         </IconButton>
                       </Tooltip>
