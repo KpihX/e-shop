@@ -29,7 +29,7 @@ export default function Login() {
 						console.log(data)
             setGestionnaire(data.gestionnaire)
             setToken(data.token)
-            navigate('/')
+            // navigate(-1)
         }).catch(err => {
             const response = err.response;
 						console.log(response);

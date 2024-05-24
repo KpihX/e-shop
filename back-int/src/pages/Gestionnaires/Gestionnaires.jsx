@@ -106,7 +106,7 @@ export default function Gestionnaires(){
           })
       }
 
-      if (gestionnaire.typeGest != 0) {
+      if (!gestionnaire || gestionnaire.typeGest != 0) {
         return <Error />
       }
 
@@ -116,7 +116,7 @@ export default function Gestionnaires(){
               <div className="relative group block">
                 <input
                   type="text"
-                  placeholder="Recherchez vos produits"
+                  placeholder="Recherchez des gestionnaires..."
                   value={currentSearchValue}
                   onChange={(e) => setCurrentSearchValue(e.target.value)}
                   className="w-[250px] sm:w-[200px] group-hover:w-[300px] transition-all duration-300 rounded-full border border-gray-300 px-2 py-1 focus:outline-none focus:border-1 focus:border-primary dark:border-gray-500 dark:bg-gray-800  "
