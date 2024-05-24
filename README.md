@@ -17,7 +17,7 @@ This step is only required the first time.
 In the backend directory, locate the `env.example` file and make a copy of it. Rename the copied file to `.env`. You can do this by running the following command:
 
 ```bash
-cd back-end // if you are not in the back-end folder yet.
+cd back-end #if you are not in the back-end folder yet.
 cp env.example .env
 ```
 
@@ -41,17 +41,17 @@ DB_PASSWORD=//password
 Finally, run these commands
 
 ```
-php artisan storage:link // to link with the local storage where images are located.
+php artisan storage:link #to link with the local storage where images are located.
 
-php artisan migrate // to create the databse and its schema
+php artisan migrate #to create the databse and its schema
 
-php artisan db:seed --class=GestionnaireSeeder // To initialise test managers
+php artisan db:seed --class=GestionnaireSeeder #To initialise test managers
 
-php artisan db:seed --class=CategoriesTableSeeder // To insert test categories
+php artisan db:seed --class=CategoriesTableSeeder #To insert test categories
 
-php artisan db:seed --class=ProduitPhotoSeeder // To insert test products and their images
+php artisan db:seed --class=ProduitPhotoSeeder #To insert test products and their images
 
-php artisan db:seed --class=VilleSeeder // To insert test villes
+php artisan db:seed --class=VilleSeeder #To insert test villes
 ```
 
 ### 1.4. Generating API Key (Facultative)
@@ -106,7 +106,7 @@ This will compile your frontend assets and start a development server.
 
 Once connected there are by default three profile:
 
-- login: ADMIN1, password: admin // it's the only profile that can access the 'Gestionnaires' page
+- login: ADMIN1, password: admin #it's the only profile that can access the 'Gestionnaires' page
 - login: GEST2, password: gest
 - login: CAIS3, password: cais
 
