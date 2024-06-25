@@ -4,12 +4,13 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up()
     {
         Schema::dropIfExists('produit');
         Schema::create('produit', function (Blueprint $table) {
-            $table->increments('codePro');  // Use id() for auto-incrementing primary key (assuming codePro is unique)
+            $table->string('codePro', 6)->collate('utf8mb4_unicode_ci');  // Use id() for auto-incrementing primary key (assuming codePro is unique)
             $table->unsignedInteger('idCategorie');
             $table->string('nomPro', 255)->collate('utf8mb4_unicode_ci');
             $table->decimal('prix', 8, 0);
@@ -26,6 +27,7 @@ return new class extends Migration {
             $table->integer('typeSize');
 
             $table->foreign('idCategorie')->references('idCat')->on('categorie'); // Assuming 'categories' table with 'id' primary key exists
+            $table->primary('codePro');
         });
     }
 
