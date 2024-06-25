@@ -1,6 +1,7 @@
 const options = [
-    { value: 'name', label: 'Nom' },
-    { value: 'id', label: 'Id' }
+    { value: 'id', label: 'Id' },
+    { value: 'name', label: 'Nom' }
+    
 ];
   
 export default options;
