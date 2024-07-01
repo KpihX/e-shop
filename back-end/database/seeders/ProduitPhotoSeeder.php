@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Shop\Photo;
 use App\Models\Shop\Produit;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Database\Factories\Shop\ProduitFactory;
 use App\Services\UtilService;
@@ -16,18 +15,18 @@ class ProduitPhotoSeeder extends Seeder
     protected static $imagePaths = [];
 
     public static function formatImageName($string) {
-        // Remplacer les espaces par des underscores
+        // Replace spaces with underscores
         $formatted = str_replace(' ', '_', $string);
-        // Mettre la première lettre de chaque mot en majuscule
+        // Capitalize the first letter of each word
         $formatted = lcfirst($formatted);
-        // Remplacer les accents
+        // Replace accents
         $formatted = iconv('UTF-8', 'ASCII//TRANSLIT', $formatted);
-        // Concaténer avec le chemin du dossier et l'extension du fichier
+        // Concatenate with the path and file extension
         return "images/" . Str::before($formatted, '_') . "/" . $formatted . '.png';
     }
 
     public static function prepareProductsNames() {
-        // Tableaux des noms de produits
+        // Arrays of product names
         $babyProductsNames = [
             'Bébé 1',
             'Bébé 2',
@@ -49,7 +48,6 @@ class ProduitPhotoSeeder extends Seeder
             'Enfant 6',
             'Enfant 7',
             'Enfant 8',
-            
         ];
 
         $manProductsNames = [
@@ -101,14 +99,18 @@ class ProduitPhotoSeeder extends Seeder
         while ($i < $numberOfProducts) {
             $product = UtilService::getAtIndex(self::$productsNames, $j);
             if ($product) {
+                // Generate a unique 6-digit codePro
+                $codePro = str_pad(mt_rand(1, 999999), 6, '0', STR_PAD_LEFT);
+
                 $produit = Produit::factory()->create([
+                    'codePro' => $codePro,
                     'nomPro' => $product,
                     'idCategorie' => $j % 4 + 1,
                     'description' => "Vêtement pour " . substr($product, 0, -2),
                 ]);
                 
                 Photo::factory()->create([
-                    'codePro' => $produit->codePro,
+                    'codePro' => $codePro,
                     'lienPhoto' => url('storage/' . UtilService::getAtIndex(self::$imagePaths, $j)),
                 ]);
                 $i++;

@@ -1,19 +1,22 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Http\Resources\Shop\GestionStockResource;
 
 use App\Http\Requests\StoreGestionStockRequest;
 use App\Http\Requests\UpdateGestionStockRequest;
 use App\Models\GestionStock;
-
+use Illuminate\Http\Request;
 class GestionStockController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         //
+        $factures = GestionStock::all();
+        return GestionStockResource::collection($factures);
     }
 
     /**

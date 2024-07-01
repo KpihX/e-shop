@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import PopupCommande from './PopupCommande';
 
 
         // ,lignComSelect
-const Popup = (  {handleCloseligne,lignCom}) => {
+const Popup = ( {handleCloseligne,lignCom}) => {
 
   const [formData, setFormData] = useState({
     ID: lignCom.idLignCom,

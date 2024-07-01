@@ -37,7 +37,9 @@ const Navbar = ({selectedCategory, setSelectedCategory, setCurrentPage, setSearc
   const menuRef = React.useRef();
   const smBreakpoint = parseInt(defaultTheme.screens.sm);
   const [isSmallScreen, setIsSmallScreen] = React.useState(window.innerWidth <= smBreakpoint);
-  
+  const removeHyphen = (value) => {
+    return value.replace(/-/g, '');
+};
   const goHome = () => {
     setCurrentPage(0)
     setCurrentSearchValue("")
@@ -114,7 +116,7 @@ const Navbar = ({selectedCategory, setSelectedCategory, setCurrentPage, setSearc
                 />
                 <IoMdSearch 
                   className="text-gray-500 group-hover:text-primary absolute top-1/2 -translate-y-1/2 right-3" 
-                  onClick={() => setSearchValue(currentSearchValue)}
+                  onClick={() => setSearchValue(removeHyphen(currentSearchValue))}
                 />
                 
               </div>

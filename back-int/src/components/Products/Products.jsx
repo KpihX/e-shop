@@ -62,7 +62,9 @@ const Products = () => {
         }
       }))
     }
-
+    const removeHyphen = (value) => {
+      return value.replace(/-/g, '');
+  };
   const loadProducts = (page) => {
     
     if (currentPage === 0) {
@@ -121,7 +123,7 @@ const Products = () => {
                 />
                 <IoMdSearch 
                   className="text-gray-500 group-hover:text-primary absolute top-1/2 -translate-y-1/2 right-3" 
-                  onClick={() => setSearchValue(currentSearchValue)}
+                  onClick={() => setSearchValue(removeHyphen(currentSearchValue))}
                 />
                 
               </div>

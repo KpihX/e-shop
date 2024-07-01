@@ -31,6 +31,7 @@ const PopupCommande = ({onClose, idCommande}) => {
   React.useEffect(() => {
     console.log(idCommande)
     axiosClient.get(`/admin/getCommand?idCommande=${idCommande}`)
+    console.log(lignesCommande)
     .then((response) => {
       setLignesCommande(response.data.data);
     })

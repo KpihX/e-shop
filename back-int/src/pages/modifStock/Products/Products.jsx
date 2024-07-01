@@ -133,7 +133,9 @@ const Products = () => {
     setCurrentPage(prevPage => prevPage + 1);
   }
 
-  
+  const removeHyphen = (value) => {
+    return value.replace(/-/g, '');
+};
   return (
     <div className="bg-slate-50 dark:bg-gray-700 w-full">
       <ScrollTopButton />
@@ -158,7 +160,7 @@ const Products = () => {
                 />
                 <IoMdSearch 
                   className="text-gray-500 group-hover:text-primary absolute top-1/2 -translate-y-1/2 right-3" 
-                  onClick={() => setSearchValue(currentSearchValue)}
+                  onClick={() => setSearchValue(removeHyphen(currentSearchValue))}
                 />
                 
               </div>

@@ -18,7 +18,7 @@ class ProduitController extends Controller
     {
         $categoryId = $request->query('category');
         $searchType = $request->query('searchType');
-        $perPage = Config::get('pagination.perPage', 9);
+        $perPage = Config::get('pagination.perPage', 12);
         $page = $request->query('page', 1);
         $searchItem = $request->query('searchItem');
 

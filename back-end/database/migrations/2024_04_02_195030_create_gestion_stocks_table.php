@@ -6,26 +6,29 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
     {
-
-        Schema::dropIfExists('gestionstock');
-        Schema::create('gestionstock', function (Blueprint $table) {
-            $table->bigIncrements('idStock');  // Use id() for auto-incrementing primary key
+        Schema::create('gestionStock', function (Blueprint $table) {
+            $table->increments('idStock');
             $table->unsignedInteger('qte');
-            $table->datetime('dateStock');
+            $table->dateTime('dateStock');
             $table->tinyInteger('operation');
             $table->unsignedInteger('idGest');
-            $table->unsignedInteger('codePro')->nullable();
+            $table->unsignedInteger('codePro');
 
-            // $table->primary('idStock');
-            $table->foreign('idGest')->references('idGest')->on('gestionnaire'); // Assuming 'gestionnaire' table exists
-            $table->foreign('codePro')->references('codePro')->on('produit')->onDelete('set null'); // Assuming 'produits' table with 'id' primary key exists
+            $table->foreign('idGest')->references('idGest')->on('gestionnaire');
+            $table->foreign('codePro')->references('codePro')->on('produit');
         });
     }
 
-    public function down()
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
     {
-        Schema::dropIfExists('gestionstock');
+        Schema::dropIfExists('gestionStock');
     }
 };

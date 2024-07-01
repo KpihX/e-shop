@@ -1,0 +1,8 @@
+affichage du code pro avec le fichier
+choix du choix d'affichage du nom des produits
+par defaut on cherche par id
+gerer la validation par un onpress Enter
+Dans la facture remplacer le libelle par le code-pro 
+separer le magazinier du gestionnaire
+gerer les historiques d'un produit
+table gestion stock, ajouter le champ commentaire

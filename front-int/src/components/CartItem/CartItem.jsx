@@ -63,7 +63,20 @@ function CartItem({ codePro, nomPro, description, prix, quantite, image, size1, 
     }
     
   };
-
+  function formatString(input) {
+    // Ensure input is a string
+    let str = String(input);
+    
+    // Complete the string to 6 characters if necessary
+    if (str.length < 6) {
+        str = str.padStart(6, '0');
+    }
+  
+    const firstPart = str.slice(0, 3);
+    const lastPart = str.slice(-3);
+    return `${firstPart}-${lastPart}`;
+  }
+  
   const handleBlurOrEnterSize = (e) => {
     const size = e.target.value
     if (e.type === 'blur' || (e.type === 'keydown' && e.key === 'Enter')) {
@@ -108,7 +121,7 @@ function CartItem({ codePro, nomPro, description, prix, quantite, image, size1, 
       className="mt-10 z-10 mb-5 flex flex-row mx-5 rounded-2xl bg-orange-50 dark:bg-gray-800 hover:bg-black/80 dark:hover:bg-slate-900 hover:text-white relative shadow-xl duration-300"
     >
       {/* image section */}
-      <h1 className="absolute bg-orange-400 hover:scale-105 duration-300 text-white py-1 px-4 rounded-xl group-hover:bg-white group-hover:text-primary min-w-20 h-10">Id: {codePro}</h1>
+      <h1 className="absolute bg-orange-400 hover:scale-105 duration-300 text-white flex justify-center py-1 px-4 rounded-xl group-hover:bg-white group-hover:text-primary min-w-20 h-10">{formatString(codePro)}</h1>
       <div className='sm:grid sm:grid-cols-2 items-center justify-center'>
         <div className=" h-max relative overflow-hidden"> 
           <img
@@ -131,12 +144,12 @@ function CartItem({ codePro, nomPro, description, prix, quantite, image, size1, 
           <p className="text-gray-500 group-hover:text-white duration-300 text-sm line-clamp-2">
             {description}
           </p>
-          <div className='flex flex-col sm:flex-row'>
-            <h1 className="text-xl ">Sélectionner votre couleur:&nbsp;</h1>
+          <div className='flex flex-col '>
+            <h1 className="text-sm ">Sélectionner votre couleur:&nbsp;</h1>
             
-            <div className="group self-center sm:self-auto relative cursor-pointer">
+            <div className="group self-center sm:self-auto flex justify-end relative cursor-pointer">
               {/* Menu button for smaller screens */}
-              <button className="text-xl flex items-center gap-[2px] " onClick={() => setIsMenuOpen(!isMenuOpen)}>
+              <button className="text-sm flex items-center gap-[2px] " onClick={() => setIsMenuOpen(!isMenuOpen)}>
                 {selectedOption.label}
                 <FaCaretDown className="transition-all duration-200 group-hover:rotate-180" />
               </button>
@@ -156,15 +169,17 @@ function CartItem({ codePro, nomPro, description, prix, quantite, image, size1, 
               }
             </div>
           </div>
-          <h1 className="text-xl">Entrez votre taille (compris entre {size1} et {size2}): </h1>
+          <h1 className="text-sm">Entrez votre taille (de {size1} à {size2}): </h1>
+          <div className="flex justify-end ">
           <input
             type="text"
             value={sizeClothe}
             onChange={e => setSizeClothe(e.target.value)}
             onBlur={handleBlurOrEnterSize}
             onKeyDown={handleBlurOrEnterSize}
-            className="text-black dark:text-white mt-2 w-[190px] group-hover:w-[300px] transition-all duration-300 rounded-full border border-gray-300 px-2 py-1 focus:outline-none focus:border-1 focus:border-primary dark:border-gray-500 dark:bg-gray-800  "
+            className="text-black flex justify-end dark:text-white mx-2 w-[100px] group-hover:w-[300px] transition-all duration-300 rounded-full border border-gray-300 px-2 py-1 focus:outline-none focus:border-1 focus:border-primary dark:border-gray-500 dark:bg-gray-800  "
           />
+          </div>
           <br/>
           <button
             className="bg-primary hover:scale-105 duration-300 text-white py-1 px-4 rounded-full mt-4 group-hover:bg-white group-hover:text-primary"

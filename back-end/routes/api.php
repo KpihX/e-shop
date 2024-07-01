@@ -10,6 +10,7 @@ use App\Http\Controllers\Shop\ProduitController;
 use App\Http\Controllers\Shop\PhotoController;
 use App\Http\Controllers\Shop\VilleController;
 use App\Http\Controllers\GestionnaireController;
+use App\Http\Controllers\Shop\LigneCommandeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Config;
