@@ -51,12 +51,12 @@ const Popup = (  { handleClose, commande, setCommandes, setFilteredCommandes }) 
     axiosClient.post(`/admin/updateCommand/${formData.idCommande}`, {
       convertedFormData:convertedFormData,
       gest: gestionnaire.idGest})
-      .then(() => {
+      .then((response) => {
+        console.log(response)
         updateCommands();
         handleClose();
       })
       .catch(err => {
-
         alert(err.response.data.message)
         const response = err.response;
         alert(err.reponse.data)
@@ -189,7 +189,7 @@ const Popup = (  { handleClose, commande, setCommandes, setFilteredCommandes }) 
               <input
                 type="text"
                 name="commentaire"
-                value={formData.commentaire}
+                value={formData.commentaire ? formData.commentaire : ''}
                 onChange={handleChange}
                 id="commentaire"
                 className="justify-end w-4/5 rounded-full border border-gray-300 dark:border-gray-500 dark:bg-gray-800 px-2 py-1"

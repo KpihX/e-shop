@@ -29,18 +29,21 @@ const PopupCommande = ({onClose, idCommande}) => {
 
 
   React.useEffect(() => {
-    console.log(idCommande)
-    axiosClient.get(`/admin/getCommand?idCommande=${idCommande}`)
-    console.log(lignesCommande)
+    console.log(idCommande);
+    axiosClient.get('/admin/getCommand', {
+      params: { idCommande }
+    })
     .then((response) => {
-      setLignesCommande(response.data.data);
+      console.log(response.data);
+      setLignesCommande(response.data);
     })
     .catch(error => {
-      alert(error.response.data.message); // Assurez-vous que le message d'erreur est bien dans error.response.data.message
+      alert(error.response.data); // Assurez-vous que le message d'erreur est bien dans error.response.data
       console.error(error.response);
     });
-  }, []);
-
+  }, [idCommande]); // Ajoutez idCommande en dépendance si c'est une variable
+  
+  
 
   // React.useEffect(()=>{
   //   axiosClient.post('/')

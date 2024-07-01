@@ -20,9 +20,13 @@ class Commande extends Model
         'mobile',
         'adresse',
         'idVille',
-        'dateCom',
         'montant',
-        'livrer'
+        'livrer',
+        'commentaire',
+        'avance',
+        'remise',
+        'type',
+
     ];
     public function ville()
     {

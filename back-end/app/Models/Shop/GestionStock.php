@@ -9,7 +9,7 @@ use App\Models\Shop\Produit;
 class GestionStock extends Model
 {
     use HasFactory;
-
+    //
     protected $table = 'gestionStock';
     protected $primaryKey = 'idStock';
     public $incrementing = true;

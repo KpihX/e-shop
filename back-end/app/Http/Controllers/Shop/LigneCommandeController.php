@@ -41,9 +41,10 @@ class LigneCommandeController extends Controller
      * Display the specified resource.
      */
     public function show($idCommande)
-    {
+    {   
         $lignesCommande = LigneCommande::where('idCommande',$idCommande)->get();
-        return LigneCommandeResource::collection($lignesCommande, 200);
+        // return LigneCommandeResource::collection($lignesCommande, 200);
+        return $lignesCommande;
     }
 
 

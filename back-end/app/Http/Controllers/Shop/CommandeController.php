@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Shop\FactureController;
+use Exception;
 
 // use DB;
 
@@ -136,46 +137,58 @@ class CommandeController extends Controller
         return response()->json('Commande Livrée', 200);
     }
 
-    public function updateCommand(UpdateCommandeRequest $request, $idCommande)
-    {
-
+    public function updateCommand(UpdateCommandeRequest $request, $idCommande) {
         $validatedData = $request->validated();
         $data = $validatedData['convertedFormData'];
         $gest = $validatedData['gest'];
-        // $commande = Commande::where('idCommande', $validatedData['idCommande'])->first();
+    
+        // Trouver la commande par ID ou échouer
         $commande = Commande::findOrFail($idCommande);
-
+        // error_log($data->commentaire);
+    
         try {
             DB::transaction(function () use ($commande, $gest, $data) {
-                if ($commande->livrer == 0){
+                if ($commande->livrer == 0) {
                     $commande->update($data);
-                    if($commande->livrer == 1){
+                    if ($commande->livrer == 1) {
                         $controller = new FactureController();
                         $controller->convertCommandeToFacture($commande->idCommande, $data, $gest);
-                        return response()->json('Commande Updated', 200);
+                    }
+                } else {
+                    if ($data['livrer'] !== 0) {
+                        $commande->update($data);
+                    } else {
+                        throw new Exception('Impossible d\'effectuer cette modification');
                     }
                 }
-                $commande->update($data);
             });
-            return response()->json('Commande Updated', 200);
-        } catch (\Exception $e) {
-            print_r($e->getMessage());
+    
+            return response()->json('Commande Modifiée', 200);
+        } catch (Exception $e) {
+            error_log($e->getMessage());
             return response()->json(['error' => 'Une erreur est survenue lors de la mise à jour de la commande.', 'message' => $e->getMessage()], 500);
         }
-        return response()->json('Commande Updated', 200);
-        // On ne va pas se tuer!!!!!!!!!!!!!!!!!!!!!
     }
-
-    public function getCommand(Request $request){
+    
+    public function getCommand(Request $request) {
         $data = Validator::make($request->all(), [
             'idCommande' => 'required|integer',
         ]);
+    
         if ($data->fails()) {
             return response()->json('Commande Inexistante', 400);
         }
+    
         $controller = new LigneCommandeController();
-        return $controller->show($request->idCommande);
+        try {
+            $result = $controller->show($request->idCommande);
+            error_log($result);
+            return $result;
+        } catch (Exception $e) {
+            return response()->json('Erreur interne du serveur', 500);
+        }
     }
+    
     /**
      * Destroy a command and all its lines
      *
