@@ -14,7 +14,6 @@ class StoreProduitRequest extends FormRequest
     public function rules()
     {
         return [
-            'convertedFormData.codePro' => 'required|digits:6|unique:products,id',
             'convertedFormData.idCategorie' => 'required|exists:categorie,idCat',
             'convertedFormData.nomPro' => 'required|string|max:255',
             'convertedFormData.prix' => 'required|numeric',
@@ -29,6 +28,7 @@ class StoreProduitRequest extends FormRequest
             'convertedFormData.size1' => 'required|string',
             'convertedFormData.size2' => 'required|string',
             'convertedFormData.typeSize' => 'sometimes|integer',
+            'idGest' => 'required|integer'
         ];
     }
 }

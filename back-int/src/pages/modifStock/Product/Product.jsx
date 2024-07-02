@@ -8,6 +8,7 @@ import {
 } from '@material-tailwind/react';
 import { PhotoIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/solid';
 import axiosClient from '../../../axiosClient';
+import { useGestionnaireContext } from "../../../utils/context/GestionnaireContext";
 
 
 function formatString(input) {
@@ -49,12 +50,14 @@ function Product({
   const { addToCart, cartItemCount, getCartItem } = useContext(CartContext);
   const [orderPopup, setOrderPopup] = useState(false);
   const currentProduct = getCartItem(codePro);
-
+  const {gestionnaire} = useGestionnaireContext();
   const [popupImg, setPopupImg] = useState(false);
 
   const handleDelete = (code) => {
     axiosClient
-      .post(`/admin/destroyProduct/${code}`)
+      .post(`/admin/destroyProduct/`, {
+        codePro:codePro, 
+        idGest: gestionnaire.idGest})
       .then(() => {})
       .catch((err) => {
         const response = err.response;

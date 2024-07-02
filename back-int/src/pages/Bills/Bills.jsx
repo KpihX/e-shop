@@ -16,9 +16,11 @@ const Bills = () => {
   }, []);
   return (
     <div className="bg-white dark:bg-gray-900 dark:text-white duration-200">
-      <div className="flex flex-row">
-        <BillNav className="flex-auto"/>
-        <Products/>
+      <div className="">
+      <Products/>
+
+      <BillNav className="flex-auto"/>
+        
       </div>
     </div>
   );

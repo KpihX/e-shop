@@ -23,6 +23,10 @@ class StoreLigneFactureRequest extends FormRequest
     {
         return [
             //
+            'codePro' => 'required',
+            'idFac' => 'required|integer',
+            'prix' => 'requierd|numeric',
+            'qte' => 'required|integer'
         ];
     }
 }

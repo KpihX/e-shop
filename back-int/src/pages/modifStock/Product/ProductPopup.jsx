@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { IoCloseOutline } from "react-icons/io5";
 import axiosClient from "../../../axiosClient";
 import PopupImage from "./PopupImage";
+import { useGestionnaireContext } from "../../../utils/context/GestionnaireContext";
 
 import {
   Button,
@@ -11,7 +12,7 @@ import {
   DialogFooter,
 } from "@material-tailwind/react";
 
-
+ 
   const ProductPopup = ({
     orderPopup,
     setOrderPopup,
@@ -36,6 +37,10 @@ import {
     const handleValidation = () => {
       setOrderPopup(false);
     };
+  const [plus, setPlus] = useState(0);
+  const [moins, setMoins] = useState(0);
+  const {gestionnaire} = useGestionnaireContext();
+
   const [formData, setFormData] = React.useState({
     nomPro: nomPro,
     idCategorie: idCategorie,
@@ -63,7 +68,7 @@ import {
       nomPro: formData.nomPro,
       idCategorie: parseInt(formData.idCategorie),
       prix: parseFloat(formData.prix),
-      qte: parseInt(formData.qte),
+      qte: parseInt(formData.qte) + parseInt(plus) - parseInt(moins),
       description: formData.description,
       codeArrivage: formData.codeArrivage,
       actif: parseInt(formData.actif),
@@ -76,7 +81,7 @@ import {
       typeSize: parseInt(formData.typeSize),
     };
     console.log(convertedFormData);
-    axiosClient.post(`/admin/updateProduct/${parseInt(codePro)}`, {convertedFormData:convertedFormData})
+    axiosClient.post(`/admin/updateProduct/${parseInt(codePro)}`, {convertedFormData:convertedFormData, idGest: gestionnaire['idGest']})
       .then(() => {
         setOrderPopup(false);
         loadProducts(currentPage)
@@ -178,14 +183,34 @@ import {
                     />
                   </div>
                   <div className="flex items-center justify-between flex-row">
-                    <p>Quantité</p>
+                    <div className="flex items-center justify-between flex-row">
+                      <p>Quantité</p>
+                      <input
+                        type="text"
+                        placeholder="quantite"
+                        name="qte"
+                        disabled
+                        value={formData.qte + parseInt(plus) - parseInt(moins)}
+                        className="w-2/5 rounded-full border border-gray-300 dark:border-gray-500 dark:bg-gray-800 px-2 py-1 mb-4"
+                        />
+                      </div>
+                    <p>Entrée</p>
                     <input
                       type="text"
-                      placeholder="quantite"
+                      placeholder="entrée"
                       name="qte"
-                      value={formData.qte}
-                      onChange={handleChange}
-                      className="w-4/5 rounded-full border border-gray-300 dark:border-gray-500 dark:bg-gray-800 px-2 py-1 mb-4"
+                      value={plus}
+                      onChange={(e)=>setPlus(e.target.value)}
+                      className="w-1/5 rounded-full border border-gray-300 dark:border-gray-500 dark:bg-gray-800 px-2 py-1 mb-4"
+                    />
+                    <p>Sortie</p>
+                    <input
+                      type="text"
+                      placeholder="sortie"
+                      name="qte"
+                      value={moins}
+                      onChange={(e)=>setMoins(e.target.value)}
+                      className="w-1/5 rounded-full border border-gray-300 dark:border-gray-500 dark:bg-gray-800 px-2 py-1 mb-4"
                     />
                   </div>
                   <div className="flex items-center justify-between flex-row">

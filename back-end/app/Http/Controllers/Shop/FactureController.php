@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use App\Models\Shop\LigneCarte;
 use App\Http\Controllers\Shop\ClientCarteController;
+use App\Http\Requests\Shop\StoreGestionStockRequest;
+use App\Http\Requests\Shop\StoreLigneFactureRequest;
+use App\Models\Shop\GestionStock;
 
 // use Illuminate\Support\Facades\Request;
 
@@ -47,10 +50,37 @@ class FactureController extends Controller
     public function store(StoreFactureRequest $request)
     {
         // Create a new facture instance
-        $facture = Facture::create($request->validated());
+        $validatedData = $request->validated();
+        $lignesFacture = $validatedData['lignes']; 
+        $facture =new FactureResource(Facture::create($validatedData));
+        foreach ($lignesFacture as $ligne){
+            $formatedData1 = [
+                'codePro' => $ligne['codePro'],
+                'idGest' => $validatedData['idCaissiere'],
+                'qte' => $ligne['qte'],
+                'dateStock' => now(),
+                'operation' => 1
+            ];
+            $formatedData2 =[
+                'codePro' => $ligne['codePro'],
+                'idFac' => $facture->idFac,
+                'prix' => $ligne['prix'],
+                'qte' => $ligne['qte']
+            ]; 
+            // Crée une nouvelle requête pour valider les données de gestion de stock
+            $storeRequest1 = new StoreGestionStockRequest();
+            $storeRequest1->replace($formatedData1);
 
+            // Utilise le contrôleur GestionStock pour enregistrer les données validées
+            $gestionStockController = new GestionStockController();
+            if ($gestionStockController->store($storeRequest1)){
+                LigneFacture::create($formatedData2);
+            }else{
+                return response()->json('error occured');
+            }
+        }
+        return $facture;
         // Return the newly created facture as FactureResource
-        return new FactureResource($facture);
     }
 
     /**
@@ -73,9 +103,11 @@ class FactureController extends Controller
         $commande = Commande::with("ligneCommandes")->findOrFail($idCommande);
         $factureData = $commande->toFactureData($gest);
         $facture = Facture::create($factureData);
-
+        
         foreach($commande->ligneCommandes as $ligne){
-            LigneFacture::create($ligne->toLigneFacture($facture->idFac));  
+            LigneFacture::create($ligne->toLigneFacture($facture->idFac));
+            GestionStock::create($ligne->historyFacture($gest));
+            
         }
 
         return new FactureResource($facture);

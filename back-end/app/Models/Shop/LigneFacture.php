@@ -18,7 +18,14 @@ class LigneFacture extends Model
     protected $fillable = [
         'codePro', 'idFac', 'prix', 'qte'
     ];
-
+    public function formatedData($ligne, $idFac){
+        return [
+            'codePro' => $ligne->codePro,
+            'idFac' => $idFac,
+            'prix' => $ligne->prix,
+            'qte' => $ligne->qte
+        ];
+    }
     // Define relationships
     public function facture()
     {

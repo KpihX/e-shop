@@ -14,6 +14,7 @@ class Produit extends Model
     public $incrementing = true;
     protected $keyType = 'int';
     protected $fillable = [
+        'codePro',
         'idCategorie',
         'nomPro',
         'prix',

@@ -5,8 +5,7 @@ import options from "../../../datas/options";
 import PopupImage from "./PopupImage";
 import { IconButton, Tooltip } from '@material-tailwind/react';
 import { PhotoIcon } from '@heroicons/react/24/solid';
-import { Button, Dialog, DialogHeader, DialogBody, DialogFooter } from "@material-tailwind/react";
-
+import { useGestionnaireContext } from "../../../utils/context/GestionnaireContext";
 const ProductPopupNew = ({
   orderPopup,
   setOrderPopup,
@@ -17,7 +16,7 @@ const ProductPopupNew = ({
   const [searchValue, setSearchValue] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [searchType, setSearchType] = useState(options[0]);
-
+  const {gestionnaire} = useGestionnaireContext();
   const [products, setProducts] = useState([]);
   const [allProducts, setAllProducts] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -63,7 +62,8 @@ const ProductPopupNew = ({
     };
     console.log(convertedFormData);
     axiosClient.post(`/admin/storeProduct/`, {
-      convertedFormData: convertedFormData
+      convertedFormData: convertedFormData,
+      idGest: gestionnaire['idGest']
     })
     .then(() => {
       setOrderPopup(false);

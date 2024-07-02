@@ -18,6 +18,10 @@ const pages = [
   {
     name: 'Factures',
     link: '/factures'
+  },
+  {
+    name: 'GestionStock',
+    link: '/gestionStock'
   }
 ]
 

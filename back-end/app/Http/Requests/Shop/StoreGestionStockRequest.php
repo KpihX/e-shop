@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Shop;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -22,7 +22,11 @@ class StoreGestionStockRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'codePro'=> 'required|string',
+            'idGest'=>'required|integer',
+            'qte'=>'required|numeric',
+            'dateStock' => 'required|datetime',
+            'operation'=>'required|integer'
         ];
     }
 }

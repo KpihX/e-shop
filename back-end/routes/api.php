@@ -10,6 +10,7 @@ use App\Http\Controllers\Shop\ProduitController;
 use App\Http\Controllers\Shop\PhotoController;
 use App\Http\Controllers\Shop\VilleController;
 use App\Http\Controllers\GestionnaireController;
+use App\Http\Controllers\Shop\GestionStockController;
 use App\Http\Controllers\Shop\LigneCommandeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -54,10 +55,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('storeProduct', [ProduitController::class, 'store']);
         Route::post('updateProduct/{codePro}', [ProduitController::class, 'update']);
         Route::post('addCategorie', [CategorieController::class, 'store']);
-        Route::Post('destroyProduct/{codePro}', [ProduitController::class, 'destroy']);
+        Route::Post('destroyProduct', [ProduitController::class, 'destroy']);
         Route::Post('destroyPhoto/{idPhoto}', [PhotoController::class, 'destroy']);
         Route::get('getPhotos', [PhotoController::class, 'getPhotos']);
         Route::post('/upload', [PhotoController::class, 'store']);
+        Route::get('allHistory', [GestionStockController::class, 'index']);
     });
 });
 

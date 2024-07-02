@@ -24,7 +24,7 @@ class LigneCommande extends Model
         'disponible'
     ];
 
-    public function toLigneFacture(string $idFacture){
+    public function toLigneFacture(int $idFacture){
         return [
             'codePro' => $this->codePro,
             'idFac' => $idFacture,
@@ -32,7 +32,24 @@ class LigneCommande extends Model
             'qte' => $this->quantite
         ];
     }
-    
+    public function historyFacture(int $gest){
+        return[
+            'codePro' => $this->codePro,
+            'idGest' => $gest,
+            'qte' => $this->quantite,
+            'dateStock' => now(),
+            'operation' => 2
+        ];
+    }
+    public function historyCommande (int $gest){
+        return[
+            'codePro' => $this->codePro,
+            'idGest' => $gest,
+            'qte' => $this->quantite,
+            'dateStock' => now(),
+            'operation' => 0
+        ];
+    }
     public function commande()
     {
         return $this->belongsTo(Commande::class, 'idCommande');

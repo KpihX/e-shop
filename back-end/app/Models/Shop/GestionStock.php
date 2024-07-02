@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Shop;
 
+use App\Models\Gestionnaire;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Shop\Produit;
@@ -18,6 +19,8 @@ class GestionStock extends Model
         'qte',
         'dateStock',
         'operation',
+        'idGest',
+        'codePro'
     ];
     public $timestamps = false;
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Shop;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Shop\StoreGestionStockRequest;
 use App\Http\Requests\UpdateLigneCommandeRequest;
 use App\Http\Resources\LigneCommandeResource;
 use App\Models\Shop\LigneCommande;
@@ -19,6 +20,13 @@ class LigneCommandeController extends Controller
     public function store($ligneCommande, $idCommande)
     {
         $ligne = new LigneCommande();
+        $formatedData = [
+            'codePro' => '',
+            'idGest' => 2,
+            'qte' => 0,
+            'dateStock' => null,
+            'operation' => 0
+        ];
         $produit = Produit::where('codePro', $ligneCommande['codePro'])->first();
         if($produit->qte - $ligneCommande['quantite']>=0){
             $ligne->disponible  = 1;
@@ -28,9 +36,22 @@ class LigneCommandeController extends Controller
             $ligne->taille = $ligneCommande['taille'];
             $ligne->couleur = $ligneCommande['couleur'];
             $produit->qte -= $ligneCommande['quantite'];
-            $produit->save();
-            $ligne->save();
-            return '';
+
+            $formatedData['codePro'] = $ligneCommande['codePro'];
+            $formatedData['qte'] = $ligneCommande['quantite'];
+            $formatedData['dateStock'] = now();
+            $formatedData['operation'] = 0;
+            // Crée une nouvelle requête pour valider les données de gestion de stock
+            $storeRequest = new StoreGestionStockRequest();
+            $storeRequest->replace($formatedData);
+
+            // Utilise le contrôleur GestionStock pour enregistrer les données validées
+            $gestionStockController = new GestionStockController();
+            if ($gestionStockController->store($storeRequest)){
+                $produit->save();
+                $ligne->save();
+                return '';
+            }
         }else{
             $ligne->disponible  = 0;
             return 'Stock insuffisant : il ne reste que '.$produit->qte.' exemplaire(s) restant(s) pour le produit '.$produit->nomPro.'.\n';
